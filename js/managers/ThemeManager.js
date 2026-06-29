@@ -3,11 +3,11 @@ export const themes = {
   morning: {
     id: 'morning',
     name: 'Morning Growth',
-    bg: '#F8E68A',
-    glowA: '#F8E68A',
-    glowB: '#FFD54A',
-    accent: '#F4A261',
-    greeting: '☀️ Keep building your momentum.'
+    bg: '#FFD54A',
+    glowA: '#FFD54A',
+    glowB: '#FFB067',
+    accent: '#F5B000',
+    greeting: '🌅 Good morning, ready to level up?'
   },
   sunset: {
     id: 'sunset',
