@@ -62,6 +62,8 @@ export class ChooseJourneyView {
     }
     
     this.paths.forEach((path, index) => {
+      const validIcon = path.icon === 'server' ? 'hard-drives' : path.icon === 'layers' ? 'stack' : path.icon === 'monitor' ? 'desktop' : path.icon;
+      
       const card = createElement('div', { 
         className: `card journey-card animate-slide-up delay-${(index + 1) * 100}`,
         style: `border: 3px solid var(--color-black); box-shadow: 8px 8px 0px var(--color-black); padding: 0; overflow: hidden; display: flex; flex-direction: column; background: var(--color-white); transition: all 0.2s ease; cursor: default;`
@@ -70,7 +72,7 @@ export class ChooseJourneyView {
           style: `background-color: ${path.color || 'var(--theme-bg)'}; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 3px solid var(--color-black);`
         }, [
           createElement('div', { style: 'width: 88px; height: 88px; background: var(--color-white); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid var(--color-black); box-shadow: 4px 4px 0px var(--color-black); margin-bottom: 20px;' }, [
-             createElement('i', { className: `ph-duotone ph-${path.icon}`, style: `font-size: 44px; color: var(--color-black);` })
+             createElement('i', { className: `ph-duotone ph-${validIcon}`, style: `font-size: 44px; color: var(--color-black);` })
           ]),
           createElement('h3', { className: 'm-0 text-2xl font-bold text-center', style: 'color: var(--color-black); line-height: 1.2;' }, path.title)
         ]),
@@ -108,7 +110,7 @@ export class ChooseJourneyView {
   render() {
     const container = createElement('div', { className: 'centered-layout flex-column align-center' }, [
       createElement('div', { className: 'text-center mb-8 animate-fade-in' }, [
-        createElement('h1', { className: 'text-4xl text-white font-bold mb-4' }, 'Select Your Class'),
+        createElement('h1', { className: 'text-white font-bold mb-4', style: 'font-size: 3.5rem; text-shadow: 4px 4px 0px var(--color-black); letter-spacing: -1px;' }, 'Select Your Class'),
         createElement('p', { className: 'text-white text-lg m-0', style: 'opacity: 0.9;' }, 'Choose your primary learning journey to begin.'),
         createElement('p', { className: 'text-white text-sm mt-3', style: 'opacity: 0.7; max-width: 500px; margin: 0 auto; line-height: 1.5;' }, 'Don\'t worry, you can always learn other skills later. This just sets your starting questline.')
       ]),
