@@ -23,8 +23,8 @@ export class Sidebar {
       const li = createElement('li', { className: 'mb-2' }, [
         createElement('a', { 
           href: item.path,
-          className: `d-flex align-center gap-2 p-3 font-bold ${isActive ? 'bg-primary' : ''}`,
-          style: `border-radius: var(--radius-md); color: var(--color-black); text-decoration: none; ${isActive ? 'border: 2px solid var(--color-black); box-shadow: 2px 2px 0px var(--color-black);' : ''}`
+          className: `d-flex align-center gap-2 p-3 font-bold`,
+          style: `border-radius: var(--radius-md); color: var(--color-black); text-decoration: none; transition: all 0.2s ease; ${isActive ? 'background-color: var(--theme-bg); border: 2px solid var(--color-black); box-shadow: 3px 3px 0px var(--color-black); transform: translateX(2px);' : 'border: 2px solid transparent;'}`
         }, [
           createElement('i', { className: `${isActive ? 'ph-fill' : 'ph'} ${item.icon} text-lg` }),
           item.label
@@ -37,7 +37,7 @@ export class Sidebar {
     return createElement('aside', { className: 'app-sidebar' }, [
       createElement('div', { className: 'p-6 pb-2 text-center' }, [
         createElement('h2', { className: 'text-2xl m-0' }, [
-          createElement('i', { className: 'ph-fill ph-sword text-primary' }),
+          createElement('i', { className: 'ph-fill ph-sword', style: 'color: var(--theme-bg); text-shadow: 1px 1px 0px var(--color-black);' }),
           ' LevelUp'
         ])
       ]),

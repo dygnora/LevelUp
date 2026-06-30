@@ -18,7 +18,7 @@ export class Navbar {
       createElement('div', { className: 'd-flex align-center gap-2' }, [
         // Mobile menu toggle (future)
         createElement('i', { className: 'ph ph-list text-2xl hide-desktop' }),
-        createElement('span', { className: 'font-black text-xl text-primary' }, 'LevelUp')
+        createElement('span', { className: 'font-black text-xl', style: 'color: var(--theme-bg); text-shadow: 1px 1px 0px var(--color-black);' }, 'LevelUp')
       ]),
       createElement('div', { className: 'd-flex align-center gap-4' }, [
         createElement('div', { className: 'd-flex align-center gap-2' }, [
