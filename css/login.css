@@ -20,9 +20,9 @@
 }
 
 /* Layering Opacity */
-.layer-1 { opacity: 0.10; }
-.layer-2 { opacity: 0.12; }
-.layer-3 { opacity: 0.14; }
+.layer-1 { opacity: 0.7; }
+.layer-2 { opacity: 0.6; }
+.layer-3 { opacity: 0.5; }
 
 /* Micro Particles */
 .bg-particle {
@@ -88,65 +88,65 @@
   transition: background 0.8s ease;
 }
 
-/* CSS Animations (Phase 3 Revision) */
+/* CSS Animations (Dynamic & Festive Revision) */
 @keyframes ambient-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-60px) scale(1.15); }
 }
 
 @keyframes ambient-drift {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(18px, -18px); }
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(80px, -60px) rotate(20deg); }
 }
 
 @keyframes ambient-rotate {
-  0%, 100% { transform: rotate(-10deg); }
-  50% { transform: rotate(10deg); }
+  0%, 100% { transform: rotate(-30deg) scale(1); }
+  50% { transform: rotate(30deg) scale(1.1); }
 }
 
 @keyframes particle-rise {
   0% { transform: translateY(100vh); opacity: 0; }
-  15% { opacity: 0.18; }
-  85% { opacity: 0.18; }
+  15% { opacity: 0.3; }
+  85% { opacity: 0.3; }
   100% { transform: translateY(-10vh); opacity: 0; }
 }
 
 @keyframes graph-pulse {
-  0%, 100% { opacity: 0.05; transform: translate(0, 0); }
-  50% { opacity: 0.08; transform: translate(10px, -5px); }
+  0%, 100% { opacity: 0.05; transform: translate(0, 0) scale(1); }
+  50% { opacity: 0.15; transform: translate(30px, -15px) scale(1.05); }
 }
 
 @keyframes glow-a-pulse {
   0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.35; }
-  50% { transform: translate(-50%, -50%) scale(1.04); opacity: 0.55; }
+  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.70; }
 }
 
 @keyframes glow-b-pulse {
   0%, 100% { transform: scale(1); opacity: 0.25; }
-  50% { transform: scale(1.04); opacity: 0.45; }
+  50% { transform: scale(1.1); opacity: 0.60; }
 }
 
-/* Animation Classes */
+/* Animation Classes (Much Faster) */
 .anim-float {
-  animation: ambient-float 26s ease-in-out infinite;
+  animation: ambient-float 8s ease-in-out infinite;
 }
 .anim-drift {
-  animation: ambient-drift 35s ease-in-out infinite;
+  animation: ambient-drift 12s ease-in-out infinite;
 }
 .anim-rotate {
-  animation: ambient-rotate 28s ease-in-out infinite;
+  animation: ambient-rotate 10s ease-in-out infinite;
 }
 .anim-particle {
-  animation: particle-rise 30s ease-in-out infinite;
+  animation: particle-rise 12s ease-in-out infinite;
 }
 .anim-graph {
-  animation: graph-pulse 18s ease-in-out infinite;
+  animation: graph-pulse 9s ease-in-out infinite;
 }
 .anim-glow-a {
-  animation: glow-a-pulse 14s ease-in-out infinite;
+  animation: glow-a-pulse 6s ease-in-out infinite;
 }
 .anim-glow-b {
-  animation: glow-b-pulse 16s ease-in-out infinite;
+  animation: glow-b-pulse 8s ease-in-out infinite;
 }
 
 /* Hover overriding for Auth Card Google Btn */
