@@ -12,8 +12,8 @@ export const themes = {
   sunset: {
     id: 'sunset',
     name: 'Momentum',
-    bg: '#FF3333',
-    glowA: '#FF3333',
+    bg: '#ea1e35',
+    glowA: '#ea1e35',
     glowB: '#FF0000',
     accent: '#CC0000',
     greeting: '🌆 Progress is built one quest at a time.'
@@ -21,7 +21,7 @@ export const themes = {
   night: {
     id: 'night',
     name: 'Deep Work',
-    bg: '#1B2A49',
+    bg: '#2e4892',
     glowA: '#3672D9',
     glowB: '#7B2CBF',
     accent: '#4D96FF',
