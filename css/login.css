@@ -1,14 +1,5 @@
 /* css/login.css */
 
-/* Z-Index Layers Mapping:
-   Background: -5
-   Grid: -4
-   Decorations Far: -3
-   Decorations Mid: -2
-   Decorations Near: -1
-   Login Card: (Default stacking context, implicit 0 or higher)
-*/
-
 .login-bg-container {
   position: absolute;
   top: 0;
@@ -16,110 +7,129 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  pointer-events: none; /* Ignore pointer events for accessibility */
-  z-index: -3; /* Base layer for decorations */
+  pointer-events: none;
+  z-index: 1; /* Render behind .auth-card (10) */
 }
 
-/* Base Styles for Background Elements */
+/* Base Element Style */
 .bg-element {
   position: absolute;
-  color: var(--color-black); /* Assume design token handles color */
-  pointer-events: none; /* Secondary safeguard */
+  color: var(--color-black);
+  pointer-events: none;
 }
 
-/* Layer Overrides */
-.layer-1 { z-index: -3; opacity: 0.04; font-size: 24px; }
-.layer-2 { z-index: -2; opacity: 0.06; font-size: 32px; }
-.layer-3 { z-index: -1; opacity: 0.08; font-size: 48px; }
+/* Layering Opacity */
+.layer-1 { opacity: 0.02; }
+.layer-2 { opacity: 0.04; }
+.layer-3 { opacity: 0.06; }
 
-/* Words Styling */
-.bg-word {
-  font-weight: 900;
-  opacity: 0.02;
-  font-size: 80px;
-  filter: blur(2px);
-  z-index: -5;
-}
-
-/* Particles Styling */
+/* Micro Particles */
 .bg-particle {
   font-size: 12px;
-  opacity: 0.03;
-  z-index: -3;
-}
-
-/* CSS Animations for Drift */
-@keyframes float-slow {
-  0%, 100% { transform: translateY(0) translateX(0); }
-  50% { transform: translateY(-8px) translateX(4px); }
-}
-
-@keyframes float-medium {
-  0%, 100% { transform: translateY(0) translateX(0); }
-  50% { transform: translateY(-12px) translateX(-4px); }
-}
-
-@keyframes float-fast {
-  0%, 100% { transform: translateY(0) translateX(0); }
-  50% { transform: translateY(-16px) translateX(6px); }
-}
-
-@keyframes drift-up {
-  0% { transform: translateY(100px); opacity: 0; }
-  10% { opacity: 0.05; }
-  90% { opacity: 0.05; }
-  100% { transform: translateY(-100px); opacity: 0; }
-}
-
-/* Assign animations */
-@media (prefers-reduced-motion: no-preference) {
-  .anim-float-slow { animation: float-slow 35s ease-in-out infinite; }
-  .anim-float-medium { animation: float-medium 28s ease-in-out infinite; }
-  .anim-float-fast { animation: float-fast 20s ease-in-out infinite; }
-  .anim-particle { animation: drift-up 20s linear infinite; }
-}
-
-/* Knowledge Graph SVG */
-.bg-graph {
-  opacity: 0.04;
-  stroke: var(--color-black);
-  stroke-width: 2;
-  fill: var(--color-black);
-}
-
-/* Feature Highlights Fade Sequence */
-.feature-item {
+  font-weight: bold;
   opacity: 0;
-  animation: fade-in 0.3s forwards;
-}
-.delay-1 { animation-delay: 0.05s; }
-.delay-2 { animation-delay: 0.1s; }
-.delay-3 { animation-delay: 0.15s; }
-.delay-4 { animation-delay: 0.2s; }
-
-/* Enhanced Google Button Hover */
-.btn-google {
-  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-}
-.btn-google:hover {
-  transform: translateY(-2px);
-  box-shadow: 4px 6px 0px rgba(0,0,0,1);
 }
 
-/* Glow A (Behind Card) */
+/* Huge Faint Words */
+.bg-word {
+  font-size: 15vw;
+  font-weight: 900;
+  line-height: 1;
+  opacity: 0.02;
+  filter: blur(4px);
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* SVG Graphs */
+.bg-graph {
+  opacity: 0.03;
+  stroke: var(--color-black);
+  stroke-width: 1.5;
+  fill: var(--color-primary);
+}
+
+/* Glow A (Behind Card - Bright Yellow) */
 .glow-a {
   position: absolute;
   width: 50vw;
   height: 50vw;
   max-width: 600px;
   max-height: 600px;
-  background: var(--color-primary); /* Bright Yellow */
+  background: var(--color-primary);
   filter: blur(200px);
   opacity: 0.8;
-  z-index: 1; /* Behind card (10) but above background */
+  z-index: 5;
   pointer-events: none;
   border-radius: 50%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* Glow B (Bottom Right - Light Orange) */
+.glow-b {
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  max-width: 800px;
+  max-height: 800px;
+  background: #FFB067;
+  filter: blur(250px);
+  opacity: 0.4;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: 50%;
+  bottom: -20%;
+  right: -20%;
+}
+
+/* CSS Animations (Phase 3) */
+@keyframes ambient-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-25px) rotate(4deg); }
+}
+
+@keyframes ambient-float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(20px) rotate(-3deg); }
+}
+
+@keyframes ambient-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, -15px); }
+}
+
+@keyframes particle-rise {
+  0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.15; }
+  90% { opacity: 0.15; }
+  100% { transform: translateY(-10vh) rotate(180deg); opacity: 0; }
+}
+
+@keyframes glow-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-30px, -20px); }
+}
+
+.anim-float {
+  animation: ambient-float 30s ease-in-out infinite;
+}
+.anim-float-slow {
+  animation: ambient-float-slow 38s ease-in-out infinite;
+}
+.anim-drift {
+  animation: ambient-drift 35s ease-in-out infinite;
+}
+.anim-particle {
+  animation: particle-rise 25s linear infinite;
+}
+.anim-glow-drift {
+  animation: glow-drift 40s ease-in-out infinite;
+}
+
+/* Hover overriding for Auth Card Google Btn */
+.btn-google:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 6px 0px rgba(0,0,0,1);
 }

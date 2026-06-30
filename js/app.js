@@ -32,6 +32,13 @@ function initApp() {
     router.handleRoute();
   });
   
+  // Local live-server fallback handler
+  const redirectRoute = sessionStorage.getItem('redirectRoute');
+  if (redirectRoute) {
+    sessionStorage.removeItem('redirectRoute');
+    window.history.replaceState({}, '', redirectRoute);
+  }
+
   // Initial render
   router.handleRoute();
 }
