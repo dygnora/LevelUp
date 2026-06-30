@@ -145,21 +145,17 @@ export class LoginView {
     if (!this.isWhyModalOpen) return null;
 
     const leftCol = createElement('div', { className: 'why-modal-left' }, [
-      createElement('h3', { className: 'text-xl font-bold m-0 mb-6' }, 'Your Journey'),
-      createElement('div', { className: 'timeline mb-8' }, [
-        this.createTimelineStep('ph-map-trifold', 'Level 1: Start Journey'),
-        this.createTimelineStep('ph-sword', 'Level 2: Complete Quests'),
-        this.createTimelineStep('ph-trend-up', 'Level 3: Gain XP'),
-        this.createTimelineStep('ph-medal', 'Level 4: Unlock Badges'),
-        this.createTimelineStep('ph-caret-double-up', 'Level Up', true)
-      ]),
-      createElement('h2', { className: 'text-2xl font-bold m-0 mb-3' }, 'What is LevelUp?'),
-      createElement('p', { className: 'text-gray text-sm m-0', style: 'line-height: 1.6;' }, 
-        'LevelUp transforms your learning journey into measurable progress through quests, XP, and skill progression.'
-      )
+      createElement('h3', { className: 'text-2xl font-bold m-0 mb-8', style: 'letter-spacing: -0.5px;' }, 'Your Journey'),
+      createElement('div', { className: 'timeline mb-4' }, [
+        this.createTimelineStep('ph-map-trifold', 'Start your journey', false),
+        this.createTimelineStep('ph-sword', 'Complete daily quests', false),
+        this.createTimelineStep('ph-lightning', 'Track your XP', false),
+        this.createTimelineStep('ph-medal', 'Unlock rare badges', false),
+        this.createTimelineStep('ph-rocket', 'Level Up', true)
+      ])
     ]);
 
-    const previewCard = createElement('div', { className: 'card bg-white p-6', style: 'border: 2px solid var(--border-color); box-shadow: 4px 4px 0px var(--color-black); pointer-events: none; user-select: none;' }, [
+    const previewCard = createElement('div', { className: 'card bg-white p-6', style: 'border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 24px 48px rgba(0,0,0,0.08); border-radius: var(--radius-xl); pointer-events: none; user-select: none; transform: translateY(-4px);' }, [
       createElement('div', { className: 'd-flex justify-between align-center mb-6' }, [
         createElement('h4', { className: 'm-0 text-xl font-bold' }, 'Level 12'),
         createElement('span', { className: 'badge bg-black text-white' }, 'EXPLORER')
@@ -169,17 +165,17 @@ export class LoginView {
           createElement('span', {}, 'XP Progress'),
           createElement('span', {}, '560 / 700 XP')
         ]),
-        createElement('div', { className: 'progress-container', style: 'height: 16px;' }, [
-          createElement('div', { className: 'progress-bar', style: 'width: 80%;' })
+        createElement('div', { className: 'progress-container', style: 'height: 12px; background: rgba(0,0,0,0.05); border: none; border-radius: 6px; overflow: hidden;' }, [
+          createElement('div', { className: 'progress-bar', style: 'width: 80%; background: var(--theme-bg); box-shadow: 0 0 12px var(--theme-bg); border-radius: 6px;' })
         ])
       ]),
-      createElement('div', { className: 'p-4 bg-gray-100', style: 'border-radius: var(--radius-sm); border: 2px solid var(--border-color);' }, [
+      createElement('div', { className: 'p-4 bg-gray-100', style: 'border-radius: var(--radius-md); border: 1px solid rgba(0,0,0,0.05);' }, [
         createElement('div', { className: 'd-flex justify-between align-center' }, [
           createElement('div', {}, [
             createElement('p', { className: 'text-xs text-gray font-bold m-0 mb-1 uppercase' }, 'Current Quest'),
             createElement('h4', { className: 'm-0 text-base font-bold' }, 'Responsive Layout')
           ]),
-          createElement('span', { className: 'badge bg-primary text-black' }, '+20 XP')
+          createElement('span', { className: 'badge bg-black text-white' }, '+20 XP')
         ])
       ])
     ]);
@@ -192,10 +188,10 @@ export class LoginView {
         ]),
         previewCard
       ]),
-      createElement('div', { className: 'mt-6' }, [
+      createElement('div', { className: 'mt-8' }, [
         createElement('button', { 
           className: 'btn btn-primary w-100 p-4 btn-google',
-          style: 'font-weight: 800; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 16px; border-width: 3px;',
+          style: 'font-weight: 800; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 16px; border-width: 3px; background-color: var(--theme-bg); color: var(--theme-btn-text); border-color: var(--color-black);',
           onclick: () => {
             this.closeWhyModal();
             this.handleGoogleLogin();
@@ -228,13 +224,17 @@ export class LoginView {
   }
 
   createTimelineStep(iconClass, text, isLast = false) {
-    const iconColorClass = isLast ? 'text-primary' : '';
-    return createElement('div', { className: 'timeline-item' }, [
-      createElement('div', { className: 'timeline-line', style: 'width: 1px;' }),
-      createElement('div', { className: `timeline-icon ${iconColorClass}` }, [
-        createElement('i', { className: `ph-bold ${iconClass}` })
+    const iconColor = isLast ? 'color: var(--theme-bg); background: rgba(0,0,0,0.05);' : 'color: var(--color-gray); opacity: 0.7;';
+    const textColor = isLast ? 'font-weight: 800; font-size: 16px;' : 'font-weight: 600; font-size: 15px; color: var(--color-gray);';
+    return createElement('div', { className: 'timeline-item', style: 'display: flex; align-items: center; gap: 20px; position: relative;' }, [
+      createElement('div', { className: 'timeline-line', style: 'width: 2px; background: rgba(0,0,0,0.05); position: absolute; left: 19px; top: 40px; bottom: -28px; display: ' + (isLast ? 'none' : 'block') + ';' }),
+      createElement('div', { 
+        className: 'timeline-icon', 
+        style: `width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; ${iconColor} font-size: 20px; z-index: 2; border: 1px solid rgba(0,0,0,0.05);` 
+      }, [
+        createElement('i', { className: `ph-fill ${iconClass}` })
       ]),
-      createElement('span', { className: 'text-sm font-bold' }, text)
+      createElement('span', { style: textColor }, text)
     ]);
   }
 
