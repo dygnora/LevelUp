@@ -239,7 +239,7 @@ export class LoginView {
   }
 
   createSignatureProgressLine() {
-    return createElement('div', { className: 'signature-progress-line' }, [
+    return createElement('div', { className: 'signature-progress-line', style: 'margin: 16px 0;' }, [
       createElement('svg', { viewBox: '0 0 160 12', xmlns: 'http://www.w3.org/2000/svg' }, [
         createElement('line', { x1: '6', y1: '6', x2: '154', y2: '6' }),
         createElement('circle', { cx: '6', cy: '6', r: '4' }),
@@ -259,7 +259,7 @@ export class LoginView {
 
     const googleBtn = createElement('button', { 
       id: 'google-login-btn',
-      className: 'btn btn-primary w-100 p-4 btn-google mb-6',
+      className: 'btn btn-primary w-100 p-4 btn-google',
       style: 'font-weight: 800; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 16px; border-width: 3px;',
       onclick: this.handleGoogleLogin
     }, [
@@ -267,19 +267,21 @@ export class LoginView {
       ' Continue with Google'
     ]);
 
-    const curiosityLink = createElement('div', { className: 'text-center mb-6' }, [
-      createElement('p', { className: 'text-xs text-gray font-bold uppercase m-0 mb-2' }, 'Curious?'),
+    const curiosityLink = createElement('div', { className: 'text-center', style: 'margin-top: 20px;' }, [
       createElement('button', { 
         className: 'link-subtle',
+        style: 'font-weight: 600;',
         onclick: this.openWhyModal
       }, [
         'See how LevelUp works',
-        createElement('i', { className: 'ph-bold ph-arrow-right' })
+        createElement('i', { className: 'ph-bold ph-arrow-right', style: 'margin-left: 4px;' })
       ])
     ]);
 
+    const divider = createElement('hr', { style: 'margin: 24px 0 16px; border: none; border-top: 2px solid var(--border-color); opacity: 0.1;' });
+
     const adminSection = this.showAdminForm 
-      ? createElement('div', { className: 'mt-6 p-4 bg-gray-100', style: 'border-radius: var(--radius-md); border: 2px solid var(--border-color);' }, [
+      ? createElement('div', { className: 'p-4 bg-gray-100', style: 'border-radius: var(--radius-md); border: 2px solid var(--border-color);' }, [
           createElement('form', { onsubmit: this.handleEmailLogin }, [
             createElement('div', { className: 'form-group' }, [
               createElement('label', { className: 'form-label text-xs text-gray', for: 'email' }, 'Admin Email'),
@@ -292,7 +294,7 @@ export class LoginView {
             createElement('button', { type: 'submit', id: 'login-btn', className: 'btn btn-secondary w-100', style: 'font-weight: 600;' }, 'Login')
           ])
         ])
-      : createElement('div', { className: 'mt-2 text-center' }, [
+      : createElement('div', { className: 'text-center' }, [
           createElement('button', { 
             className: 'text-gray text-xs',
             style: 'background: none; border: none; cursor: pointer; text-decoration: underline; opacity: 0.6; font-weight: 500;',
@@ -303,13 +305,13 @@ export class LoginView {
     const wrapper = createElement('div', { className: 'centered-layout relative z-0', style: 'padding: 40px 16px; overflow-y: auto; height: 100vh;' }, [
       createElement('div', { className: 'glow-a anim-glow-a', style: 'position: fixed;' }),
       createElement('div', { className: 'card auth-card login-card-clean animate-pop-in z-10', style: 'margin: auto;' }, [
-        createElement('div', { className: 'text-center mb-8' }, [
+        createElement('div', { className: 'text-center', style: 'margin-bottom: 24px;' }, [
           createElement('h1', { className: 'text-2xl m-0', style: 'font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px;' }, [
             createElement('i', { className: 'ph-fill ph-sword text-primary' }),
             'LevelUp'
           ]),
           this.createSignatureProgressLine(),
-          createElement('h2', { className: 'text-4xl m-0 mb-4', style: 'font-weight: 800; line-height: 1.2; letter-spacing: -0.5px;' }, [
+          createElement('h2', { className: 'text-4xl m-0', style: 'font-weight: 800; line-height: 1.0; letter-spacing: -0.5px; margin-bottom: 12px;' }, [
             'See your progress.',
             createElement('br'),
             'Not just your effort.'
@@ -319,6 +321,7 @@ export class LoginView {
         errorContainer,
         googleBtn,
         curiosityLink,
+        divider,
         adminSection
       ])
     ]);
