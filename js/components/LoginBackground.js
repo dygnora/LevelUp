@@ -28,14 +28,14 @@ export class LoginBackground {
     return bgConfig.budgets.desktop;
   }
 
-  mount() {
+  mount(target = document.body) {
     this.container = createElement('div', { 
       className: 'login-bg-container',
       'aria-hidden': 'true' // Hide from screen readers
     });
     
     this.renderElements();
-    document.body.appendChild(this.container);
+    target.appendChild(this.container);
 
     this.isActive = true;
 

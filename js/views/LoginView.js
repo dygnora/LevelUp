@@ -159,7 +159,8 @@ export class LoginView {
     if (!this.bg) {
       this.bg = new LoginBackground();
     }
-    this.bg.mount();
+    const container = document.querySelector('.centered-layout') || document.body;
+    this.bg.mount(container);
   }
 
   unmount() {
