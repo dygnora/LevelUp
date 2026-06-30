@@ -56,7 +56,7 @@ export class JourneyView {
   }
 
   render() {
-    const layout = new AppLayout(this.renderContent(), '#/journey');
+    const layout = new AppLayout(this.renderContent(), '/journey');
     return layout.render();
   }
 }

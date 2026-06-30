@@ -9,10 +9,10 @@ export class Sidebar {
 
   render() {
     const navItems = [
-      { path: '#/home', icon: 'ph-house', label: 'Home' },
-      { path: '#/journey', icon: 'ph-map-trifold', label: 'Journey' },
-      { path: '#/profile', icon: 'ph-user', label: 'Character' },
-      { path: '#/settings', icon: 'ph-gear', label: 'Settings' }
+      { path: '/home', icon: 'ph-house', label: 'Home' },
+      { path: '/journey', icon: 'ph-map-trifold', label: 'Journey' },
+      { path: '/profile', icon: 'ph-user', label: 'Character' },
+      { path: '/settings', icon: 'ph-gear', label: 'Settings' }
     ];
 
     const ul = createElement('ul', { className: 'w-100 p-4' });

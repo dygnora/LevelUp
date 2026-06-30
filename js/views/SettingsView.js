@@ -29,7 +29,7 @@ export class SettingsView {
     `);
     document.head.appendChild(style);
 
-    const layout = new AppLayout(this.renderContent(), '#/settings');
+    const layout = new AppLayout(this.renderContent(), '/settings');
     return layout.render();
   }
 }

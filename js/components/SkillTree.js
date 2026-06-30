@@ -23,7 +23,7 @@ export class SkillTree {
       
       const skillNode = createElement('div', { 
         className: `card mb-4 ${isLocked ? 'opacity-50 cursor-not-allowed' : 'card-interactive'}`,
-        onclick: () => !isLocked && router.navigate(`#/skill/${skill.id}`)
+        onclick: () => !isLocked && router.navigate(`/skill/${skill.id}`)
       }, [
         createElement('div', { className: 'd-flex align-center justify-between' }, [
           createElement('div', { className: 'd-flex align-center gap-4' }, [

@@ -7,7 +7,17 @@ class Router {
     this.currentRoute = null;
     this.appContainer = document.getElementById('app');
     
-    window.addEventListener('hashchange', () => this.handleRoute());
+    // Listen for browser back/forward navigation
+    window.addEventListener('popstate', () => this.handleRoute());
+
+    // Intercept global link clicks to use History API instead of full reload
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (link && link.getAttribute('href') && link.getAttribute('href').startsWith('/')) {
+        e.preventDefault();
+        this.navigate(link.getAttribute('href'));
+      }
+    });
   }
 
   addRoute(path, viewClass, requireAuth = false) {
@@ -15,33 +25,33 @@ class Router {
   }
 
   navigate(path) {
-    window.location.hash = path;
+    if (window.location.pathname !== path) {
+      window.history.pushState({}, '', path);
+    }
+    this.handleRoute();
   }
 
   async handleRoute() {
     // Wait for auth to be checked initially
     if (!state.get('isAuthChecked')) {
-      // Let SplashView handle this until auth resolves
       return;
     }
 
-    const hash = window.location.hash || '#/';
-    // Simple exact match for now, later we can add regex for /skill/:id
+    const path = window.location.pathname || '/';
     let matchedPath = null;
     let params = {};
     
     for (const routePath in this.routes) {
       if (routePath.includes(':')) {
-        // Dynamic route matching
-        const routeParts = routePath.split('/');
-        const hashParts = hash.split('/');
+        const routeParts = routePath.split('/').filter(Boolean);
+        const pathParts = path.split('/').filter(Boolean);
         
-        if (routeParts.length === hashParts.length) {
+        if (routeParts.length === pathParts.length) {
           let match = true;
           for (let i = 0; i < routeParts.length; i++) {
             if (routeParts[i].startsWith(':')) {
-              params[routeParts[i].substring(1)] = hashParts[i];
-            } else if (routeParts[i] !== hashParts[i]) {
+              params[routeParts[i].substring(1)] = pathParts[i];
+            } else if (routeParts[i] !== pathParts[i]) {
               match = false;
               break;
             }
@@ -51,43 +61,43 @@ class Router {
             break;
           }
         }
-      } else if (routePath === hash) {
+      } else if (routePath === path) {
         matchedPath = routePath;
         break;
       }
     }
 
     // Default to splash if not found
-    if (!matchedPath) matchedPath = '#/';
+    if (!matchedPath) matchedPath = '/';
 
     const route = this.routes[matchedPath];
     const user = state.get('user');
     const character = state.get('character');
 
     // Routing Logic & Guards
-    if (route.requireAuth && !user) {
-      this.navigate('#/login');
+    if (route && route.requireAuth && !user) {
+      this.navigate('/login');
       return;
     }
     
-    if (!user && matchedPath === '#/') {
-      this.navigate('#/login');
+    if (!user && matchedPath === '/') {
+      this.navigate('/login');
       return;
     }
     
     if (user && !character) {
-      if (matchedPath !== '#/onboarding' && matchedPath !== '#/choose-journey') {
-        // Authenticated but no character created
-        this.navigate('#/onboarding');
+      if (matchedPath !== '/onboarding' && matchedPath !== '/choose-journey') {
+        this.navigate('/onboarding');
         return;
       }
     }
 
-    if (user && character && (matchedPath === '#/login' || matchedPath === '#/register' || matchedPath === '#/')) {
-      // Already logged in and set up
-      this.navigate('#/home');
+    if (user && character && (matchedPath === '/login' || matchedPath === '/register' || matchedPath === '/')) {
+      this.navigate('/home');
       return;
     }
+
+    if (!route) return;
 
     // Unmount previous view
     if (this.currentView && typeof this.currentView.unmount === 'function') {

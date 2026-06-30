@@ -11,7 +11,7 @@ export class QuestCard {
   render() {
     return createElement('div', { 
       className: `card mb-4 ${this.isCompleted ? 'bg-gray-100' : 'card-interactive'}`,
-      onclick: () => !this.isCompleted && router.navigate(`#/quest/${this.quest.id}`)
+      onclick: () => !this.isCompleted && router.navigate(`/quest/${this.quest.id}`)
     }, [
       createElement('div', { className: 'd-flex justify-between align-center' }, [
         createElement('div', {}, [

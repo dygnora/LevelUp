@@ -18,7 +18,7 @@ export class QuestView {
     return createElement('div', { className: 'animate-fade-in' }, [
       createElement('div', { className: 'mb-6 d-flex align-center gap-4' }, [
         createElement('a', { 
-          href: '#/journey', // Fallback, normally would go to skill view
+          href: '/journey', // Fallback, normally would go to skill view
           onclick: (e) => { e.preventDefault(); window.history.back(); },
           className: 'btn btn-white p-2' 
         }, [
@@ -42,7 +42,7 @@ export class QuestView {
   }
 
   render() {
-    const layout = new AppLayout(this.renderContent(), '#/journey');
+    const layout = new AppLayout(this.renderContent(), '/journey');
     return layout.render();
   }
 }

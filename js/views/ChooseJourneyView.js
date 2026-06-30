@@ -43,7 +43,7 @@ export class ChooseJourneyView {
       state.set('character', { ...characterData, id: user.uid });
       
       // Redirect to home
-      router.navigate('#/home');
+      router.navigate('/home');
     } catch (error) {
       console.error('Error creating character:', error);
       alert('Failed to start journey. Please try again.');

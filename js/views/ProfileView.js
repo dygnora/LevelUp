@@ -62,7 +62,7 @@ export class ProfileView {
   }
 
   render() {
-    const layout = new AppLayout(this.renderContent(), '#/profile');
+    const layout = new AppLayout(this.renderContent(), '/profile');
     return layout.render();
   }
 }

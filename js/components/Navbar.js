@@ -7,7 +7,7 @@ import { router } from '../router.js';
 export class Navbar {
   handleLogout() {
     authService.logout().then(() => {
-      router.navigate('#/login');
+      router.navigate('/login');
     });
   }
 

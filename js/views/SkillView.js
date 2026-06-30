@@ -54,7 +54,7 @@ export class SkillView {
 
     return createElement('div', { className: 'animate-fade-in' }, [
       createElement('div', { className: 'mb-6 d-flex align-center gap-4' }, [
-        createElement('a', { href: '#/journey', className: 'btn btn-white p-2' }, [
+        createElement('a', { href: '/journey', className: 'btn btn-white p-2' }, [
           createElement('i', { className: 'ph-bold ph-arrow-left' })
         ]),
         createElement('div', {}, [
@@ -67,7 +67,7 @@ export class SkillView {
   }
 
   render() {
-    const layout = new AppLayout(this.renderContent(), '#/journey');
+    const layout = new AppLayout(this.renderContent(), '/journey');
     return layout.render();
   }
 }

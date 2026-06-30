@@ -30,7 +30,7 @@ export class OnboardingView {
       this.currentStep++;
       this.reRender();
     } else {
-      router.navigate('#/choose-journey');
+      router.navigate('/choose-journey');
     }
   }
 

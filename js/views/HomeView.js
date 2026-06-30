@@ -43,7 +43,7 @@ export class HomeView {
         createElement('p', { className: 'text-gray mb-4' }, 'Continue where you left off.'),
         createElement('button', { 
           className: 'btn btn-secondary w-100',
-          onclick: () => router.navigate('#/journey')
+          onclick: () => router.navigate('/journey')
         }, 'Continue Adventure')
       ]),
       createElement('div', { className: 'card' }, [
@@ -73,7 +73,7 @@ export class HomeView {
   }
 
   render() {
-    const layout = new AppLayout(this.renderContent(), '#/home');
+    const layout = new AppLayout(this.renderContent(), '/home');
     return layout.render();
   }
 }
