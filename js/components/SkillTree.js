@@ -3,66 +3,94 @@ import { createElement } from '../utils/dom.js';
 import { router } from '../router.js';
 
 export class SkillTree {
-  constructor(skills, userProgress = {}) {
-    this.skills = skills;
+  constructor(tiers, userProgress = {}) {
+    this.tiers = tiers; // Now an array of arrays
     this.userProgress = userProgress;
   }
 
   render() {
-    if (!this.skills || this.skills.length === 0) {
+    if (!this.tiers || this.tiers.length === 0) {
       return createElement('div', { className: 'text-center p-6' }, 'No skills available yet.');
     }
 
-    const container = createElement('div', { className: 'skill-tree-container mt-6' });
+    const container = createElement('div', { 
+      className: 'skill-tree-container d-flex flex-column align-center mt-8',
+      style: 'width: 100%;'
+    });
     
-    // Group skills by level/tier or just display in order
-    // In this MVP we display them sequentially in a line to represent a tree.
-    this.skills.forEach((skill, index) => {
-      const isCompleted = this.userProgress[skill.id]?.completed || false;
-      const isLocked = index > 0 && !this.userProgress[this.skills[index - 1].id]?.completed; // Simple lock mechanism
+    let isPrevTierCompleted = true; // First tier is always unlocked
+
+    this.tiers.forEach((tier, tierIndex) => {
+      let isTierLocked = !isPrevTierCompleted;
+      let isCurrentTierCompleted = true;
+
+      const tierRow = createElement('div', { 
+        className: 'd-flex justify-center', 
+        style: 'gap: 48px; width: 100%;'
+      });
       
-      const skillNode = createElement('div', { 
-        className: `card mb-4 ${isLocked ? 'opacity-50 cursor-not-allowed' : 'card-interactive'}`,
-        onclick: () => !isLocked && router.navigate(`/skill/${skill.id}`)
-      }, [
-        createElement('div', { className: 'd-flex align-center justify-between' }, [
-          createElement('div', { className: 'd-flex align-center gap-4' }, [
-            createElement('div', { 
-              className: `avatar d-flex align-center justify-center ${isCompleted ? 'bg-success text-white' : 'bg-gray-200'}`,
-              style: 'border-radius: var(--radius-md);'
-            }, [
-              createElement('i', { className: `text-2xl ph-fill ${skill.icon || 'ph-star'}` })
-            ]),
-            createElement('div', {}, [
-              createElement('h3', { className: 'm-0' }, skill.title),
-              createElement('p', { className: 'text-sm text-gray m-0' }, skill.description)
-            ])
-          ]),
-          createElement('div', {}, [
-            isCompleted 
-              ? createElement('span', { className: 'badge bg-success text-white' }, 'Completed')
-              : isLocked 
-                ? createElement('i', { className: 'ph-fill ph-lock-key text-xl text-gray' })
-                : createElement('span', { className: 'badge text-primary bg-black' }, 'In Progress')
-          ])
-        ])
-      ]);
+      tier.forEach((skill) => {
+        const isCompleted = this.userProgress[skill.id]?.completed || false;
+        if (!isCompleted) isCurrentTierCompleted = false;
+        
+        let bgColor = isCompleted ? 'var(--theme-bg)' : (isTierLocked ? 'var(--color-gray-200)' : 'var(--color-warning)');
+        let textColor = isCompleted ? 'var(--color-white)' : 'var(--color-black)';
+        
+        const skillNode = createElement('div', { 
+          className: `card text-center d-flex flex-column align-center justify-center ${isTierLocked ? 'opacity-50 cursor-not-allowed' : 'card-interactive'}`,
+          style: `width: 140px; padding: 20px 16px; background-color: ${bgColor}; border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); border-radius: 8px; transition: all 0.2s;`,
+          onclick: () => !isTierLocked && router.navigate(`/skill/${skill.id}`)
+        }, [
+          createElement('i', { className: `ph-duotone ${skill.icon || 'ph-star'} mb-2`, style: `font-size: 36px; color: ${textColor};` }),
+          createElement('h3', { className: 'm-0 font-bold text-sm', style: `color: ${textColor};` }, skill.title)
+        ]);
+        
+        tierRow.appendChild(skillNode);
+      });
       
-      container.appendChild(skillNode);
-      
-      // Add connecting line
-      if (index < this.skills.length - 1) {
-        const line = createElement('div', { 
-          style: 'width: 4px; height: 30px; background-color: var(--border-color); margin: 0 auto; margin-bottom: 1rem;' 
-        });
-        container.appendChild(line);
+      container.appendChild(tierRow);
+
+      if (tierIndex < this.tiers.length - 1) {
+         const nextTierCount = this.tiers[tierIndex + 1].length;
+         const currentTierCount = tier.length;
+         const connectorColor = isCurrentTierCompleted ? 'var(--theme-bg)' : 'var(--color-gray-400)'; // Color the lines if completed
+         const lineStyle = `width: 4px; border-left: 4px dotted ${connectorColor};`;
+         const hLineStyle = `height: 4px; border-top: 4px dotted ${connectorColor};`;
+         
+         if (currentTierCount === 1 && nextTierCount === 1) {
+            container.appendChild(createElement('div', {
+              style: `${lineStyle} height: 32px; margin: 0 auto;`
+            }));
+         } else if (currentTierCount === 1 && nextTierCount > 1) {
+            const branchWidth = (nextTierCount - 1) * 188; // 140 width + 48 gap
+            container.appendChild(createElement('div', { className: 'd-flex flex-column align-center' }, [
+               createElement('div', { style: `${lineStyle} height: 16px;` }),
+               createElement('div', { style: `${hLineStyle} width: ${branchWidth}px;` }),
+               createElement('div', { className: 'd-flex justify-between', style: `width: ${branchWidth + 4}px;` }, [
+                  createElement('div', { style: `${lineStyle} height: 16px;` }),
+                  createElement('div', { style: `${lineStyle} height: 16px;` })
+               ])
+            ]));
+         } else if (currentTierCount > 1 && nextTierCount === 1) {
+            const branchWidth = (currentTierCount - 1) * 188;
+            container.appendChild(createElement('div', { className: 'd-flex flex-column align-center' }, [
+               createElement('div', { className: 'd-flex justify-between', style: `width: ${branchWidth + 4}px;` }, [
+                  createElement('div', { style: `${lineStyle} height: 16px;` }),
+                  createElement('div', { style: `${lineStyle} height: 16px;` })
+               ]),
+               createElement('div', { style: `${hLineStyle} width: ${branchWidth}px;` }),
+               createElement('div', { style: `${lineStyle} height: 16px;` })
+            ]));
+         }
       }
+      
+      isPrevTierCompleted = isCurrentTierCompleted;
     });
 
     const style = createElement('style', {}, `
       .opacity-50 { opacity: 0.5; }
       .cursor-not-allowed { cursor: not-allowed; }
-      .bg-black { background-color: var(--color-black); }
+      .card-interactive:hover { transform: translateY(-4px); box-shadow: 6px 10px 0px var(--color-black) !important; }
     `);
     document.head.appendChild(style);
 

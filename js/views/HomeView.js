@@ -41,13 +41,13 @@ export class HomeView {
     };
 
     // 1. Greeting & Breadcrumb
-    const headerContext = createElement('div', { className: 'mb-6 animate-slide-up' }, [
-      createElement('p', { className: 'm-0 text-gray font-bold text-sm mb-2' }, `Good Morning, ${character.displayName || 'Hero'}`),
-      createElement('h2', { className: 'm-0 text-2xl font-black d-flex align-center gap-2 flex-wrap' }, [
+    const headerContext = createElement('div', { className: 'mb-4 animate-slide-up' }, [
+      createElement('p', { className: 'm-0 text-gray font-bold text-sm mb-1' }, `Good Morning, ${character.displayName || 'Hero'}`),
+      createElement('h2', { className: 'm-0 text-xl font-bold d-flex align-center gap-2 flex-wrap' }, [
         createElement('span', { style: 'color: var(--color-black);' }, mockData.path),
-        createElement('i', { className: 'ph-bold ph-caret-right text-gray text-lg' }),
+        createElement('i', { className: 'ph-bold ph-caret-right text-gray' }),
         createElement('span', { className: 'text-gray' }, mockData.chapter),
-        createElement('i', { className: 'ph-bold ph-caret-right text-gray text-lg' }),
+        createElement('i', { className: 'ph-bold ph-caret-right text-gray' }),
         createElement('span', { style: 'color: var(--theme-bg); text-shadow: 1px 1px 0px var(--color-black);' }, mockData.module)
       ])
     ]);
@@ -58,10 +58,10 @@ export class HomeView {
       style: 'border: 4px solid var(--color-black); box-shadow: 12px 12px 0px var(--color-black); background: var(--color-white); padding: 0; overflow: hidden;'
     }, [
       // Header
-      createElement('div', { style: 'background: var(--theme-bg); padding: 24px 32px; border-bottom: 4px solid var(--color-black);' }, [
-        createElement('span', { className: 'font-bold text-sm bg-black text-white px-3 py-1 mb-3 d-inline-block', style: 'border-radius: 20px;' }, 'TODAY\'S MAIN QUEST'),
-        createElement('h1', { className: 'm-0 text-4xl font-black mb-2', style: 'color: var(--color-black);' }, mockData.quest.title),
-        createElement('p', { className: 'm-0 font-bold', style: 'color: var(--color-black); opacity: 0.8; font-size: 1.1rem;' }, mockData.quest.objective)
+      createElement('div', { style: 'background: var(--theme-bg); padding: 32px; border-bottom: 4px solid var(--color-black);' }, [
+        createElement('span', { className: 'font-bold text-sm bg-black text-white px-3 py-1 mb-4 d-inline-block', style: 'border-radius: 20px; white-space: nowrap;' }, 'TODAY\'S MAIN QUEST'),
+        createElement('h1', { className: 'm-0 text-4xl font-black mb-2', style: 'color: var(--color-white); text-shadow: 2px 2px 0px var(--color-black);' }, mockData.quest.title),
+        createElement('p', { className: 'm-0 font-bold', style: 'color: var(--color-white); opacity: 0.9; font-size: 1.1rem; text-shadow: 1px 1px 0px var(--color-black);' }, mockData.quest.objective)
       ]),
       // Body
       createElement('div', { className: 'p-6' }, [
@@ -91,14 +91,14 @@ export class HomeView {
         createElement('div', { className: 'p-4 mb-6', style: 'border: 2px dashed var(--color-gray-400); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;' }, [
           createElement('div', {}, [
             createElement('div', { className: 'text-gray text-xs font-bold mb-2' }, 'TODAY\'S FLOW'),
-            createElement('div', { className: 'd-flex align-center gap-2 text-sm font-bold flex-wrap' }, [
-              createElement('span', { className: 'bg-black text-white px-2 py-1' }, '1. Learn'),
+            createElement('div', { className: 'd-flex align-center flex-wrap', style: 'gap: 8px;' }, [
+              createElement('span', { className: 'bg-black text-white text-sm font-bold', style: 'padding: 4px 8px; border-radius: 4px;' }, '1. Learn'),
               createElement('i', { className: 'ph-bold ph-arrow-right text-gray' }),
-              createElement('span', { className: 'bg-black text-white px-2 py-1' }, '2. Build & Submit'),
+              createElement('span', { className: 'bg-black text-white text-sm font-bold', style: 'padding: 4px 8px; border-radius: 4px;' }, '2. Build & Submit'),
               createElement('i', { className: 'ph-bold ph-arrow-right text-gray' }),
-              createElement('span', { className: 'bg-black text-white px-2 py-1' }, '3. Quiz'),
+              createElement('span', { className: 'bg-black text-white text-sm font-bold', style: 'padding: 4px 8px; border-radius: 4px;' }, '3. Quiz'),
               createElement('i', { className: 'ph-bold ph-arrow-right text-gray' }),
-              createElement('span', { className: 'bg-warning text-black px-2 py-1' }, 'XP')
+              createElement('span', { className: 'bg-warning text-black text-sm font-bold', style: 'padding: 4px 8px; border-radius: 4px;' }, 'XP')
             ])
           ]),
           createElement('div', { className: 'text-right' }, [
@@ -113,7 +113,7 @@ export class HomeView {
         // Learning Resources
         createElement('div', { className: 'mb-8' }, [
           createElement('h3', { className: 'text-lg font-black mb-3' }, 'Learning Resources'),
-          createElement('div', { className: 'grid grid-cols-1 md-grid-cols-3', style: 'gap: 16px;' }, mockData.resources.map(res => 
+          createElement('div', { className: 'grid grid-cols-1 md-grid-cols-3', style: 'display: grid; gap: 16px;' }, mockData.resources.map(res => 
             createElement('a', { href: '#', className: 'card-interactive p-3 d-flex align-center gap-3', style: 'border: 2px solid var(--color-black); border-radius: 8px; text-decoration: none; color: var(--color-black); background: var(--color-white);' }, [
               createElement('div', { className: 'bg-gray-100 p-2 d-flex align-center justify-center', style: 'border-radius: 4px; border: 1px solid var(--color-black);' }, [
                 createElement('i', { className: `ph-duotone ${res.icon} text-xl` })
@@ -138,16 +138,16 @@ export class HomeView {
 
     // 3. Next Unlock Attachment
     const nextUnlock = createElement('div', { 
-      className: 'card p-4 d-flex align-center gap-4 animate-slide-up delay-200 mb-8', 
-      style: 'border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); background: var(--theme-bg); margin-top: -24px; width: 92%; margin-left: auto; margin-right: auto; position: relative; z-index: 1;' 
+      className: 'card p-4 d-flex align-center gap-3 animate-slide-up delay-200 mb-8', 
+      style: 'border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); background: var(--theme-bg); margin-top: -12px; width: 92%; margin-left: auto; margin-right: auto; position: relative; z-index: 10;' 
     }, [
       createElement('div', { className: 'bg-white p-2 d-flex align-center justify-center', style: 'border: 2px solid var(--color-black); border-radius: 50%;' }, [
-        createElement('i', { className: 'ph-duotone ph-lock-key-open text-2xl text-black' })
+        createElement('i', { className: 'ph-duotone ph-lock-key-open text-xl text-black' })
       ]),
-      createElement('div', { className: 'd-flex align-center flex-wrap gap-1' }, [
+      createElement('div', { className: 'd-flex align-center flex-wrap gap-2 text-white' }, [
         createElement('span', { className: 'font-black' }, 'NEXT UNLOCK:'),
-        createElement('span', { className: 'font-bold' }, `Complete this quest to unlock `),
-        createElement('span', { className: 'font-black bg-white px-2 py-1 d-inline-block', style: 'border: 2px solid var(--color-black); border-radius: 6px; box-shadow: 2px 2px 0px var(--color-black);' }, mockData.nextUnlock)
+        createElement('span', { className: 'font-bold' }, `Complete this quest to unlock`),
+        createElement('span', { className: 'font-black bg-white text-black px-2 py-1 d-inline-block', style: 'border: 2px solid var(--color-black); border-radius: 6px; box-shadow: 2px 2px 0px var(--color-black);' }, mockData.nextUnlock)
       ])
     ]);
 

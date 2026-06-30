@@ -14,15 +14,29 @@ export class JourneyView {
   async fetchSkills() {
     const character = state.get('character');
     if (character && character.primaryJourney) {
-      try {
-        this.skills = await dbService.getSkillsByPath(character.primaryJourney);
-        // We'll mock userProgress for now until we have progressionService fully hooked up
-        this.userProgress = {}; 
-        this.isLoading = false;
-        this.reRender();
-      } catch (error) {
-        console.error("Error fetching skills:", error);
-      }
+      // Mocking the Frontend Roadmap from PDF as a nested array representing tiers
+      this.skills = [
+        [{ id: 'html', title: 'HTML', icon: 'ph-file-html' }],
+        [{ id: 'css', title: 'CSS', icon: 'ph-file-css' }],
+        [{ id: 'js', title: 'JavaScript', icon: 'ph-file-code' }],
+        [
+          { id: 'git', title: 'Git', icon: 'ph-git-branch' },
+          { id: 'github', title: 'GitHub', icon: 'ph-github-logo' }
+        ],
+        [{ id: 'npm', title: 'npm', icon: 'ph-package' }],
+        [{ id: 'react', title: 'React', icon: 'ph-atom' }],
+        [{ id: 'tailwind', title: 'Tailwind', icon: 'ph-paint-brush-broad' }],
+        [{ id: 'vitest', title: 'Vitest', icon: 'ph-test-tube' }]
+      ];
+      
+      this.userProgress = {
+        'html': { completed: true },
+        'css': { completed: true },
+        'js': { completed: false } // In Progress
+      };
+      
+      this.isLoading = false;
+      this.reRender();
     }
   }
 
