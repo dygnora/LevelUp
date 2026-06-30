@@ -155,7 +155,7 @@ export class LoginView {
       ])
     ]);
 
-    const previewCard = createElement('div', { className: 'card bg-white p-6', style: 'border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 24px 48px rgba(0,0,0,0.08); border-radius: var(--radius-xl); pointer-events: none; user-select: none; transform: translateY(-4px);' }, [
+    const previewCard = createElement('div', { className: 'card bg-white p-6', style: 'border: 2px solid var(--border-color); box-shadow: 4px 4px 0px var(--color-black); pointer-events: none; user-select: none;' }, [
       createElement('div', { className: 'd-flex justify-between align-center mb-6' }, [
         createElement('h4', { className: 'm-0 text-xl font-bold' }, 'Level 12'),
         createElement('span', { className: 'badge bg-black text-white' }, 'EXPLORER')
@@ -165,11 +165,11 @@ export class LoginView {
           createElement('span', {}, 'XP Progress'),
           createElement('span', {}, '560 / 700 XP')
         ]),
-        createElement('div', { className: 'progress-container', style: 'height: 12px; background: rgba(0,0,0,0.05); border: none; border-radius: 6px; overflow: hidden;' }, [
-          createElement('div', { className: 'progress-bar', style: 'width: 80%; background: var(--theme-bg); box-shadow: 0 0 12px var(--theme-bg); border-radius: 6px;' })
+        createElement('div', { className: 'progress-container', style: 'height: 16px; border: 2px solid var(--border-color); border-radius: 16px; overflow: hidden; background: white;' }, [
+          createElement('div', { className: 'progress-bar xp-bar-animated', style: 'width: 0%; background: var(--theme-bg); border-right: 2px solid var(--border-color); border-radius: 0;' })
         ])
       ]),
-      createElement('div', { className: 'p-4 bg-gray-100', style: 'border-radius: var(--radius-md); border: 1px solid rgba(0,0,0,0.05);' }, [
+      createElement('div', { className: 'p-4 bg-gray-100', style: 'border-radius: var(--radius-sm); border: 2px solid var(--border-color);' }, [
         createElement('div', { className: 'd-flex justify-between align-center' }, [
           createElement('div', {}, [
             createElement('p', { className: 'text-xs text-gray font-bold m-0 mb-1 uppercase' }, 'Current Quest'),
@@ -224,15 +224,15 @@ export class LoginView {
   }
 
   createTimelineStep(iconClass, text, isLast = false) {
-    const iconColor = isLast ? 'color: var(--theme-bg); background: rgba(0,0,0,0.05);' : 'color: var(--color-gray); opacity: 0.7;';
-    const textColor = isLast ? 'font-weight: 800; font-size: 16px;' : 'font-weight: 600; font-size: 15px; color: var(--color-gray);';
-    return createElement('div', { className: 'timeline-item', style: 'display: flex; align-items: center; gap: 20px; position: relative;' }, [
-      createElement('div', { className: 'timeline-line', style: 'width: 2px; background: rgba(0,0,0,0.05); position: absolute; left: 19px; top: 40px; bottom: -28px; display: ' + (isLast ? 'none' : 'block') + ';' }),
+    const iconColor = isLast ? 'color: var(--theme-bg);' : '';
+    const textColor = isLast ? 'font-weight: 800; font-size: 16px;' : 'font-weight: 700; font-size: 15px; color: var(--color-black);';
+    return createElement('div', { className: 'timeline-item', style: 'display: flex; align-items: center; gap: 24px; position: relative;' }, [
+      createElement('div', { className: 'timeline-line', style: 'width: 2px; background: var(--border-color); position: absolute; left: 19px; top: 40px; bottom: -28px; display: ' + (isLast ? 'none' : 'block') + ';' }),
       createElement('div', { 
         className: 'timeline-icon', 
-        style: `width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; ${iconColor} font-size: 20px; z-index: 2; border: 1px solid rgba(0,0,0,0.05);` 
+        style: `width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; ${iconColor} font-size: 20px; z-index: 2; background: white; border: 2px solid var(--border-color);` 
       }, [
-        createElement('i', { className: `ph-fill ${iconClass}` })
+        createElement('i', { className: `ph-bold ${iconClass}` })
       ]),
       createElement('span', { style: textColor }, text)
     ]);
