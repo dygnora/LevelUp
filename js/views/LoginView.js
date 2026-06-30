@@ -109,26 +109,73 @@ export class LoginView {
 
     const googleBtn = createElement('button', { 
       id: 'google-login-btn',
-      className: 'btn btn-white w-100 p-4 btn-google',
-      style: 'font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 8px;',
+      className: 'btn btn-primary w-100 p-4 btn-google mb-2',
+      style: 'font-weight: 800; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 16px; border-width: 3px;',
       onclick: this.handleGoogleLogin
     }, [
-      createElement('i', { className: 'ph-fill ph-google-logo text-xl' }),
+      createElement('i', { className: 'ph-bold ph-google-logo text-xl' }),
       ' Continue with Google'
     ]);
 
-    const featureChecklist = createElement('div', { className: 'd-flex flex-column align-start mt-4', style: 'gap: 8px; font-weight: 400;' }, [
-      createElement('div', { className: 'd-flex align-center gap-2 feature-item delay-1 text-sm' }, [
-        createElement('i', { className: 'ph-bold ph-check text-success' }), 'Track Progress'
+    const featureGrid = createElement('div', { 
+      className: 'd-flex flex-wrap mt-4 mb-6', 
+      style: 'gap: 12px; row-gap: 16px; font-weight: 700;' 
+    }, [
+      createElement('div', { style: 'flex: 1 1 45%; display: flex; align-items: center; gap: 8px;' }, [
+        createElement('i', { className: 'ph ph-trend-up text-primary text-2xl' }), 'Track XP'
       ]),
-      createElement('div', { className: 'd-flex align-center gap-2 feature-item delay-2 text-sm' }, [
-        createElement('i', { className: 'ph-bold ph-check text-success' }), 'Complete Quests'
+      createElement('div', { style: 'flex: 1 1 45%; display: flex; align-items: center; gap: 8px;' }, [
+        createElement('i', { className: 'ph ph-tree-structure text-primary text-2xl' }), 'Skill Tree'
       ]),
-      createElement('div', { className: 'd-flex align-center gap-2 feature-item delay-3 text-sm' }, [
-        createElement('i', { className: 'ph-bold ph-check text-success' }), 'Earn XP'
+      createElement('div', { style: 'flex: 1 1 45%; display: flex; align-items: center; gap: 8px;' }, [
+        createElement('i', { className: 'ph ph-medal text-primary text-2xl' }), 'Achievements'
       ]),
-      createElement('div', { className: 'd-flex align-center gap-2 feature-item delay-4 text-sm' }, [
-        createElement('i', { className: 'ph-bold ph-check text-success' }), 'Unlock Achievements'
+      createElement('div', { style: 'flex: 1 1 45%; display: flex; align-items: center; gap: 8px;' }, [
+        createElement('i', { className: 'ph ph-target text-primary text-2xl' }), 'Learning Paths'
+      ])
+    ]);
+
+    const demoPreview = createElement('div', { className: 'demo-preview mt-4' }, [
+      // Character Info
+      createElement('div', { className: 'd-flex justify-between align-center mb-4' }, [
+        createElement('div', { className: 'd-flex align-center gap-3' }, [
+          createElement('div', { className: 'avatar bg-secondary', style: 'width: 48px; height: 48px; border-width: 2px;' }),
+          createElement('div', {}, [
+            createElement('h3', { className: 'm-0 text-base font-bold' }, 'Level 12'),
+            createElement('p', { className: 'm-0 text-xs text-gray font-bold' }, 'Explorer')
+          ])
+        ]),
+        createElement('div', { className: 'text-right' }, [
+          createElement('span', { className: 'badge bg-warning text-black' }, '🔥 7 Day Streak')
+        ])
+      ]),
+      // XP Bar
+      createElement('div', { className: 'mb-4' }, [
+        createElement('div', { className: 'd-flex justify-between text-xs font-bold mb-2' }, [
+          createElement('span', {}, 'XP Progress'),
+          createElement('span', {}, '560 / 700 XP')
+        ]),
+        createElement('div', { className: 'progress-container', style: 'height: 16px;' }, [
+          createElement('div', { className: 'progress-bar', style: 'width: 80%;' })
+        ])
+      ]),
+      // Mock Quest Card
+      createElement('div', { className: 'card bg-white p-3', style: 'border: 2px solid var(--border-color); box-shadow: 2px 2px 0px var(--color-black);' }, [
+        createElement('div', { className: 'd-flex justify-between align-center' }, [
+          createElement('div', {}, [
+            createElement('p', { className: 'text-xs text-gray font-bold m-0 mb-1 uppercase' }, 'Current Quest'),
+            createElement('h4', { className: 'm-0 text-sm font-bold' }, 'Build Responsive Layout')
+          ]),
+          createElement('span', { className: 'badge bg-primary text-black' }, '+20 XP')
+        ])
+      ]),
+      // Achievement badge snippet
+      createElement('div', { className: 'd-flex align-center gap-3 mt-4 p-3 bg-gray-100', style: 'border-radius: var(--radius-sm); border: 2px solid var(--border-color);' }, [
+        createElement('i', { className: 'ph-fill ph-trophy text-warning text-2xl' }),
+        createElement('div', {}, [
+          createElement('p', { className: 'text-xs font-bold m-0 uppercase text-gray mb-1' }, 'Achievement Unlocked'),
+          createElement('p', { className: 'text-sm font-bold m-0' }, 'First Quest Completed')
+        ])
       ])
     ]);
 
@@ -149,31 +196,34 @@ export class LoginView {
       : createElement('div', { className: 'mt-6 text-center' }, [
           createElement('button', { 
             className: 'text-gray text-xs',
-            style: 'background: none; border: none; cursor: pointer; text-decoration: underline; opacity: 0.6; font-weight: 300;',
+            style: 'background: none; border: none; cursor: pointer; text-decoration: underline; opacity: 0.6; font-weight: 500;',
             onclick: this.toggleAdminForm
           }, 'Admin Login')
         ]);
 
-    const greetingText = themeManager.getGreeting();
-    
-    return createElement('div', { className: 'centered-layout relative z-0' }, [
-      createElement('div', { className: 'glow-a anim-glow-a' }),
-      createElement('div', { className: 'card auth-card animate-pop-in z-10 p-6', style: 'display: flex; flex-direction: column; gap: 24px;' }, [
-        // Header
-        createElement('div', { className: 'auth-header' }, [
-          createElement('h1', { className: 'text-xl m-0', style: 'font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 8px;' }, [
+    return createElement('div', { className: 'centered-layout relative z-0', style: 'padding: 40px 16px; align-items: flex-start; overflow-y: auto;' }, [
+      createElement('div', { className: 'glow-a anim-glow-a', style: 'position: fixed;' }),
+      createElement('div', { className: 'card auth-card login-card-wide animate-pop-in z-10 p-6', style: 'margin: auto;' }, [
+        // Hero Header
+        createElement('div', { className: 'auth-header text-left mb-6' }, [
+          createElement('h1', { className: 'text-xl m-0', style: 'font-weight: 800; margin-bottom: 32px; display: flex; align-items: center; gap: 8px;' }, [
             createElement('i', { className: 'ph-fill ph-sword text-primary' }),
             'LevelUp'
           ]),
-          createElement('p', { id: 'dynamic-greeting', className: 'text-sm text-gray m-0 mb-1 font-bold' }, greetingText),
-          createElement('h2', { className: 'text-4xl m-0 mb-2', style: 'font-weight: 800; line-height: 1.1;' }, 'Build real skills.'),
-          createElement('p', { className: 'text-gray m-0 text-base', style: 'font-weight: 500;' }, 'Progress starts with one quest.')
+          createElement('h2', { className: 'text-3xl m-0 mb-3', style: 'font-weight: 900; line-height: 1.1; letter-spacing: -0.5px;' }, 'Don\'t just learn. Level up.'),
+          createElement('p', { className: 'text-gray m-0 text-base mb-5', style: 'font-weight: 700;' }, 'Track every learning session. See your progress grow.'),
+          createElement('div', { className: 'p-4 bg-gray-100', style: 'border-left: 4px solid var(--color-primary); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;' }, [
+            createElement('p', { className: 'text-sm text-gray m-0', style: 'font-weight: 500; line-height: 1.5;' }, 
+              'Unlike traditional learning platforms, LevelUp doesn\'t teach you. It helps you stay consistent, track your progress, and visualize your growth.'
+            )
+          ])
         ]),
         errorContainer,
         // Main Actions
         createElement('div', {}, [
           googleBtn,
-          featureChecklist
+          featureGrid,
+          demoPreview
         ]),
         // Footer Actions
         adminSection
