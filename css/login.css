@@ -377,11 +377,11 @@
   bottom: -2px;
   width: 0%;
   height: 2px;
-  background-color: var(--color-primary-dark);
+  background-color: var(--theme-bg);
   transition: width 0.2s ease;
 }
 .link-subtle:hover {
-  color: var(--color-primary-dark);
+  color: var(--theme-bg);
 }
 .link-subtle:hover::after {
   width: 100%;
