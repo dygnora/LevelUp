@@ -19,6 +19,8 @@ export class LoginView {
     
     const errorContainer = document.getElementById('login-error');
     const googleBtn = document.getElementById('google-login-btn');
+    const authCard = document.querySelector('.auth-card');
+    const bgContainer = document.querySelector('.login-bg-container');
     
     try {
       this.isLoading = true;
@@ -26,6 +28,17 @@ export class LoginView {
       googleBtn.disabled = true;
       errorContainer.textContent = '';
       errorContainer.classList.add('hide');
+
+      // Phase 5: Polish Transition
+      if (authCard) {
+        authCard.style.transition = 'transform 0.3s ease';
+        authCard.style.transform = 'scale(0.98)';
+      }
+      if (bgContainer) {
+        bgContainer.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        bgContainer.style.opacity = '0.5';
+        bgContainer.style.transform = 'scale(1.02)';
+      }
 
       await authService.loginWithGoogle();
       // Router will automatically redirect based on auth state changes
@@ -35,6 +48,13 @@ export class LoginView {
       googleBtn.disabled = false;
       errorContainer.textContent = error.message || 'Google login failed. Please try again.';
       errorContainer.classList.remove('hide');
+
+      // Revert Phase 5 Polish
+      if (authCard) authCard.style.transform = 'scale(1)';
+      if (bgContainer) {
+        bgContainer.style.opacity = '1';
+        bgContainer.style.transform = 'scale(1)';
+      }
     }
   }
 
