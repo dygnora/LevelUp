@@ -37,8 +37,9 @@ export class OnboardingView {
   reRender() {
     const container = document.getElementById('onboarding-container');
     if (container) {
-      const newElement = this.renderContent();
-      container.innerHTML = newElement.innerHTML;
+      container.innerHTML = '';
+      const newContent = this.renderContent();
+      container.appendChild(newContent);
       this.attachEvents(container);
     }
   }
@@ -53,18 +54,19 @@ export class OnboardingView {
       })
     );
 
-    return createElement('div', { className: 'card auth-card text-center animate-pop-in', id: 'onboarding-card' }, [
+    return createElement('div', { className: 'card auth-card text-center animate-pop-in', id: 'onboarding-card', style: 'border: 3px solid var(--border-color); box-shadow: 12px 12px 0px var(--color-black); padding: 48px 32px;' }, [
       createElement('div', { className: 'mb-6' }, [
-        createElement('i', { className: `ph-fill ${step.icon} text-primary`, style: 'font-size: 4rem;' })
+        createElement('i', { className: `ph-fill ${step.icon}`, style: 'font-size: 4rem; color: var(--theme-bg);' })
       ]),
-      createElement('h2', {}, step.title),
+      createElement('h2', { className: 'text-3xl font-bold mb-4' }, step.title),
       createElement('p', { className: 'text-gray mb-6' }, step.description),
       
       createElement('div', { className: 'd-flex justify-center gap-2 mb-6' }, dots),
       
       createElement('button', { 
         id: 'onboarding-next-btn',
-        className: 'btn btn-primary w-100'
+        className: 'btn btn-primary w-100 p-4',
+        style: 'font-weight: 800; display: flex; justify-content: center; align-items: center; font-size: 16px; border-width: 3px; background-color: var(--theme-bg); color: var(--theme-btn-text); border-color: var(--color-black);'
       }, isLast ? 'Start Adventure' : 'Next')
     ]);
   }
@@ -79,8 +81,8 @@ export class OnboardingView {
   render() {
     // Add some inline styles just for onboarding dots
     const style = createElement('style', {}, `
-      .onboarding-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-gray-300); transition: var(--transition-fast); }
-      .onboarding-dot.active { background: var(--color-primary-dark); transform: scale(1.2); }
+      .onboarding-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--color-gray-300); transition: all 0.2s ease; border: 2px solid transparent; }
+      .onboarding-dot.active { background: var(--theme-bg); transform: scale(1.3); border: 2px solid var(--color-black); }
     `);
     document.head.appendChild(style);
 

@@ -264,8 +264,7 @@ export class LoginView {
 
     const logo = createElement('h1', { className: 'text-3xl m-0', style: 'font-weight: 900; display: flex; align-items: center; gap: 8px; margin-top: -2px;' }, [
       createElement('i', { className: 'ph-fill ph-lightning', style: 'color: var(--theme-bg); font-size: 32px;' }),
-      'LevelUp',
-      createElement('i', { className: 'ph-fill ph-lightning', style: 'color: var(--theme-bg); font-size: 32px;' })
+      'LevelUp'
     ]);
 
     container.appendChild(leftDiv);
