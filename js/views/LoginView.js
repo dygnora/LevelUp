@@ -303,7 +303,14 @@ export class LoginView {
     const divider = createElement('hr', { style: 'margin: 20px auto 12px auto; width: 60%; border: none; border-top: 2px dashed var(--border-color); opacity: 0.15;' });
 
     const adminSection = this.showAdminForm 
-      ? createElement('div', { className: 'p-4 bg-gray-100', style: 'border-radius: var(--radius-md); border: 2px solid var(--border-color);' }, [
+      ? createElement('div', { className: 'p-4 bg-gray-100', style: 'border-radius: var(--radius-md); border: 2px solid var(--border-color); position: relative;' }, [
+          createElement('button', {
+            className: 'text-gray',
+            style: 'position: absolute; top: 12px; right: 12px; background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;',
+            onclick: this.toggleAdminForm
+          }, [
+            createElement('i', { className: 'ph-bold ph-x', style: 'font-size: 16px;' })
+          ]),
           createElement('form', { onsubmit: this.handleEmailLogin }, [
             createElement('div', { className: 'form-group' }, [
               createElement('label', { className: 'form-label text-xs text-gray', for: 'email' }, 'Admin Email'),
@@ -335,7 +342,7 @@ export class LoginView {
             createElement('br'),
             'Not just your effort.'
           ]),
-          createElement('p', { className: 'text-gray m-0 text-base', style: 'font-weight: 500;' }, 'Every quest counts.')
+          createElement('p', { className: 'text-gray m-0 text-base', style: 'font-weight: 500;' }, 'Your journey starts here.')
         ]),
         errorContainer,
         googleBtn,
