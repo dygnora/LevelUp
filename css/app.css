@@ -1,0 +1,36 @@
+/* css/app.css */
+/* This file is just a placeholder in case we need app-specific overrides.
+   Normally, the <link> tags in index.html load everything. */
+   
+/* Splash Screen Specifics */
+.splash-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: var(--color-primary);
+  color: var(--color-black);
+  text-align: center;
+}
+
+.splash-logo {
+  font-size: var(--font-size-4xl);
+  font-weight: 900;
+  margin-bottom: var(--spacing-2);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+/* Authentication Layout Specifics */
+.auth-card {
+  width: 100%;
+  max-width: 450px;
+  background-color: var(--color-white);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: var(--spacing-6);
+}

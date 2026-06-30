@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LevelUp Database Seeder</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/utilities.css">
+  <style>
+    body { display: flex; flex-direction: column; align-items: center; padding: 2rem; }
+    .card { max-width: 600px; width: 100%; text-align: center; }
+  </style>
+  
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <div class="card">
+    <h1 class="mb-4 text-primary">Database Seeder</h1>
+    <p class="text-gray mb-6">This will automatically insert the Master Data (Learning Paths, Skills, Quests) into your Firestore Database.</p>
+    
+    <div class="p-4 bg-gray-100 mb-6 text-sm text-left" style="border: 2px solid var(--border-color); border-radius: var(--radius-md);">
+      <p class="text-danger font-bold mb-2">IMPORTANT:</p>
+      <p>Before clicking the button below, make sure your Firestore Security Rules allow writes temporarily:</p>
+      <code>
+        match /{document=**} {<br/>
+        &nbsp;&nbsp;allow read, write: if true;<br/>
+        }
+      </code>
+    </div>
+
+    <button id="seed-btn" class="btn btn-secondary w-100 p-4 mb-4" onclick="seedDatabase()">
+      Start Seeding Database
+    </button>
+
+    <div id="status" class="font-bold text-center"></div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC2sDG2vKTQLYyjIhGPY9a5CqE-1iaCmg4",
+      authDomain: "levelupspapp.firebaseapp.com",
+      projectId: "levelupspapp",
+      storageBucket: "levelupspapp.firebasestorage.app",
+      messagingSenderId: "546376604209",
+      appId: "1:546376604209:web:6b582a21a253e47155d310"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const paths = [
+      {
+        id: 'frontend',
+        title: 'Frontend Developer',
+        description: 'Learn how to build beautiful and interactive web interfaces.',
+        difficulty: 'Beginner',
+        estimatedDuration: '120 Hours',
+        color: '#FFD93D',
+        icon: 'monitor',
+        displayOrder: 1,
+        isActive: true
+      },
+      {
+        id: 'backend',
+        title: 'Backend Developer',
+        description: 'Learn how to build servers, APIs and databases.',
+        difficulty: 'Intermediate',
+        estimatedDuration: '140 Hours',
+        color: '#4D96FF',
+        icon: 'server',
+        displayOrder: 2,
+        isActive: true
+      },
+      {
+        id: 'fullstack',
+        title: 'Full Stack Developer',
+        description: 'Master both frontend and backend development.',
+        difficulty: 'Advanced',
+        estimatedDuration: '240 Hours',
+        color: '#6BCB77',
+        icon: 'layers',
+        displayOrder: 3,
+        isActive: true
+      }
+    ];
+
+    const frontendSkills = [
+      { id: 'fe-html', title: 'HTML', description: 'The skeleton of the web', icon: 'file-html', displayOrder: 1, isActive: true },
+      { id: 'fe-css', title: 'CSS', description: 'Styling the web', icon: 'file-css', displayOrder: 2, isActive: true },
+      { id: 'fe-js', title: 'JavaScript', description: 'Making the web interactive', icon: 'file-js', displayOrder: 3, isActive: true }
+    ];
+
+    async function seedDatabase() {
+      const btn = document.getElementById('seed-btn');
+      const status = document.getElementById('status');
+      
+      btn.disabled = true;
+      btn.innerText = 'Seeding in progress...';
+      status.innerText = '';
+      status.className = 'font-bold text-center mt-4';
+
+      try {
+        status.innerText = 'Writing Learning Paths...';
+        for (const path of paths) {
+          const pathData = { ...path };
+          delete pathData.id;
+          await db.collection('learning_paths').doc(path.id).set(pathData);
+        }
+
+        status.innerText = 'Writing Frontend Skills...';
+        for (const skill of frontendSkills) {
+          const skillData = { ...skill, learningPathId: 'frontend', createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+          delete skillData.id;
+          await db.collection('skills').doc(skill.id).set(skillData);
+        }
+
+        status.className = 'font-bold text-center text-success mt-4';
+        status.innerText = 'Success! All master data has been seeded. You can now return your Security Rules to secure mode.';
+        btn.innerText = 'Database Seeded';
+
+      } catch (error) {
+        status.className = 'font-bold text-center text-danger mt-4';
+        status.innerText = 'Error: ' + error.message;
+        btn.disabled = false;
+        btn.innerText = 'Try Again';
+      }
+    }
+  </script>
+</body>
+</html>

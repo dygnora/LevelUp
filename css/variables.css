@@ -1,0 +1,63 @@
+/* css/variables.css */
+:root {
+  /* Colors - Modern Neobrutalism */
+  --color-primary: #FFD93D; /* Energetic Yellow */
+  --color-primary-dark: #F5B000;
+  --color-secondary: #4D96FF; /* Friendly Blue */
+  --color-secondary-dark: #3672D9;
+  --color-success: #6BCB77; /* Growth Green */
+  --color-danger: #FF6B6B; /* Alert Red */
+  
+  /* Neutral Colors */
+  --color-white: #FFFFFF;
+  --color-black: #1A1A1A;
+  --color-gray-100: #F7F9FC;
+  --color-gray-200: #EDF1F5;
+  --color-gray-300: #E1E6EB;
+  --color-gray-500: #A0AAB5;
+  --color-gray-700: #4A5568;
+  --color-gray-900: #2D3748;
+
+  /* Neobrutalism Borders & Shadows */
+  --border-width: 3px;
+  --border-color: var(--color-black);
+  
+  --shadow-sm: 4px 4px 0px var(--color-black);
+  --shadow-md: 6px 6px 0px var(--color-black);
+  --shadow-lg: 8px 8px 0px var(--color-black);
+  
+  --shadow-sm-active: 2px 2px 0px var(--color-black);
+  --shadow-md-active: 3px 3px 0px var(--color-black);
+  
+  /* Typography */
+  --font-family: 'Outfit', sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 2.5rem;
+
+  /* Spacing */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-normal: 0.3s ease-in-out;
+}
