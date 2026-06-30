@@ -3,15 +3,6 @@ export const themes = {
   morning: {
     id: 'morning',
     name: 'Morning Growth',
-    bg: '#FFD54A',
-    glowA: '#FFD54A',
-    glowB: '#FFB067',
-    accent: '#F5B000',
-    greeting: '🌅 Good morning, ready to level up?'
-  },
-  afternoon: {
-    id: 'afternoon',
-    name: 'Focus Mode',
     bg: '#F8E68A',
     glowA: '#F8E68A',
     glowB: '#FFD54A',
@@ -21,10 +12,10 @@ export const themes = {
   sunset: {
     id: 'sunset',
     name: 'Momentum',
-    bg: '#F4A261',
-    glowA: '#F4A261',
-    glowB: '#E76F51',
-    accent: '#E76F51',
+    bg: '#FF6B6B',
+    glowA: '#FF6B6B',
+    glowB: '#E63946',
+    accent: '#D90429',
     greeting: '🌆 Progress is built one quest at a time.'
   },
   night: {
@@ -55,10 +46,8 @@ class ThemeManager {
     const hour = new Date().getHours();
     let themeId = 'night';
 
-    if (hour >= 5 && hour < 11) {
+    if (hour >= 5 && hour < 16) {
       themeId = 'morning';
-    } else if (hour >= 11 && hour < 16) {
-      themeId = 'afternoon';
     } else if (hour >= 16 && hour < 19) {
       themeId = 'sunset';
     }

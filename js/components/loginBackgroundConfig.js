@@ -25,18 +25,6 @@ export const bgConfig = {
       { icon: 'ph-battery-charging', layer: 1, x: 12, y: 50, animationType: 'float-slow' },
       { icon: 'ph-check-circle', layer: 3, x: 88, y: 35, animationType: 'float' }
     ],
-    afternoon: [
-      { icon: 'ph-briefcase', layer: 2, x: 80, y: 25, animationType: 'float-slow' },
-      { icon: 'ph-book-open', layer: 1, x: 10, y: 70, animationType: 'float' },
-      { icon: 'ph-pencil', layer: 3, x: 20, y: 80, animationType: 'float' },
-      { icon: 'ph-chart-bar', layer: 3, x: 70, y: 85, animationType: 'float-slow' },
-      { icon: 'ph-target', layer: 1, x: 75, y: 15, animationType: 'float-slow' },
-      { icon: 'ph-clock', layer: 3, x: 85, y: 75, animationType: 'float-slow' },
-      { icon: 'ph-check-square', layer: 2, x: 25, y: 15, animationType: 'float' },
-      { icon: 'ph-list-checks', layer: 2, x: 40, y: 10, animationType: 'float-slow' },
-      { icon: 'ph-calendar-check', layer: 1, x: 12, y: 50, animationType: 'float-slow' },
-      { icon: 'ph-push-pin', layer: 3, x: 88, y: 35, animationType: 'float' }
-    ],
     sunset: [
       { icon: 'ph-fire', layer: 2, x: 80, y: 25, animationType: 'float-slow' },
       { icon: 'ph-lightning', layer: 1, x: 10, y: 70, animationType: 'float' },
