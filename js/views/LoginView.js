@@ -241,18 +241,18 @@ export class LoginView {
   createDynamicLogo() {
     const leftSvg = `<svg viewBox="0 0 60 12" xmlns="http://www.w3.org/2000/svg" style="width: 48px; height: 10px; display: block;">
       <circle cx="6" cy="6" r="4" fill="var(--color-gray-300)" />
-      <line x1="6" y1="6" x2="60" y2="6" stroke="var(--color-gray-300)" stroke-width="2" />
+      <line x1="6" y1="6" x2="60" y2="6" stroke="var(--color-gray-300)" stroke-width="3" />
     </svg>`;
 
     const rightSvg = `<svg viewBox="0 0 60 12" xmlns="http://www.w3.org/2000/svg" style="width: 48px; height: 10px; display: block;">
-      <line x1="0" y1="6" x2="54" y2="6" stroke="var(--color-gray-300)" stroke-width="2" />
+      <line x1="0" y1="6" x2="54" y2="6" stroke="var(--color-gray-300)" stroke-width="3" />
       <circle cx="54" cy="6" r="6" fill="var(--theme-bg)" opacity="0.3" />
-      <circle cx="54" cy="6" r="3" fill="var(--theme-bg)" />
+      <circle cx="54" cy="6" r="4" fill="var(--theme-bg)" />
     </svg>`;
 
     const container = createElement('div', { 
       className: 'd-flex align-center justify-center', 
-      style: 'gap: 16px; margin-bottom: 24px;' 
+      style: 'gap: 12px; margin-bottom: 24px;' 
     });
 
     const leftDiv = createElement('div', { className: 'd-flex align-center' });
@@ -261,8 +261,8 @@ export class LoginView {
     const rightDiv = createElement('div', { className: 'd-flex align-center' });
     rightDiv.innerHTML = rightSvg;
 
-    const logo = createElement('h1', { className: 'text-2xl m-0', style: 'font-weight: 800; display: flex; align-items: center; gap: 8px;' }, [
-      createElement('i', { className: 'ph-bold ph-trend-up', style: 'color: var(--theme-bg);' }),
+    const logo = createElement('h1', { className: 'text-3xl m-0', style: 'font-weight: 900; display: flex; align-items: center; gap: 8px; margin-top: -2px;' }, [
+      createElement('i', { className: 'ph-fill ph-lightning', style: 'color: var(--theme-bg); font-size: 32px;' }),
       'LevelUp'
     ]);
 
@@ -282,7 +282,7 @@ export class LoginView {
     const googleBtn = createElement('button', { 
       id: 'google-login-btn',
       className: 'btn btn-primary w-100 p-4 btn-google',
-      style: 'font-weight: 800; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 16px; border-width: 3px; background-color: var(--theme-bg);',
+      style: 'font-weight: 800; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 16px; border-width: 3px; background-color: var(--theme-bg); color: var(--theme-btn-text); border-color: var(--color-black);',
       onclick: this.handleGoogleLogin
     }, [
       createElement('i', { className: 'ph-bold ph-google-logo text-xl' }),

@@ -7,6 +7,7 @@ export const themes = {
     glowA: '#FFD54A',
     glowB: '#FFB067',
     accent: '#F5B000',
+    btnText: '#000000',
     greeting: '🌅 Good morning, ready to level up?'
   },
   sunset: {
@@ -16,6 +17,7 @@ export const themes = {
     glowA: '#ea1e35',
     glowB: '#FF0000',
     accent: '#CC0000',
+    btnText: '#FFFFFF',
     greeting: '🌆 Progress is built one quest at a time.'
   },
   night: {
@@ -25,6 +27,7 @@ export const themes = {
     glowA: '#3672D9',
     glowB: '#7B2CBF',
     accent: '#4D96FF',
+    btnText: '#FFFFFF',
     greeting: '🌙 Time for deep work.'
   }
 };
@@ -60,14 +63,15 @@ class ThemeManager {
   setTheme(theme) {
     this.currentTheme = theme;
     
-    // Apply CSS Variables to root
+    // Update CSS Variables
     const root = document.documentElement;
     root.style.setProperty('--theme-bg', theme.bg);
     root.style.setProperty('--theme-glow-a', theme.glowA);
     root.style.setProperty('--theme-glow-b', theme.glowB);
     root.style.setProperty('--theme-accent', theme.accent);
-
-    // The dark navy theme needs SVG and decorative elements to use lighter accent for contrast
+    root.style.setProperty('--theme-btn-text', theme.btnText);
+    
+    // Manage dynamic element colors SVG and decorative elements to use lighter accent for contrast
     if (theme.id === 'night') {
       root.style.setProperty('--theme-element-color', 'var(--color-white)');
       root.style.setProperty('--theme-element-opacity', '0.08');
