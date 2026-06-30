@@ -146,7 +146,7 @@ export class LoginView {
 
     const leftCol = createElement('div', { className: 'why-modal-left' }, [
       createElement('h3', { className: 'text-2xl font-bold m-0 mb-2', style: 'letter-spacing: -0.5px;' }, 'Your Journey'),
-      createElement('p', { className: 'text-gray text-sm m-0 mb-8', style: 'line-height: 1.5;' }, 'LevelUp turns your daily tasks into a gamified RPG experience. Complete quests, earn XP, and track your real-life progress.'),
+      createElement('p', { className: 'text-gray text-sm m-0 mb-8', style: 'line-height: 1.5;' }, 'LevelUp transforms your learning journey into visible progress. Complete quests, earn XP, unlock achievements, and build real-world skills.'),
       createElement('div', { className: 'timeline mb-4' }, [
         this.createTimelineStep('ph-map-trifold', 'Start your journey', false),
         this.createTimelineStep('ph-sword', 'Complete daily quests', false),
