@@ -20,9 +20,9 @@
 }
 
 /* Layering Opacity */
-.layer-1 { opacity: 0.02; }
-.layer-2 { opacity: 0.04; }
-.layer-3 { opacity: 0.06; }
+.layer-1 { opacity: 0.10; }
+.layer-2 { opacity: 0.12; }
+.layer-3 { opacity: 0.14; }
 
 /* Micro Particles */
 .bg-particle {
@@ -36,7 +36,7 @@
   font-size: 15vw;
   font-weight: 900;
   line-height: 1;
-  opacity: 0.02;
+  opacity: 0.04;
   filter: blur(4px);
   user-select: none;
   white-space: nowrap;
@@ -44,7 +44,7 @@
 
 /* SVG Graphs */
 .bg-graph {
-  opacity: 0.03;
+  opacity: 0.08;
   stroke: var(--theme-element-color, var(--color-black));
   stroke-width: 1.5;
   fill: var(--theme-accent, var(--color-primary));
@@ -60,7 +60,7 @@
   max-height: 600px;
   background: var(--theme-glow-a, var(--color-primary));
   filter: blur(200px);
-  opacity: 0.8;
+  opacity: 0.35;
   z-index: 5;
   pointer-events: none;
   border-radius: 50%;
@@ -79,7 +79,7 @@
   max-height: 800px;
   background: var(--theme-glow-b, #FFB067);
   filter: blur(250px);
-  opacity: 0.4;
+  opacity: 0.25;
   z-index: 4;
   pointer-events: none;
   border-radius: 50%;
@@ -88,48 +88,65 @@
   transition: background 0.8s ease;
 }
 
-/* CSS Animations (Phase 3) */
+/* CSS Animations (Phase 3 Revision) */
 @keyframes ambient-float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-25px) rotate(4deg); }
-}
-
-@keyframes ambient-float-slow {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(20px) rotate(-3deg); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
 }
 
 @keyframes ambient-drift {
   0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(30px, -15px); }
+  50% { transform: translate(18px, -18px); }
+}
+
+@keyframes ambient-rotate {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
 }
 
 @keyframes particle-rise {
-  0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-  10% { opacity: 0.15; }
-  90% { opacity: 0.15; }
-  100% { transform: translateY(-10vh) rotate(180deg); opacity: 0; }
+  0% { transform: translateY(100vh); opacity: 0; }
+  15% { opacity: 0.18; }
+  85% { opacity: 0.18; }
+  100% { transform: translateY(-10vh); opacity: 0; }
 }
 
-@keyframes glow-drift {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(-30px, -20px); }
+@keyframes graph-pulse {
+  0%, 100% { opacity: 0.05; transform: translate(0, 0); }
+  50% { opacity: 0.08; transform: translate(10px, -5px); }
 }
 
+@keyframes glow-a-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.35; }
+  50% { transform: translate(-50%, -50%) scale(1.04); opacity: 0.55; }
+}
+
+@keyframes glow-b-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.25; }
+  50% { transform: scale(1.04); opacity: 0.45; }
+}
+
+/* Animation Classes */
 .anim-float {
-  animation: ambient-float 30s ease-in-out infinite;
-}
-.anim-float-slow {
-  animation: ambient-float-slow 38s ease-in-out infinite;
+  animation: ambient-float 26s ease-in-out infinite;
 }
 .anim-drift {
   animation: ambient-drift 35s ease-in-out infinite;
 }
-.anim-particle {
-  animation: particle-rise 25s linear infinite;
+.anim-rotate {
+  animation: ambient-rotate 28s ease-in-out infinite;
 }
-.anim-glow-drift {
-  animation: glow-drift 40s ease-in-out infinite;
+.anim-particle {
+  animation: particle-rise 30s ease-in-out infinite;
+}
+.anim-graph {
+  animation: graph-pulse 18s ease-in-out infinite;
+}
+.anim-glow-a {
+  animation: glow-a-pulse 14s ease-in-out infinite;
+}
+.anim-glow-b {
+  animation: glow-b-pulse 16s ease-in-out infinite;
 }
 
 /* Hover overriding for Auth Card Google Btn */

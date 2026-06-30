@@ -82,10 +82,10 @@ export class LoginBackground {
     this.currentY += (this.targetY - this.currentY) * 0.05;
 
     this.elements.forEach(item => {
-      // Depth multiplier: Layer 1 -> 4px max, Layer 2 -> 12px, Layer 3 -> 20px
-      const depthMultiplier = item.layer === 1 ? 4 : item.layer === 2 ? 12 : 20;
-      const shiftX = this.currentX * depthMultiplier * 2;
-      const shiftY = this.currentY * depthMultiplier * 2;
+      // Depth multiplier: Layer 1 -> 4px, Layer 2 -> 10px, Layer 3 -> 18px
+      const depthMultiplier = item.layer === 1 ? 4 : item.layer === 2 ? 10 : 18;
+      const shiftX = this.currentX * depthMultiplier;
+      const shiftY = this.currentY * depthMultiplier;
 
       // Apply transform without touching top/left or rotation (which is handled by children)
       item.node.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
@@ -102,7 +102,7 @@ export class LoginBackground {
     const budget = this.getBudget();
 
     // Render Glow B (Ambient light layer)
-    const glowB = createElement('div', { className: 'glow-b anim-glow-drift' });
+    const glowB = createElement('div', { className: 'glow-b anim-glow-b' });
     this.container.appendChild(glowB);
 
     // Render Words

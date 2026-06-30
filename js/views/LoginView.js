@@ -157,6 +157,7 @@ export class LoginView {
     const greetingText = themeManager.getGreeting();
     
     return createElement('div', { className: 'centered-layout relative z-0' }, [
+      createElement('div', { className: 'glow-a anim-glow-a' }),
       createElement('div', { className: 'card auth-card animate-pop-in z-10 p-6', style: 'display: flex; flex-direction: column; gap: 24px;' }, [
         // Header
         createElement('div', { className: 'auth-header' }, [
