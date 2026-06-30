@@ -88,31 +88,31 @@ export class LoginView {
     const googleSection = createElement('div', { className: 'mb-4 text-center' }, [
       createElement('button', { 
         id: 'google-login-btn',
-        className: 'btn btn-white w-100 p-4 btn-google',
+        className: 'btn btn-white w-100 p-3 btn-google mb-4',
         onclick: this.handleGoogleLogin
       }, [
         createElement('i', { className: 'ph-fill ph-google-logo text-xl' }),
         ' Continue with Google'
       ]),
       // Feature Checklist
-      createElement('div', { className: 'd-flex flex-column align-start mt-6 pl-4' }, [
-        createElement('div', { className: 'd-flex align-center gap-2 mb-2 feature-item delay-1 text-sm font-bold' }, [
+      createElement('div', { className: 'd-flex flex-column align-start pl-2' }, [
+        createElement('div', { className: 'd-flex align-center gap-2 mb-1 feature-item delay-1 text-xs font-bold' }, [
           createElement('i', { className: 'ph-bold ph-check text-success' }), 'Track Progress'
         ]),
-        createElement('div', { className: 'd-flex align-center gap-2 mb-2 feature-item delay-2 text-sm font-bold' }, [
+        createElement('div', { className: 'd-flex align-center gap-2 mb-1 feature-item delay-2 text-xs font-bold' }, [
           createElement('i', { className: 'ph-bold ph-check text-success' }), 'Complete Quests'
         ]),
-        createElement('div', { className: 'd-flex align-center gap-2 mb-2 feature-item delay-3 text-sm font-bold' }, [
+        createElement('div', { className: 'd-flex align-center gap-2 mb-1 feature-item delay-3 text-xs font-bold' }, [
           createElement('i', { className: 'ph-bold ph-check text-success' }), 'Earn XP'
         ]),
-        createElement('div', { className: 'd-flex align-center gap-2 mb-2 feature-item delay-4 text-sm font-bold' }, [
+        createElement('div', { className: 'd-flex align-center gap-2 feature-item delay-4 text-xs font-bold' }, [
           createElement('i', { className: 'ph-bold ph-check text-success' }), 'Unlock Achievements'
         ])
       ])
     ]);
 
     const adminSection = this.showAdminForm 
-      ? createElement('div', { className: 'mt-8 p-4 bg-gray-100', style: 'border-radius: var(--radius-md); border: 2px solid var(--border-color);' }, [
+      ? createElement('div', { className: 'mt-6 p-4 bg-gray-100', style: 'border-radius: var(--radius-md); border: 2px solid var(--border-color);' }, [
           createElement('form', { onsubmit: this.handleEmailLogin }, [
             createElement('div', { className: 'form-group' }, [
               createElement('label', { className: 'form-label text-xs text-gray', for: 'email' }, 'Admin Email'),
@@ -122,26 +122,29 @@ export class LoginView {
               createElement('label', { className: 'form-label text-xs text-gray', for: 'password' }, 'Password'),
               createElement('input', { type: 'password', id: 'password', className: 'form-input', required: 'true' })
             ]),
-            createElement('button', { type: 'submit', id: 'login-btn', className: 'btn btn-secondary w-100' }, 'Login')
+            createElement('button', { type: 'submit', id: 'login-btn', className: 'btn btn-secondary w-100 p-2 text-sm' }, 'Login')
           ])
         ])
-      : createElement('div', { className: 'mt-8 text-center' }, [
+      : createElement('div', { className: 'mt-4 text-center' }, [
           createElement('button', { 
             className: 'text-gray text-xs font-bold',
-            style: 'background: none; border: none; cursor: pointer; text-decoration: underline; opacity: 0.6;',
+            style: 'background: none; border: none; cursor: pointer; text-decoration: underline; opacity: 0.5;',
             onclick: this.toggleAdminForm
           }, 'Admin Login')
         ]);
 
+    const glowA = createElement('div', { className: 'glow-a' });
+
     return createElement('div', { className: 'centered-layout relative z-0' }, [
+      glowA,
       createElement('div', { className: 'card auth-card animate-pop-in z-10' }, [
-        createElement('div', { className: 'auth-header mb-6' }, [
-          createElement('h1', { className: 'text-4xl m-0 mb-4' }, [
+        createElement('div', { className: 'auth-header mb-5' }, [
+          createElement('h1', { className: 'text-3xl m-0 mb-3' }, [
             createElement('i', { className: 'ph-fill ph-sword text-primary' }),
             ' LevelUp'
           ]),
-          createElement('h2', { className: 'text-2xl m-0 mb-2' }, 'Build real skills.'),
-          createElement('p', { className: 'text-gray m-0' }, 'Track real progress.')
+          createElement('h2', { className: 'text-xl m-0 mb-1' }, 'Build real skills.'),
+          createElement('p', { className: 'text-gray m-0 text-sm font-bold' }, 'Progress starts with one quest.')
         ]),
         errorContainer,
         googleSection,

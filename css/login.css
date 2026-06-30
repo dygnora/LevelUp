@@ -105,3 +105,21 @@
   transform: translateY(-2px);
   box-shadow: 4px 6px 0px rgba(0,0,0,1);
 }
+
+/* Glow A (Behind Card) */
+.glow-a {
+  position: absolute;
+  width: 50vw;
+  height: 50vw;
+  max-width: 600px;
+  max-height: 600px;
+  background: var(--color-primary); /* Bright Yellow */
+  filter: blur(200px);
+  opacity: 0.8;
+  z-index: 1; /* Behind card (10) but above background */
+  pointer-events: none;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
