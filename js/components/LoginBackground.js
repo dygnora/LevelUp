@@ -153,7 +153,7 @@ export class LoginBackground {
       
       const iconEl = createElement('i', { 
         className: `ph ${icon.icon} anim-${icon.animationType}`,
-        style: `display: block; font-size: ${icon.layer === 1 ? '3rem' : icon.layer === 2 ? '4rem' : '5rem'};`
+        style: `display: block; font-size: ${icon.layer === 1 ? '1.5rem' : icon.layer === 2 ? '2.5rem' : '3.5rem'};`
       });
       
       wrapper.appendChild(iconEl);

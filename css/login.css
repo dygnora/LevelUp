@@ -20,9 +20,9 @@
 }
 
 /* Layering Opacity & Depth Blur */
-.layer-1 { opacity: 0.2; filter: blur(1.5px); }
-.layer-2 { opacity: 0.3; filter: blur(0.5px); }
-.layer-3 { opacity: 0.5; filter: blur(0px); }
+.layer-1 { opacity: 0.04; filter: blur(1.5px); }
+.layer-2 { opacity: 0.06; filter: blur(0.5px); }
+.layer-3 { opacity: 0.08; filter: blur(0px); }
 
 /* Micro Particles */
 .bg-particle {
@@ -36,7 +36,7 @@
   font-size: 15vw;
   font-weight: 900;
   line-height: 1;
-  opacity: 0.02;
+  opacity: 0.015;
   filter: blur(4px);
   user-select: none;
   white-space: nowrap;
@@ -44,7 +44,7 @@
 
 /* SVG Graphs */
 .bg-graph {
-  opacity: 0.05;
+  opacity: 0.03;
   stroke: var(--theme-element-color, var(--color-black));
   stroke-width: 1.5;
   fill: var(--theme-accent, var(--color-primary));
@@ -117,8 +117,8 @@
 }
 
 @keyframes word-pulse {
-  0%, 100% { opacity: 0.02; }
-  50% { opacity: 0.03; }
+  0%, 100% { opacity: 0.015; }
+  50% { opacity: 0.025; }
 }
 
 @keyframes glow-a-pulse {
@@ -164,41 +164,37 @@
 }
 
 /* Product-Level Login UI */
-.login-card-landscape {
-  max-width: 980px;
+.login-card-clean {
+  max-width: 480px;
   width: 100%;
-  display: grid;
-  grid-template-columns: 58% 42%;
-  padding: 0 !important;
-  overflow: hidden;
-}
-
-.login-left-panel {
-  padding: var(--spacing-8);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  padding: var(--spacing-8) !important;
 }
 
-.login-right-panel {
+.clean-preview {
   background-color: var(--color-gray-100);
-  padding: var(--spacing-6);
-  border-left: 3px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-4);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
   pointer-events: none;
   user-select: none;
+  position: relative;
+  margin-top: var(--spacing-6);
 }
 
-@media (max-width: 768px) {
-  .login-card-landscape {
-    grid-template-columns: 1fr;
-  }
-  .login-right-panel {
-    border-left: none;
-    border-top: 3px solid var(--border-color);
-  }
+.clean-preview::before {
+  content: "PREVIEW";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-black);
+  color: var(--color-white);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
 }
 
 .feature-card {
