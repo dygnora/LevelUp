@@ -165,7 +165,7 @@
 
 /* Product-Level Login UI */
 .login-card-clean {
-  max-width: 480px;
+  max-width: 420px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -221,6 +221,7 @@
 
 .why-modal-content {
   background: var(--color-white);
+  color: var(--color-black);
   border: 3px solid var(--border-color);
   box-shadow: 8px 8px 0px var(--color-black);
   border-radius: var(--radius-lg);
