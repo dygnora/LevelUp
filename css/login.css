@@ -170,6 +170,36 @@
   display: flex;
   flex-direction: column;
   padding: var(--spacing-8) !important;
+  box-shadow: 0 0 60px rgba(255, 204, 0, 0.10);
+}
+
+.signature-progress-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 24px 0 32px 0;
+}
+.signature-progress-line svg {
+  width: 160px;
+  height: 12px;
+  color: var(--color-gray);
+}
+.signature-progress-line circle {
+  fill: currentColor;
+  opacity: 0.4;
+}
+.signature-progress-line line {
+  stroke: currentColor;
+  stroke-width: 2;
+  opacity: 0.3;
+}
+.signature-progress-line .active-node {
+  fill: var(--color-primary);
+  opacity: 1;
+}
+.signature-progress-line .active-glow {
+  fill: var(--color-primary);
+  opacity: 0.2;
 }
 
 /* Why LevelUp Modal Styles */

@@ -145,22 +145,18 @@ export class LoginView {
     if (!this.isWhyModalOpen) return null;
 
     const leftCol = createElement('div', { className: 'why-modal-left' }, [
-      createElement('h2', { className: 'text-3xl font-bold m-0 mb-4' }, 'What is LevelUp?'),
-      createElement('p', { className: 'text-gray text-base m-0 mb-4', style: 'line-height: 1.6;' }, 
+      createElement('h3', { className: 'text-xl font-bold m-0 mb-6' }, 'Your Journey'),
+      createElement('div', { className: 'timeline mb-8' }, [
+        this.createTimelineStep('ph-map-trifold', 'Level 1: Start Journey'),
+        this.createTimelineStep('ph-sword', 'Level 2: Complete Quests'),
+        this.createTimelineStep('ph-trend-up', 'Level 3: Gain XP'),
+        this.createTimelineStep('ph-medal', 'Level 4: Unlock Badges'),
+        this.createTimelineStep('ph-caret-double-up', 'Level Up', true)
+      ]),
+      createElement('h2', { className: 'text-2xl font-bold m-0 mb-3' }, 'What is LevelUp?'),
+      createElement('p', { className: 'text-gray text-sm m-0', style: 'line-height: 1.6;' }, 
         'LevelUp transforms your learning journey into measurable progress through quests, XP, and skill progression.'
-      ),
-      createElement('p', { className: 'text-gray text-base m-0 mb-8', style: 'line-height: 1.6;' }, 
-        'Traditional learning often lacks visible progress. LevelUp helps students stay motivated by making every completed task meaningful and measurable.'
-      ),
-      
-      createElement('h3', { className: 'text-xl font-bold m-0 mb-2' }, 'How It Works'),
-      createElement('div', { className: 'timeline' }, [
-        this.createTimelineStep('ph-map-trifold', 'Choose Your Journey'),
-        this.createTimelineStep('ph-sword', 'Complete Quests'),
-        this.createTimelineStep('ph-trend-up', 'Earn XP'),
-        this.createTimelineStep('ph-medal', 'Unlock Achievements'),
-        this.createTimelineStep('ph-caret-double-up', 'Level Up')
-      ])
+      )
     ]);
 
     const previewCard = createElement('div', { className: 'card bg-white p-6', style: 'border: 2px solid var(--border-color); box-shadow: 4px 4px 0px var(--color-black); pointer-events: none; user-select: none;' }, [
@@ -191,12 +187,12 @@ export class LoginView {
     const rightCol = createElement('div', { className: 'why-modal-right' }, [
       createElement('div', {}, [
         createElement('div', { className: 'd-flex justify-between align-center mb-4' }, [
-          createElement('span', { className: 'text-sm font-bold uppercase text-gray' }, 'Inside the app'),
+          createElement('span', { className: 'text-sm font-bold uppercase text-gray' }, 'Inside LevelUp'),
           createElement('span', { className: 'badge bg-black text-white' }, 'PREVIEW')
         ]),
         previewCard
       ]),
-      createElement('div', { className: 'mt-8' }, [
+      createElement('div', { className: 'mt-6' }, [
         createElement('button', { 
           className: 'btn btn-primary w-100 p-4 btn-google',
           style: 'font-weight: 800; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 16px; border-width: 3px;',
@@ -231,13 +227,27 @@ export class LoginView {
     }, [modalContent]);
   }
 
-  createTimelineStep(iconClass, text) {
+  createTimelineStep(iconClass, text, isLast = false) {
+    const iconColorClass = isLast ? 'text-primary' : '';
     return createElement('div', { className: 'timeline-item' }, [
-      createElement('div', { className: 'timeline-line' }),
-      createElement('div', { className: 'timeline-icon' }, [
+      createElement('div', { className: 'timeline-line', style: 'width: 1px;' }),
+      createElement('div', { className: `timeline-icon ${iconColorClass}` }, [
         createElement('i', { className: `ph-bold ${iconClass}` })
       ]),
-      createElement('span', { className: 'text-base font-bold' }, text)
+      createElement('span', { className: 'text-sm font-bold' }, text)
+    ]);
+  }
+
+  createSignatureProgressLine() {
+    return createElement('div', { className: 'signature-progress-line' }, [
+      createElement('svg', { viewBox: '0 0 160 12', xmlns: 'http://www.w3.org/2000/svg' }, [
+        createElement('line', { x1: '6', y1: '6', x2: '154', y2: '6' }),
+        createElement('circle', { cx: '6', cy: '6', r: '4' }),
+        createElement('circle', { cx: '55', cy: '6', r: '4' }),
+        createElement('circle', { cx: '104', cy: '6', r: '4' }),
+        createElement('circle', { className: 'active-glow', cx: '154', cy: '6', r: '6' }),
+        createElement('circle', { className: 'active-node', cx: '154', cy: '6', r: '3' })
+      ])
     ]);
   }
 
@@ -258,7 +268,7 @@ export class LoginView {
     ]);
 
     const curiosityLink = createElement('div', { className: 'text-center mb-6' }, [
-      createElement('p', { className: 'text-xs text-gray font-bold uppercase m-0 mb-2' }, 'First time here?'),
+      createElement('p', { className: 'text-xs text-gray font-bold uppercase m-0 mb-2' }, 'Curious?'),
       createElement('button', { 
         className: 'link-subtle',
         onclick: this.openWhyModal
@@ -294,12 +304,17 @@ export class LoginView {
       createElement('div', { className: 'glow-a anim-glow-a', style: 'position: fixed;' }),
       createElement('div', { className: 'card auth-card login-card-clean animate-pop-in z-10', style: 'margin: auto;' }, [
         createElement('div', { className: 'text-center mb-8' }, [
-          createElement('h1', { className: 'text-2xl m-0', style: 'font-weight: 800; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 8px;' }, [
+          createElement('h1', { className: 'text-2xl m-0', style: 'font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px;' }, [
             createElement('i', { className: 'ph-fill ph-sword text-primary' }),
             'LevelUp'
           ]),
-          createElement('h2', { className: 'text-3xl m-0 mb-2', style: 'font-weight: 800; line-height: 1.2; letter-spacing: -0.5px;' }, 'Build real skills.'),
-          createElement('p', { className: 'text-gray m-0 text-base', style: 'font-weight: 500;' }, 'Track every milestone.')
+          this.createSignatureProgressLine(),
+          createElement('h2', { className: 'text-3xl m-0 mb-4', style: 'font-weight: 800; line-height: 1.2; letter-spacing: -0.5px;' }, [
+            'See your progress.',
+            createElement('br'),
+            'Not just your effort.'
+          ]),
+          createElement('p', { className: 'text-gray m-0 text-base', style: 'font-weight: 500;' }, 'Every quest counts.')
         ]),
         errorContainer,
         googleBtn,
