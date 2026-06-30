@@ -174,7 +174,7 @@ export class LoginView {
         createElement('div', { className: 'd-flex justify-between align-center' }, [
           createElement('div', {}, [
             createElement('p', { className: 'text-xs text-gray font-bold m-0 mb-1 uppercase' }, 'Current Quest'),
-            createElement('h4', { className: 'm-0 text-base font-bold' }, 'Responsive Layout')
+            createElement('h4', { className: 'm-0 text-base font-bold' }, 'Read 20 pages')
           ]),
           createElement('span', { className: 'badge bg-black text-white' }, '+20 XP')
         ])
