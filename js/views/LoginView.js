@@ -145,7 +145,8 @@ export class LoginView {
     if (!this.isWhyModalOpen) return null;
 
     const leftCol = createElement('div', { className: 'why-modal-left' }, [
-      createElement('h3', { className: 'text-2xl font-bold m-0 mb-8', style: 'letter-spacing: -0.5px;' }, 'Your Journey'),
+      createElement('h3', { className: 'text-2xl font-bold m-0 mb-2', style: 'letter-spacing: -0.5px;' }, 'Your Journey'),
+      createElement('p', { className: 'text-gray text-sm m-0 mb-8', style: 'line-height: 1.5;' }, 'LevelUp turns your daily tasks into a gamified RPG experience. Complete quests, earn XP, and track your real-life progress.'),
       createElement('div', { className: 'timeline mb-4' }, [
         this.createTimelineStep('ph-map-trifold', 'Start your journey', false),
         this.createTimelineStep('ph-sword', 'Complete daily quests', false),
@@ -158,7 +159,7 @@ export class LoginView {
     const previewCard = createElement('div', { className: 'card bg-white p-6', style: 'border: 2px solid var(--border-color); box-shadow: 4px 4px 0px var(--color-black); pointer-events: none; user-select: none;' }, [
       createElement('div', { className: 'd-flex justify-between align-center mb-6' }, [
         createElement('h4', { className: 'm-0 text-xl font-bold' }, 'Level 12'),
-        createElement('span', { className: 'badge bg-black text-white' }, 'EXPLORER')
+        createElement('span', { className: 'badge', style: 'background-color: var(--theme-bg); color: var(--theme-btn-text); border: 2px solid var(--color-black);' }, 'EXPLORER')
       ]),
       createElement('div', { className: 'mb-6' }, [
         createElement('div', { className: 'd-flex justify-between text-sm font-bold mb-2' }, [
