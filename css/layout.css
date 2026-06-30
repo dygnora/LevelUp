@@ -49,12 +49,13 @@
 /* Centered layout for Login/Register/Onboarding */
 .centered-layout {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   min-height: 100vh;
+  background-color: var(--theme-bg, var(--color-primary));
   padding: var(--spacing-4);
-  background-color: var(--color-primary); /* Default energetic background */
-  background-image: radial-gradient(var(--color-black) 1px, transparent 1px);
+  transition: background-color 0.8s ease;
+  background-image: radial-gradient(var(--theme-element-color, var(--color-black)) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 

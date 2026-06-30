@@ -60,4 +60,12 @@
   /* Transitions */
   --transition-fast: 0.15s ease-in-out;
   --transition-normal: 0.3s ease-in-out;
+
+  /* Theme Variables (Dynamically updated by ThemeManager) */
+  --theme-bg: var(--color-primary);
+  --theme-glow-a: var(--color-primary);
+  --theme-glow-b: #FFB067;
+  --theme-accent: var(--color-primary-dark);
+  --theme-element-color: var(--color-black);
+  --theme-element-opacity: 1;
 }

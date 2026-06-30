@@ -1,5 +1,6 @@
 import { router } from './router.js';
 import { authService } from './services/authService.js';
+import { themeManager } from './managers/ThemeManager.js';
 import { SplashView } from './views/SplashView.js';
 import { LoginView } from './views/LoginView.js';
 import { OnboardingView } from './views/OnboardingView.js';
@@ -13,6 +14,9 @@ import { SettingsView } from './views/SettingsView.js';
 
 // Initialize App
 function initApp() {
+  // Initialize Dynamic Theme System
+  themeManager.init();
+
   // Register Routes
   router.addRoute('/', SplashView, false);
   router.addRoute('/login', LoginView, false);

@@ -3,6 +3,7 @@ import { createElement } from '../utils/dom.js';
 import { authService } from '../services/authService.js';
 import { router } from '../router.js';
 import { LoginBackground } from '../components/LoginBackground.js';
+import { themeManager } from '../managers/ThemeManager.js';
 
 export class LoginView {
   constructor() {
@@ -12,6 +13,7 @@ export class LoginView {
     this.isLoading = false;
     this.showAdminForm = false;
     this.bg = null;
+    this.unsubscribeTheme = null;
   }
 
   async handleGoogleLogin() {
@@ -105,29 +107,28 @@ export class LoginView {
       className: 'text-danger mb-4 font-bold text-center hide text-sm' 
     });
 
-    const googleSection = createElement('div', { className: 'mb-4 text-center' }, [
-      createElement('button', { 
-        id: 'google-login-btn',
-        className: 'btn btn-white w-100 p-3 btn-google mb-4',
-        onclick: this.handleGoogleLogin
-      }, [
-        createElement('i', { className: 'ph-fill ph-google-logo text-xl' }),
-        ' Continue with Google'
+    const googleBtn = createElement('button', { 
+      id: 'google-login-btn',
+      className: 'btn btn-white w-100 p-4 btn-google',
+      style: 'font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 8px;',
+      onclick: this.handleGoogleLogin
+    }, [
+      createElement('i', { className: 'ph-fill ph-google-logo text-xl' }),
+      ' Continue with Google'
+    ]);
+
+    const featureChecklist = createElement('div', { className: 'd-flex flex-column align-start mt-4', style: 'gap: 8px; font-weight: 400;' }, [
+      createElement('div', { className: 'd-flex align-center gap-2 feature-item delay-1 text-sm' }, [
+        createElement('i', { className: 'ph-bold ph-check text-success' }), 'Track Progress'
       ]),
-      // Feature Checklist
-      createElement('div', { className: 'd-flex flex-column align-start pl-2' }, [
-        createElement('div', { className: 'd-flex align-center gap-2 mb-1 feature-item delay-1 text-xs font-bold' }, [
-          createElement('i', { className: 'ph-bold ph-check text-success' }), 'Track Progress'
-        ]),
-        createElement('div', { className: 'd-flex align-center gap-2 mb-1 feature-item delay-2 text-xs font-bold' }, [
-          createElement('i', { className: 'ph-bold ph-check text-success' }), 'Complete Quests'
-        ]),
-        createElement('div', { className: 'd-flex align-center gap-2 mb-1 feature-item delay-3 text-xs font-bold' }, [
-          createElement('i', { className: 'ph-bold ph-check text-success' }), 'Earn XP'
-        ]),
-        createElement('div', { className: 'd-flex align-center gap-2 feature-item delay-4 text-xs font-bold' }, [
-          createElement('i', { className: 'ph-bold ph-check text-success' }), 'Unlock Achievements'
-        ])
+      createElement('div', { className: 'd-flex align-center gap-2 feature-item delay-2 text-sm' }, [
+        createElement('i', { className: 'ph-bold ph-check text-success' }), 'Complete Quests'
+      ]),
+      createElement('div', { className: 'd-flex align-center gap-2 feature-item delay-3 text-sm' }, [
+        createElement('i', { className: 'ph-bold ph-check text-success' }), 'Earn XP'
+      ]),
+      createElement('div', { className: 'd-flex align-center gap-2 feature-item delay-4 text-sm' }, [
+        createElement('i', { className: 'ph-bold ph-check text-success' }), 'Unlock Achievements'
       ])
     ]);
 
@@ -142,32 +143,38 @@ export class LoginView {
               createElement('label', { className: 'form-label text-xs text-gray', for: 'password' }, 'Password'),
               createElement('input', { type: 'password', id: 'password', className: 'form-input', required: 'true' })
             ]),
-            createElement('button', { type: 'submit', id: 'login-btn', className: 'btn btn-secondary w-100 p-2 text-sm' }, 'Login')
+            createElement('button', { type: 'submit', id: 'login-btn', className: 'btn btn-secondary w-100', style: 'font-weight: 600;' }, 'Login')
           ])
         ])
-      : createElement('div', { className: 'mt-4 text-center' }, [
+      : createElement('div', { className: 'mt-6 text-center' }, [
           createElement('button', { 
-            className: 'text-gray text-xs font-bold',
-            style: 'background: none; border: none; cursor: pointer; text-decoration: underline; opacity: 0.5;',
+            className: 'text-gray text-xs',
+            style: 'background: none; border: none; cursor: pointer; text-decoration: underline; opacity: 0.6; font-weight: 300;',
             onclick: this.toggleAdminForm
           }, 'Admin Login')
         ]);
 
-    const glowA = createElement('div', { className: 'glow-a' });
-
+    const greetingText = themeManager.getGreeting();
+    
     return createElement('div', { className: 'centered-layout relative z-0' }, [
-      glowA,
-      createElement('div', { className: 'card auth-card animate-pop-in z-10' }, [
-        createElement('div', { className: 'auth-header mb-5' }, [
-          createElement('h1', { className: 'text-3xl m-0 mb-3' }, [
+      createElement('div', { className: 'card auth-card animate-pop-in z-10 p-6', style: 'display: flex; flex-direction: column; gap: 24px;' }, [
+        // Header
+        createElement('div', { className: 'auth-header' }, [
+          createElement('h1', { className: 'text-xl m-0', style: 'font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 8px;' }, [
             createElement('i', { className: 'ph-fill ph-sword text-primary' }),
-            ' LevelUp'
+            'LevelUp'
           ]),
-          createElement('h2', { className: 'text-xl m-0 mb-1' }, 'Build real skills.'),
-          createElement('p', { className: 'text-gray m-0 text-sm font-bold' }, 'Progress starts with one quest.')
+          createElement('p', { id: 'dynamic-greeting', className: 'text-sm text-gray m-0 mb-1 font-bold' }, greetingText),
+          createElement('h2', { className: 'text-4xl m-0 mb-2', style: 'font-weight: 800; line-height: 1.1;' }, 'Build real skills.'),
+          createElement('p', { className: 'text-gray m-0 text-base', style: 'font-weight: 500;' }, 'Progress starts with one quest.')
         ]),
         errorContainer,
-        googleSection,
+        // Main Actions
+        createElement('div', {}, [
+          googleBtn,
+          featureChecklist
+        ]),
+        // Footer Actions
         adminSection
       ])
     ]);
@@ -184,12 +191,24 @@ export class LoginView {
     }
     const container = document.querySelector('.centered-layout') || document.body;
     this.bg.mount(container);
+
+    // Subscribe to dynamic theme updates
+    this.unsubscribeTheme = themeManager.subscribe((theme) => {
+      const greetingEl = document.getElementById('dynamic-greeting');
+      if (greetingEl) {
+        greetingEl.textContent = theme.greeting;
+      }
+    });
   }
 
   unmount() {
     if (this.bg) {
       this.bg.destroy();
       this.bg = null;
+    }
+    if (this.unsubscribeTheme) {
+      this.unsubscribeTheme();
+      this.unsubscribeTheme = null;
     }
   }
 }

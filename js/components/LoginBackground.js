@@ -1,6 +1,6 @@
-// js/components/LoginBackground.js
 import { createElement } from '../utils/dom.js';
 import { bgConfig } from './loginBackgroundConfig.js';
+import { themeManager } from '../managers/ThemeManager.js';
 
 export class LoginBackground {
   constructor() {
@@ -13,6 +13,9 @@ export class LoginBackground {
     this.currentY = 0;
     this.elements = [];
     this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    // Store initial theme so icons don't jump on theme change during active session
+    this.initialThemeId = themeManager.getCurrentTheme().id;
 
     this.handleResize = this.handleResize.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -24,6 +27,12 @@ export class LoginBackground {
     if (width < 768) return bgConfig.budgets.mobile;
     if (width < 1024) return bgConfig.budgets.tablet;
     return bgConfig.budgets.desktop;
+  }
+
+  getIcons() {
+    const base = bgConfig.baseIcons || [];
+    const specific = bgConfig.themeIcons[this.initialThemeId] || bgConfig.themeIcons['night'];
+    return [...base, ...specific];
   }
 
   mount(target = document.body) {
@@ -135,7 +144,8 @@ export class LoginBackground {
     });
 
     // Render Icons
-    bgConfig.icons.slice(0, budget.icons).forEach(icon => {
+    const icons = this.getIcons();
+    icons.slice(0, budget.icons).forEach(icon => {
       const wrapper = createElement('div', {
         className: `bg-element layer-${icon.layer}`,
         style: `left: ${icon.x}%; top: ${icon.y}%;`
