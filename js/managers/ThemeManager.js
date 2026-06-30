@@ -12,10 +12,10 @@ export const themes = {
   sunset: {
     id: 'sunset',
     name: 'Momentum',
-    bg: '#FF6B6B',
-    glowA: '#FF6B6B',
-    glowB: '#E63946',
-    accent: '#D90429',
+    bg: '#FF3333',
+    glowA: '#FF3333',
+    glowB: '#FF0000',
+    accent: '#CC0000',
     greeting: '🌆 Progress is built one quest at a time.'
   },
   night: {
