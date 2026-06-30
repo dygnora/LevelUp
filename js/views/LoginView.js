@@ -239,16 +239,16 @@ export class LoginView {
   }
 
   createSignatureProgressLine() {
-    return createElement('div', { className: 'signature-progress-line', style: 'margin: 16px 0;' }, [
-      createElement('svg', { viewBox: '0 0 160 12', xmlns: 'http://www.w3.org/2000/svg' }, [
-        createElement('line', { x1: '6', y1: '6', x2: '154', y2: '6' }),
-        createElement('circle', { cx: '6', cy: '6', r: '4' }),
-        createElement('circle', { cx: '55', cy: '6', r: '4' }),
-        createElement('circle', { cx: '104', cy: '6', r: '4' }),
-        createElement('circle', { className: 'active-glow', cx: '154', cy: '6', r: '6' }),
-        createElement('circle', { className: 'active-node', cx: '154', cy: '6', r: '3' })
-      ])
-    ]);
+    const div = createElement('div', { className: 'd-flex justify-center', style: 'margin-bottom: 24px;' });
+    div.innerHTML = `<svg viewBox="0 0 160 12" xmlns="http://www.w3.org/2000/svg" style="width: 120px; height: 9px;">
+      <line x1="6" y1="6" x2="154" y2="6" stroke="var(--color-gray-300)" stroke-width="2" />
+      <circle cx="6" cy="6" r="4" fill="var(--color-gray-300)" />
+      <circle cx="55" cy="6" r="4" fill="var(--color-gray-300)" />
+      <circle cx="104" cy="6" r="4" fill="var(--color-gray-300)" />
+      <circle cx="154" cy="6" r="6" fill="var(--color-primary)" opacity="0.3" />
+      <circle cx="154" cy="6" r="3" fill="var(--color-primary)" />
+    </svg>`;
+    return div;
   }
 
   renderContent() {
@@ -267,7 +267,7 @@ export class LoginView {
       ' Continue with Google'
     ]);
 
-    const curiosityLink = createElement('div', { className: 'text-center', style: 'margin-top: 20px;' }, [
+    const curiosityLink = createElement('div', { className: 'text-center', style: 'margin-top: 16px;' }, [
       createElement('button', { 
         className: 'link-subtle',
         style: 'font-weight: 600;',
@@ -278,7 +278,7 @@ export class LoginView {
       ])
     ]);
 
-    const divider = createElement('hr', { style: 'margin: 24px auto 16px auto; width: 72%; border: none; border-top: 2px dashed var(--border-color); opacity: 0.15;' });
+    const divider = createElement('hr', { style: 'margin: 20px auto 12px auto; width: 60%; border: none; border-top: 2px dashed var(--border-color); opacity: 0.15;' });
 
     const adminSection = this.showAdminForm 
       ? createElement('div', { className: 'p-4 bg-gray-100', style: 'border-radius: var(--radius-md); border: 2px solid var(--border-color);' }, [
@@ -303,22 +303,21 @@ export class LoginView {
           }, 'Admin Login')
         ]);
 
-    const wrapper = createElement('div', { className: 'centered-layout relative z-0', style: 'padding: 20px 16px 60px 16px; overflow-y: auto; height: 100vh;' }, [
+    const wrapper = createElement('div', { className: 'centered-layout relative z-0', style: 'padding: 20px 16px 40px 16px; overflow-y: auto; height: 100vh;' }, [
       createElement('div', { className: 'glow-a anim-glow-a', style: 'position: fixed;' }),
-      createElement('div', { className: 'card auth-card login-card-clean animate-pop-in z-10', style: 'margin: auto;' }, [
+      createElement('div', { className: 'card auth-card login-card-clean animate-pop-in z-10', style: 'margin: auto; padding: 32px 32px 24px 32px !important;' }, [
         createElement('div', { className: 'text-center', style: 'margin-bottom: 24px;' }, [
-          createElement('h1', { className: 'text-2xl m-0', style: 'font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px;' }, [
+          createElement('h1', { className: 'text-2xl m-0', style: 'font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px;' }, [
             createElement('i', { className: 'ph-fill ph-sword text-primary' }),
             'LevelUp'
           ]),
           this.createSignatureProgressLine(),
-          createElement('p', { className: 'text-gray text-sm m-0 mb-3', style: 'font-weight: 600;' }, 'Gamified learning platform for university students.'),
-          createElement('h2', { className: 'text-4xl m-0', style: 'font-weight: 800; line-height: 1.0; letter-spacing: -0.5px; margin-bottom: 12px;' }, [
+          createElement('h2', { className: 'text-3xl m-0', style: 'font-weight: 800; line-height: 1.0; letter-spacing: -0.5px; margin-bottom: 12px;' }, [
             'See your progress.',
             createElement('br'),
             'Not just your effort.'
           ]),
-          createElement('p', { className: 'text-gray m-0 text-lg', style: 'font-weight: 500;' }, 'Every quest counts.')
+          createElement('p', { className: 'text-gray m-0 text-base', style: 'font-weight: 500;' }, 'Every quest counts.')
         ]),
         errorContainer,
         googleBtn,
