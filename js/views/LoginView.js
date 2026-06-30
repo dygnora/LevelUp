@@ -309,12 +309,12 @@ export class LoginView {
             'LevelUp'
           ]),
           this.createSignatureProgressLine(),
-          createElement('h2', { className: 'text-3xl m-0 mb-4', style: 'font-weight: 800; line-height: 1.2; letter-spacing: -0.5px;' }, [
+          createElement('h2', { className: 'text-4xl m-0 mb-4', style: 'font-weight: 800; line-height: 1.2; letter-spacing: -0.5px;' }, [
             'See your progress.',
             createElement('br'),
             'Not just your effort.'
           ]),
-          createElement('p', { className: 'text-gray m-0 text-base', style: 'font-weight: 500;' }, 'Every quest counts.')
+          createElement('p', { className: 'text-gray m-0 text-lg', style: 'font-weight: 500;' }, 'Every quest counts.')
         ]),
         errorContainer,
         googleBtn,
