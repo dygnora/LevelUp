@@ -278,7 +278,7 @@ export class LoginView {
       ])
     ]);
 
-    const divider = createElement('hr', { style: 'margin: 24px 0 16px; border: none; border-top: 2px solid var(--border-color); opacity: 0.1;' });
+    const divider = createElement('hr', { style: 'margin: 24px auto 16px auto; width: 72%; border: none; border-top: 2px dashed var(--border-color); opacity: 0.15;' });
 
     const adminSection = this.showAdminForm 
       ? createElement('div', { className: 'p-4 bg-gray-100', style: 'border-radius: var(--radius-md); border: 2px solid var(--border-color);' }, [
@@ -295,6 +295,7 @@ export class LoginView {
           ])
         ])
       : createElement('div', { className: 'text-center' }, [
+          createElement('p', { className: 'text-xs text-gray m-0 mb-1', style: 'font-weight: 500;' }, 'Administrator?'),
           createElement('button', { 
             className: 'text-gray text-xs',
             style: 'background: none; border: none; cursor: pointer; text-decoration: underline; opacity: 0.6; font-weight: 500;',
@@ -302,7 +303,7 @@ export class LoginView {
           }, 'Admin Login')
         ]);
 
-    const wrapper = createElement('div', { className: 'centered-layout relative z-0', style: 'padding: 40px 16px; overflow-y: auto; height: 100vh;' }, [
+    const wrapper = createElement('div', { className: 'centered-layout relative z-0', style: 'padding: 20px 16px 60px 16px; overflow-y: auto; height: 100vh;' }, [
       createElement('div', { className: 'glow-a anim-glow-a', style: 'position: fixed;' }),
       createElement('div', { className: 'card auth-card login-card-clean animate-pop-in z-10', style: 'margin: auto;' }, [
         createElement('div', { className: 'text-center', style: 'margin-bottom: 24px;' }, [
@@ -311,6 +312,7 @@ export class LoginView {
             'LevelUp'
           ]),
           this.createSignatureProgressLine(),
+          createElement('p', { className: 'text-gray text-sm m-0 mb-3', style: 'font-weight: 600;' }, 'Gamified learning platform for university students.'),
           createElement('h2', { className: 'text-4xl m-0', style: 'font-weight: 800; line-height: 1.0; letter-spacing: -0.5px; margin-bottom: 12px;' }, [
             'See your progress.',
             createElement('br'),
