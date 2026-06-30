@@ -77,9 +77,9 @@ export class LoginBackground {
   tick() {
     if (!this.isActive) return;
 
-    // Smooth interpolation for parallax
-    this.currentX += (this.targetX - this.currentX) * 0.05;
-    this.currentY += (this.targetY - this.currentY) * 0.05;
+    // Smooth interpolation for inertia parallax
+    this.currentX += (this.targetX - this.currentX) * 0.015;
+    this.currentY += (this.targetY - this.currentY) * 0.015;
 
     this.elements.forEach(item => {
       // Depth multiplier: Layer 1 -> 4px, Layer 2 -> 10px, Layer 3 -> 18px

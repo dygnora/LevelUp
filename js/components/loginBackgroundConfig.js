@@ -51,9 +51,9 @@ export const bgConfig = {
     ]
   },
   words: [
-    { text: 'BUILD', layer: 1, x: 5, y: 10, animationType: 'drift' },
-    { text: 'LEARN', layer: 1, x: 60, y: 75, animationType: 'float' },
-    { text: 'GROW', layer: 1, x: 10, y: 65, animationType: 'drift' }
+    { text: 'BUILD', layer: 1, x: 5, y: 10, animationType: 'word' },
+    { text: 'LEARN', layer: 1, x: 60, y: 75, animationType: 'word' },
+    { text: 'GROW', layer: 1, x: 10, y: 65, animationType: 'word' }
   ],
   graphs: [
     { layer: 2, x: 10, y: 20, animationType: 'graph' },
