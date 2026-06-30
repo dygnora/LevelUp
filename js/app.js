@@ -32,12 +32,8 @@ function initApp() {
     router.handleRoute();
   });
   
-  // Initial render is SplashView since auth state is pending
-  if (!window.location.hash) {
-    window.location.hash = '/';
-  } else {
-    router.handleRoute();
-  }
+  // Initial render
+  router.handleRoute();
 }
 
 // Start
