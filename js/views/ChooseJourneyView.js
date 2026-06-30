@@ -63,18 +63,41 @@ export class ChooseJourneyView {
     
     this.paths.forEach((path, index) => {
       const card = createElement('div', { 
-        className: `card card-interactive animate-slide-up delay-${(index + 1) * 100}`,
-        onclick: () => this.handleSelect(path.id),
-        style: `border-top: 6px solid ${path.color || 'var(--color-primary)'}`
+        className: `card journey-card animate-slide-up delay-${(index + 1) * 100}`,
+        style: `border: 3px solid var(--color-black); box-shadow: 8px 8px 0px var(--color-black); padding: 0; overflow: hidden; display: flex; flex-direction: column; background: var(--color-white); transition: all 0.2s ease; cursor: default;`
       }, [
-        createElement('div', { className: 'd-flex align-center gap-2 mb-4' }, [
-          createElement('i', { className: `ph-fill ph-${path.icon} text-3xl`, style: `color: ${path.color}` }),
-          createElement('h3', { className: 'm-0' }, path.title)
+        createElement('div', { 
+          style: `background-color: ${path.color || 'var(--theme-bg)'}; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 3px solid var(--color-black);`
+        }, [
+          createElement('div', { style: 'width: 88px; height: 88px; background: var(--color-white); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid var(--color-black); box-shadow: 4px 4px 0px var(--color-black); margin-bottom: 20px;' }, [
+             createElement('i', { className: `ph-duotone ph-${path.icon}`, style: `font-size: 44px; color: var(--color-black);` })
+          ]),
+          createElement('h3', { className: 'm-0 text-2xl font-bold text-center', style: 'color: var(--color-black); line-height: 1.2;' }, path.title)
         ]),
-        createElement('p', { className: 'text-gray text-sm' }, path.description),
-        createElement('div', { className: 'd-flex justify-between mt-4' }, [
-          createElement('span', { className: 'badge' }, path.difficulty),
-          createElement('span', { className: 'text-xs font-bold text-gray' }, path.estimatedDuration)
+        createElement('div', { className: 'p-6 flex-grow-1 d-flex flex-column justify-between' }, [
+          createElement('div', {}, [
+            createElement('p', { className: 'text-gray text-sm mb-6', style: 'line-height: 1.6; text-align: center;' }, path.description),
+            createElement('div', { className: 'd-flex justify-between mb-6', style: 'background: var(--color-gray-100); padding: 12px; border-radius: 8px; border: 2px solid var(--border-color);' }, [
+              createElement('div', { className: 'd-flex align-center gap-1 text-sm font-bold' }, [
+                createElement('i', { className: 'ph-bold ph-sword', style: `color: ${path.color || 'var(--color-black)'}` }),
+                createElement('span', {}, path.difficulty.toUpperCase())
+              ]),
+              createElement('div', { className: 'd-flex align-center gap-1 text-sm font-bold text-gray' }, [
+                createElement('i', { className: 'ph-bold ph-hourglass-high' }),
+                createElement('span', {}, path.estimatedDuration)
+              ])
+            ])
+          ]),
+          createElement('button', {
+            className: 'btn w-100 p-4 mt-auto',
+            style: `background-color: ${path.color || 'var(--theme-bg)'}; color: var(--color-black); font-weight: 800; font-size: 16px; border: 3px solid var(--color-black); box-shadow: 4px 4px 0px var(--color-black); transition: all 0.2s ease; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px;`,
+            onclick: () => this.handleSelect(path.id),
+            onmouseover: (e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '4px 6px 0px var(--color-black)'; },
+            onmouseout: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '4px 4px 0px var(--color-black)'; }
+          }, [
+            'Select Class',
+            createElement('i', { className: 'ph-bold ph-arrow-right' })
+          ])
         ])
       ]);
       
@@ -84,19 +107,21 @@ export class ChooseJourneyView {
 
   render() {
     const container = createElement('div', { className: 'centered-layout flex-column align-center' }, [
-      createElement('div', { className: 'text-center mb-6 animate-fade-in' }, [
-        createElement('h1', { className: 'text-3xl text-white' }, 'Choose Your Path'),
-        createElement('p', { className: 'text-white' }, 'Select your primary learning journey to begin.')
+      createElement('div', { className: 'text-center mb-8 animate-fade-in' }, [
+        createElement('h1', { className: 'text-4xl text-white font-bold mb-4' }, 'Select Your Class'),
+        createElement('p', { className: 'text-white text-lg m-0', style: 'opacity: 0.9;' }, 'Choose your primary learning journey to begin.'),
+        createElement('p', { className: 'text-white text-sm mt-3', style: 'opacity: 0.7; max-width: 500px; margin: 0 auto; line-height: 1.5;' }, 'Don\'t worry, you can always learn other skills later. This just sets your starting questline.')
       ]),
-      createElement('div', { id: 'paths-container', className: 'grid grid-cols-1 md-grid-cols-3' }, [
+      createElement('div', { id: 'paths-container', className: 'grid grid-cols-1 md-grid-cols-3', style: 'gap: 32px;' }, [
         // Loading state
         createElement('p', { className: 'text-white font-bold' }, 'Loading paths...')
       ])
     ]);
 
-    // Use a small trick to add responsive grid class
+    // Add styles for the grid and hover effects
     const style = createElement('style', {}, `
-      @media(min-width: 768px) { .md-grid-cols-3 { grid-template-columns: repeat(3, 1fr); max-width: 1000px; width: 100%; } }
+      @media(min-width: 768px) { .md-grid-cols-3 { grid-template-columns: repeat(3, 1fr); max-width: 1100px; width: 100%; } }
+      .journey-card:hover { transform: translateY(-8px); box-shadow: 12px 16px 0px var(--color-black) !important; }
     `);
     document.head.appendChild(style);
 
