@@ -38,7 +38,7 @@ export class ChooseJourneyView {
         progress: {
           currentJourney: pathId,
           currentModule: 'html', // Assuming pathId is frontend for MVP
-          currentQuest: 'semantic-html',
+          currentQuest: null,
           completedQuests: {},
           completedModules: [],
           xp: 0,

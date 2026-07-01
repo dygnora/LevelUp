@@ -58,10 +58,10 @@ export class HomeView {
               createElement('span', {}, '🟢'), createElement('span', {}, ctx.quest.difficulty || 'Normal')
            ]),
            createElement('span', { className: 'align-center text-sm font-bold px-3 py-1', style: 'display: inline-flex; gap: 4px; background: var(--color-gray-100); border-radius: 20px;' }, [
-              createElement('span', {}, '⏱'), createElement('span', {}, ctx.quest.estimatedTime || 'N/A')
+              createElement('span', {}, '⏱'), createElement('span', {}, ctx.quest.estimatedMinutes ? `${ctx.quest.estimatedMinutes}m` : 'N/A')
            ]),
            createElement('span', { className: 'align-center text-sm font-bold px-3 py-1 text-warning', style: 'display: inline-flex; gap: 4px; background: var(--color-gray-100); border-radius: 20px;' }, [
-              createElement('span', {}, '⭐'), createElement('span', {}, `+${ctx.quest.rewardXP || 0} XP`)
+              createElement('span', {}, '⭐'), createElement('span', {}, `+${ctx.quest.rewards?.xp || 0} XP`)
            ])
         ])
       ]),
