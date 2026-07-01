@@ -232,13 +232,13 @@ export class QuestView {
               className: 'p-4 bg-gray-100 mb-4', 
               style: 'border-radius: 8px; border-left: 4px solid var(--color-primary);'
           }, [
-              createElement('strong', { className: 'd-block mb-1 text-sm text-gray text-uppercase' }, 'Why it matters'),
-              createElement('span', { style: 'line-height: 1.5;' }, quest.whyItMatters)
+              createElement('div', { className: 'mb-1 text-sm text-gray text-uppercase font-bold' }, 'Why it matters'),
+              createElement('div', { style: 'line-height: 1.5;' }, [quest.whyItMatters])
           ]) : createElement('div', {}, []),
 
           quest.keyConcepts && quest.keyConcepts.length > 0 ? createElement('div', { className: 'mb-4' }, [
-              createElement('strong', { className: 'd-block mb-2 text-sm text-gray text-uppercase' }, 'Key Concepts Preview'),
-              createElement('div', { className: 'd-flex gap-2 flex-wrap' }, quest.keyConcepts.map(concept => 
+              createElement('div', { className: 'mb-2 text-sm text-gray text-uppercase font-bold' }, 'Key Concepts Preview'),
+              createElement('div', { className: 'd-flex flex-wrap', style: 'gap: 8px;' }, quest.keyConcepts.map(concept => 
                   createElement('span', { 
                       className: 'px-3 py-1 bg-black text-white font-bold text-xs',
                       style: 'border-radius: 20px;'
@@ -247,9 +247,9 @@ export class QuestView {
           ]) : createElement('div', {}, []),
 
           quest.learningOutcomes && quest.learningOutcomes.length > 0 ? createElement('div', { className: 'mb-4' }, [
-              createElement('strong', { className: 'd-block mb-2 text-sm text-gray text-uppercase' }, 'Learning Outcomes'),
-              createElement('ul', { className: 'm-0 pl-4 text-sm' }, quest.learningOutcomes.map(outcome => 
-                  createElement('li', { className: 'mb-1' }, outcome)
+              createElement('div', { className: 'mb-2 text-sm text-gray text-uppercase font-bold' }, 'Learning Outcomes'),
+              createElement('ul', { className: 'm-0 text-sm', style: 'list-style-type: disc; padding-left: 20px;' }, quest.learningOutcomes.map(outcome => 
+                  createElement('li', { className: 'mb-1' }, [outcome])
               ))
           ]) : createElement('div', {}, []),
 
@@ -257,9 +257,9 @@ export class QuestView {
               className: 'p-4',
               style: 'background-color: #fff5f5; border-radius: 8px; border: 2px solid #ffc9c9;'
           }, [
-              createElement('strong', { className: 'd-block mb-2 text-sm text-uppercase', style: 'color: #e03131;' }, 'Common Mistakes to Avoid'),
-              createElement('ul', { className: 'm-0 pl-4', style: 'color: #c92a2a;' }, quest.commonMistakes.map(mistake => 
-                  createElement('li', { className: 'mb-1 font-bold' }, mistake)
+              createElement('div', { className: 'mb-2 text-sm text-uppercase font-bold', style: 'color: #e03131;' }, 'Common Mistakes to Avoid'),
+              createElement('ul', { className: 'm-0', style: 'color: #c92a2a; list-style-type: disc; padding-left: 20px;' }, quest.commonMistakes.map(mistake => 
+                  createElement('li', { className: 'mb-1 font-bold' }, [mistake])
               ))
           ]) : createElement('div', {}, [])
        ]);
@@ -318,8 +318,8 @@ export class QuestView {
 
              quest.submissionRequirement.requirements ? createElement('div', { className: 'mb-4' }, [
                  createElement('div', { className: 'font-bold text-sm mb-2 text-gray text-uppercase' }, 'Requirements:'),
-                 createElement('ul', { className: 'm-0 pl-4 text-sm' }, 
-                     quest.submissionRequirement.requirements.map(req => createElement('li', { className: 'mb-1 font-bold' }, req))
+                 createElement('ul', { className: 'm-0 text-sm', style: 'list-style-type: disc; padding-left: 20px;' }, 
+                     quest.submissionRequirement.requirements.map(req => createElement('li', { className: 'mb-1 font-bold' }, [req]))
                  )
              ]) : createElement('div', {}, []),
 
