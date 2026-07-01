@@ -16,7 +16,10 @@ export class QuestView {
     const questId = character?.progress?.currentQuest;
     if (!questId) return;
 
-    if (actionType === 'SUBMIT_PROJECT') {
+    if (actionType === 'START_QUEST') {
+       progressionEngine.dispatch('START_QUEST', { questId });
+       this.reRender();
+    } else if (actionType === 'SUBMIT_PROJECT') {
       if (!this.submissionValue.trim()) {
          alert('Please enter a valid submission URL.');
          return;
@@ -47,7 +50,9 @@ export class QuestView {
          score: 100,
          attempts: 1
       });
-      // Navigate back to home to see the "Mission Complete" or "Next Unlock"
+      this.reRender();
+    } else if (actionType === 'CLAIM_REWARD') {
+      progressionEngine.dispatch('CLAIM_REWARD', { questId });
       router.navigate('/home');
     }
   }
@@ -68,7 +73,7 @@ export class QuestView {
 
     const { journey, module, quest, state: questState } = context;
 
-    // Header
+    // --- SHARED HEADER ---
     const header = createElement('div', { className: 'mb-8 animate-fade-in' }, [
       createElement('button', { 
          className: 'btn bg-transparent p-0 mb-4 font-bold text-gray d-flex align-center gap-2',
@@ -97,22 +102,105 @@ export class QuestView {
       ])
     ]);
 
-    // Objective
-    const objectiveCard = createElement('div', { 
-       className: 'card p-6 mb-6 animate-slide-up delay-100', 
-       style: 'border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); background: var(--color-white);' 
-    }, [
-       createElement('h3', { className: 'text-xl font-black mb-3 m-0 d-flex align-center gap-2' }, [
-          createElement('i', { className: 'ph-bold ph-target text-primary' }),
-          'Mission Objective'
-       ]),
-       createElement('p', { className: 'text-lg m-0', style: 'line-height: 1.6;' }, quest.objective)
+    const contentArea = createElement('div', { className: 'w-100' }, []);
+
+    // --- STATE: AVAILABLE ---
+    if (questState === PROGRESSION_STATES.AVAILABLE) {
+        contentArea.appendChild(this._renderObjectiveCard(quest));
+        contentArea.appendChild(createElement('button', {
+             className: 'btn w-100 p-4 mt-6 animate-slide-up delay-200',
+             style: 'background-color: var(--color-primary); color: var(--color-black); font-size: 20px; font-weight: 900; border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;',
+             onclick: () => this.handleAction('START_QUEST'),
+             onmousedown: (e) => { e.currentTarget.style.transform = 'translateY(6px)'; e.currentTarget.style.boxShadow = '0 0px 0px var(--color-black)'; },
+             onmouseup: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '6px 6px 0px var(--color-black)'; }
+        }, 'START MISSION'));
+    }
+
+    // --- STATE: IN_PROGRESS ---
+    else if (questState === PROGRESSION_STATES.IN_PROGRESS) {
+        contentArea.appendChild(this._renderObjectiveCard(quest));
+        contentArea.appendChild(this._renderResourcesCard(quest));
+        contentArea.appendChild(this._renderSubmissionForm(quest));
+        contentArea.appendChild(this._renderLockedQuiz());
+    }
+
+    // --- STATE: SUBMITTED ---
+    else if (questState === PROGRESSION_STATES.SUBMITTED) {
+        contentArea.appendChild(this._renderObjectiveCard(quest));
+        contentArea.appendChild(this._renderSubmittedState());
+        contentArea.appendChild(this._renderLockedQuiz());
+    }
+
+    // --- STATE: QUIZ_AVAILABLE ---
+    else if (questState === PROGRESSION_STATES.QUIZ_AVAILABLE) {
+        contentArea.appendChild(this._renderObjectiveCard(quest));
+        contentArea.appendChild(this._renderSubmittedState());
+        contentArea.appendChild(this._renderQuizForm(quest));
+    }
+
+    // --- STATE: QUIZ_PASSED / REWARD_PENDING ---
+    // (We render the QUIZ_AVAILABLE view underneath the modal)
+    else if (questState === PROGRESSION_STATES.QUIZ_PASSED || questState === PROGRESSION_STATES.REWARD_PENDING) {
+        contentArea.appendChild(this._renderObjectiveCard(quest));
+        contentArea.appendChild(this._renderSubmittedState());
+        contentArea.appendChild(this._renderQuizForm(quest)); // Render underneath overlay
+    }
+
+    // --- COMPLETED ---
+    else if (questState === PROGRESSION_STATES.COMPLETED) {
+        contentArea.appendChild(this._renderObjectiveCard(quest));
+        contentArea.appendChild(createElement('div', { 
+           className: 'card p-6 text-center bg-gray-100', style: 'border: 3px dashed var(--color-gray-400);' 
+        }, [
+           createElement('i', { className: 'ph-duotone ph-check-circle text-success text-5xl mb-4' }),
+           createElement('h2', { className: 'text-2xl m-0' }, 'Mission Completed'),
+           createElement('button', { 
+               className: 'btn bg-black text-white mt-4',
+               onclick: () => router.navigate('/home')
+           }, 'Return to Base')
+        ]));
+    }
+
+    // CSS Utilities
+    const style = createElement('style', {}, `
+      .max-w-700 { max-width: 700px; margin: 0 auto; }
+      .bg-white { background-color: var(--color-white); }
+      .bg-black { background-color: var(--color-black); }
+      .text-white { color: var(--color-white); }
+    `);
+    document.head.appendChild(style);
+
+    const mainContainer = createElement('div', { className: 'animate-fade-in max-w-700 mt-4', style: 'position: relative;' }, [
+      header,
+      contentArea
     ]);
 
-    // Resources
-    let resourcesCard = createElement('div', {}, []);
-    if (quest.resources && quest.resources.length > 0) {
-       resourcesCard = createElement('div', { className: 'mb-8 animate-slide-up delay-200' }, [
+    // Append Reward Overlay if needed
+    if (questState === PROGRESSION_STATES.QUIZ_PASSED || questState === PROGRESSION_STATES.REWARD_PENDING) {
+        mainContainer.appendChild(this._renderRewardOverlay(quest));
+    }
+
+    return mainContainer;
+  }
+
+  // --- UI COMPONENT HELPERS ---
+
+  _renderObjectiveCard(quest) {
+      return createElement('div', { 
+         className: 'card p-6 mb-6 animate-slide-up delay-100', 
+         style: 'border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); background: var(--color-white);' 
+      }, [
+         createElement('h3', { className: 'text-xl font-black mb-3 m-0 d-flex align-center gap-2' }, [
+            createElement('i', { className: 'ph-bold ph-target text-primary' }),
+            'Mission Objective'
+         ]),
+         createElement('p', { className: 'text-lg m-0', style: 'line-height: 1.6;' }, quest.objective)
+      ]);
+  }
+
+  _renderResourcesCard(quest) {
+      if (!quest.resources || quest.resources.length === 0) return createElement('div', {}, []);
+      return createElement('div', { className: 'mb-8 animate-slide-up delay-200' }, [
           createElement('h3', { className: 'text-lg font-black mb-3' }, 'Required Intel (Resources)'),
           createElement('div', { className: 'd-flex flex-column gap-3' }, quest.resources.map(res => 
              createElement('a', { 
@@ -131,15 +219,13 @@ export class QuestView {
                 createElement('i', { className: 'ph-bold ph-arrow-up-right text-gray' })
              ])
           ))
-       ]);
-    }
+      ]);
+  }
 
-    // Submission (Only if IN_PROGRESS)
-    let submissionCard = createElement('div', {}, []);
-    if (questState === PROGRESSION_STATES.IN_PROGRESS || questState === PROGRESSION_STATES.AVAILABLE) {
-       submissionCard = createElement('div', { 
+  _renderSubmissionForm(quest) {
+      return createElement('div', { 
           className: 'card p-6 mb-8 animate-slide-up delay-300', 
-          style: 'border: 3px solid var(--color-black); background: var(--theme-bg); position: relative;' 
+          style: 'border: 3px solid var(--color-black); background: var(--theme-bg);' 
        }, [
           createElement('h3', { className: 'text-xl font-black mb-4 m-0 d-flex align-center gap-2 text-white' }, [
              createElement('i', { className: 'ph-bold ph-upload-simple' }),
@@ -163,8 +249,10 @@ export class QuestView {
              onmouseup: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '4px 4px 0px rgba(0,0,0,0.5)'; }
           }, 'SUBMIT MISSION')
        ]);
-    } else if (questState === PROGRESSION_STATES.SUBMITTED) {
-       submissionCard = createElement('div', { 
+  }
+
+  _renderSubmittedState() {
+      return createElement('div', { 
           className: 'card p-4 mb-8 text-center animate-fade-in', 
           style: 'border: 2px dashed var(--color-black); background: var(--color-gray-100);' 
        }, [
@@ -172,13 +260,24 @@ export class QuestView {
           createElement('h3', { className: 'm-0 font-bold' }, 'Project Submitted!'),
           createElement('p', { className: 'text-sm text-gray m-0 mt-1' }, 'Scroll down to take the final quiz.')
        ]);
-    }
+  }
 
-    // Quiz (Only if SUBMITTED)
-    let quizCard = createElement('div', {}, []);
-    if (questState === PROGRESSION_STATES.SUBMITTED && quest.quiz && quest.quiz.length > 0) {
-       quizCard = createElement('div', { 
-          className: 'card p-6 mb-8 animate-slide-up delay-400', 
+  _renderLockedQuiz() {
+      return createElement('div', { className: 'card p-4 text-center opacity-50', style: 'border: 2px dashed var(--color-gray-400);' }, [
+          createElement('i', { className: 'ph-bold ph-lock-key text-2xl text-gray mb-2' }),
+          createElement('p', { className: 'font-bold m-0 text-gray' }, 'Quiz unlocks after submission')
+      ]);
+  }
+
+  _renderQuizForm(quest) {
+      if (!quest.quiz || quest.quiz.length === 0) {
+          // If a quest has no quiz, directly allow claiming reward after submission
+          // For MVP, we assume all quests have a quiz or we simulate an empty one.
+          return createElement('div', {}, []);
+      }
+
+      return createElement('div', { 
+          className: 'card p-6 mb-8 animate-slide-up', 
           style: 'border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); background: var(--color-white);' 
        }, [
           createElement('h3', { className: 'text-xl font-black mb-4 m-0 d-flex align-center gap-2' }, [
@@ -212,29 +311,40 @@ export class QuestView {
              onmouseup: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '4px 4px 0px var(--color-black)'; }
           }, 'COMPLETE QUEST')
        ]);
-    } else if (questState !== PROGRESSION_STATES.COMPLETED) {
-       quizCard = createElement('div', { className: 'card p-4 text-center opacity-50', style: 'border: 2px dashed var(--color-gray-400);' }, [
-          createElement('i', { className: 'ph-bold ph-lock-key text-2xl text-gray mb-2' }),
-          createElement('p', { className: 'font-bold m-0 text-gray' }, 'Quiz unlocks after submission')
-       ]);
-    }
+  }
 
-    // CSS Utilities
-    const style = createElement('style', {}, `
-      .max-w-700 { max-width: 700px; margin: 0 auto; }
-      .bg-white { background-color: var(--color-white); }
-      .bg-black { background-color: var(--color-black); }
-      .text-white { color: var(--color-white); }
-    `);
-    document.head.appendChild(style);
+  _renderRewardOverlay(quest) {
+      // Fullscreen Neo-Brutalist Overlay
+      return createElement('div', { 
+          className: 'fixed inset-0 d-flex align-center justify-center p-4',
+          style: 'background: rgba(0,0,0,0.85); z-index: 9999; animation: fadeIn 0.3s ease-out forwards; backdrop-filter: blur(4px);'
+      }, [
+          createElement('div', { 
+              className: 'card max-w-sm w-full text-center', 
+              style: 'background: var(--color-white); border: 4px solid var(--color-black); box-shadow: 12px 12px 0px var(--color-black); border-radius: 16px; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;'
+          }, [
+              createElement('div', { className: 'mb-4' }, [
+                  createElement('i', { className: 'ph-fill ph-confetti text-primary', style: 'font-size: 64px;' })
+              ]),
+              createElement('h2', { className: 'text-3xl font-black mb-2 m-0 uppercase' }, 'Mission Complete'),
+              createElement('p', { className: 'text-gray text-lg font-bold mb-6' }, quest.title),
+              
+              createElement('div', { 
+                  className: 'bg-black text-warning py-4 px-6 mb-8 d-inline-block',
+                  style: 'border-radius: 30px; border: 2px solid var(--color-black);'
+              }, [
+                  createElement('span', { className: 'text-3xl font-black' }, `+${quest.rewardXP} XP`)
+              ]),
 
-    return createElement('div', { className: 'animate-fade-in max-w-700 mt-4' }, [
-      header,
-      objectiveCard,
-      resourcesCard,
-      submissionCard,
-      quizCard
-    ]);
+              createElement('button', {
+                  className: 'btn w-100 p-4 bg-primary text-black',
+                  style: 'font-size: 20px; font-weight: 900; border: 3px solid var(--color-black); box-shadow: 4px 4px 0px var(--color-black); cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;',
+                  onclick: () => this.handleAction('CLAIM_REWARD'),
+                  onmousedown: (e) => { e.currentTarget.style.transform = 'translateY(4px)'; e.currentTarget.style.boxShadow = '0 0px 0px var(--color-black)'; },
+                  onmouseup: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '4px 4px 0px var(--color-black)'; }
+              }, 'CLAIM REWARD')
+          ])
+      ]);
   }
 
   render() {

@@ -9,6 +9,9 @@ export const PROGRESSION_STATES = {
   AVAILABLE: 'AVAILABLE',
   IN_PROGRESS: 'IN_PROGRESS',
   SUBMITTED: 'SUBMITTED',
+  QUIZ_AVAILABLE: 'QUIZ_AVAILABLE',
+  QUIZ_PASSED: 'QUIZ_PASSED',
+  REWARD_PENDING: 'REWARD_PENDING',
   COMPLETED: 'COMPLETED',
   UNLOCKED: 'UNLOCKED' // Used for modules/journeys
 };
@@ -117,8 +120,18 @@ class ProgressionEngine {
     }
     
     if (progress.currentQuest === questId) {
+      if (progress.isRewardPending) {
+         return PROGRESSION_STATES.REWARD_PENDING;
+      }
+      if (progress.isQuizPassed) {
+         return PROGRESSION_STATES.QUIZ_PASSED;
+      }
       if (progress.activeSubmission && progress.activeSubmission.questId === questId) {
-        return PROGRESSION_STATES.SUBMITTED;
+         const quest = this.getQuest(questId);
+         if (quest && quest.quiz && quest.quiz.length > 0) {
+             return PROGRESSION_STATES.QUIZ_AVAILABLE;
+         }
+         return PROGRESSION_STATES.SUBMITTED;
       }
       if (progress.isQuestStarted) {
         return PROGRESSION_STATES.IN_PROGRESS;
@@ -130,12 +143,9 @@ class ProgressionEngine {
     // Logic to determine if it's available (if previous quest is completed or it's the very first)
     const quest = this.getQuest(questId);
     if (!progress.currentQuest && quest.order === 1 && progress.currentModule === quest.moduleId) {
-      return PROGRESSION_STATES.AVAILABLE; // Fresh account with initialized module but null currentQuest
+      return PROGRESSION_STATES.AVAILABLE;
     }
     
-    // If it's the next quest in line but currentQuest hasn't been set yet (user finished previous, hasn't started next)
-    // Wait, the unlock engine automatically sets progress.currentQuest = nextQuestId. 
-    // So if progress.currentQuest is NOT this quest, and it's not completed, it's locked.
     return null; // Locked
   }
 
@@ -291,6 +301,8 @@ class ProgressionEngine {
         p.currentQuest = questId;
         p.isQuestStarted = true;
         p.activeSubmission = null;
+        p.isQuizPassed = false;
+        p.isRewardPending = false;
         break;
       }
       case 'SUBMIT_PROJECT': {
@@ -305,19 +317,31 @@ class ProgressionEngine {
       }
       case 'PASS_QUIZ': {
         const { questId, score, attempts } = payload;
+        p.isQuizPassed = true;
+        p.isRewardPending = true;
+        p.quizResults = { score, attempts };
+        break;
+      }
+      case 'CLAIM_REWARD': {
+        const { questId } = payload;
         const quest = this.getQuest(questId);
         
         // 1. Mark as completed
         if (!p.completedQuests) p.completedQuests = {};
         p.completedQuests[questId] = {
           completedAt: new Date().toISOString(),
-          score,
-          attempts,
+          score: p.quizResults?.score || 100,
+          attempts: p.quizResults?.attempts || 1,
           xpEarned: quest.rewardXP
         };
         
         p.xp += quest.rewardXP;
+        
+        // Reset local quest state flags
         p.activeSubmission = null;
+        p.isQuizPassed = false;
+        p.isRewardPending = false;
+        p.isQuestStarted = false;
 
         // 2. Unlock Engine: Determine what happens next
         this._evaluateUnlock(p, quest);
