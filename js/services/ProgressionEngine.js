@@ -552,25 +552,13 @@ class ProgressionEngine {
 
   getAchievements() {
     const character = state.get('character') || {};
+    const unlockedIds = character.progress?.achievements || [];
     
     return achievementDefinitions.map(ach => {
-        const isUnlocked = ach.condition(character);
-        
-        let progress = null;
-        if (ach.incremental && ach.maxProgress) {
-            let currentProg = 0;
-            if (ach.id === 'html-master') {
-                const htmlQuests = this.getQuestsForModule('html');
-                const completed = Object.keys(character.progress?.completedQuests || {}).filter(qId => htmlQuests.find(q => q.id === qId)).length;
-                currentProg = completed;
-            }
-            progress = `${Math.min(currentProg, ach.maxProgress)} / ${ach.maxProgress}`;
-        }
-
+        const isUnlocked = unlockedIds.includes(ach.id);
         return {
             ...ach,
-            isUnlocked,
-            progress
+            isUnlocked
         };
     });
   }

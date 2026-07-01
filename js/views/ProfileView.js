@@ -86,20 +86,19 @@ export class ProfileView {
     if (achievements && achievements.length > 0) {
         achievementsContent = createElement('div', { className: 'grid grid-cols-1 md-grid-cols-2 gap-4' }, achievements.map(ach => {
             const isUnlocked = ach.isUnlocked;
-            const progressEl = (!isUnlocked && ach.progress) ? createElement('p', { className: 'text-xs font-bold mt-2' }, ach.progress) : null;
             
             return createElement('div', { 
                 className: `card d-flex align-center gap-4 ${isUnlocked ? 'card-interactive' : ''}`, 
-                style: isUnlocked ? '' : 'opacity: 0.6; filter: grayscale(1);' 
+                style: isUnlocked ? 'border: 3px solid var(--color-black);' : 'opacity: 0.6; filter: grayscale(1); border: 2px dashed var(--color-gray-400);' 
             }, [
-                createElement('div', { className: 'p-3 rounded-full', style: `border-radius: var(--radius-md); background-color: ${isUnlocked ? 'var(--theme-bg)' : 'var(--color-gray-300)'}; transition: background-color var(--transition-normal);` }, [
-                    createElement('i', { className: `${isUnlocked ? ach.icon : 'ph-lock'} text-2xl` })
+                createElement('div', { className: 'p-3 rounded-full', style: `border-radius: var(--radius-md); background-color: ${isUnlocked ? 'var(--color-primary)' : 'var(--color-gray-300)'}; transition: background-color var(--transition-normal); border: 2px solid var(--color-black);` }, [
+                    createElement('i', { className: `${isUnlocked ? ach.icon : 'ph-lock'} text-2xl ${isUnlocked ? 'text-black' : ''}` })
                 ]),
                 createElement('div', {}, [
-                    createElement('h4', { className: 'm-0' }, ach.name),
-                    createElement('p', { className: 'text-xs text-gray m-0 mt-1' }, ach.desc),
-                    progressEl
-                ].filter(Boolean))
+                    createElement('h4', { className: 'm-0' }, ach.title),
+                    createElement('p', { className: 'text-xs text-gray m-0 mt-1' }, ach.description),
+                    createElement('span', { className: 'text-xs font-bold mt-2 d-inline-block', style: 'color: var(--color-primary); text-transform: uppercase;' }, ach.rarity)
+                ])
             ]);
         }));
     } else {
