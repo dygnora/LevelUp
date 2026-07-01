@@ -412,13 +412,13 @@ export class QuestView {
              if (hasSubmitted && this.quizAnswers[index] !== undefined) {
                  const selectedAnswer = this.quizAnswers[index];
                  const isCorrect = selectedAnswer === q.correctAnswer;
-                 const boxClass = isCorrect ? 'bg-success text-white' : 'bg-warning text-black';
                  const icon = isCorrect ? 'ph-check-circle' : 'ph-x-circle';
+                 const borderColor = isCorrect ? 'var(--color-success, #2b8a3e)' : 'var(--color-danger, #c92a2a)';
                  explanationBox = createElement('div', {
-                     className: `p-3 mt-3 d-flex gap-2 ${boxClass}`,
-                     style: 'border-radius: 8px; border: 2px solid var(--color-black);'
+                     className: `p-3 mt-3 d-flex gap-2 bg-white`,
+                     style: `border-radius: 8px; border: 2px solid ${borderColor}; color: var(--color-black);`
                  }, [
-                     createElement('i', { className: `ph-fill ${icon} text-xl mt-1` }),
+                     createElement('i', { className: `ph-fill ${icon} text-xl mt-1`, style: `color: ${borderColor};` }),
                      createElement('div', {}, [
                          createElement('strong', { className: 'd-block mb-1' }, isCorrect ? 'Correct!' : 'Incorrect.'),
                          createElement('span', { className: 'text-sm font-bold' }, [q.explanation])
