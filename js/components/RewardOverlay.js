@@ -27,7 +27,7 @@ export class RewardOverlay {
                     className: 'bg-black text-warning py-4 px-6 mb-8 d-inline-block',
                     style: 'border-radius: 30px; border: 2px solid var(--color-black);'
                 }, [
-                    createElement('span', { className: 'text-3xl font-black' }, `+${this.quest.rewardXP} XP`)
+                    createElement('span', { className: 'text-3xl font-black' }, `+${this.quest.rewards.xp} XP`)
                 ]),
   
                 createElement('button', {

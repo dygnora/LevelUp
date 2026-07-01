@@ -3,9 +3,7 @@ import { state } from '../state.js';
 import { levelTable } from '../data/levelTable.js';
 import { rankTable } from '../data/rankTable.js';
 import { achievementDefinitions } from '../data/achievements.js';
-import { journeys } from '../data/journeys.js';
-import { modules } from '../data/modules.js';
-import { quests } from '../data/quests.js';
+import { journeys, modules, quests } from '../data/index.js';
 import { dbService } from './dbService.js';
 
 // --- FSM STATES ---
@@ -35,13 +33,13 @@ class ProgressionEngine {
   getModulesForJourney(journeyId) {
     return Object.values(this.modules)
       .filter(m => m.journeyId === journeyId)
-      .sort((a, b) => a.order - b.order);
+      .sort((a, b) => a.order - b.order); // Keeping modules order for now, though we might use array index in future
   }
 
   getQuestsForModule(moduleId) {
     return Object.values(this.quests)
       .filter(q => q.moduleId === moduleId)
-      .sort((a, b) => a.order - b.order);
+      .sort((a, b) => a._index - b._index);
   }
 
   // --- UTILS ---
@@ -68,7 +66,7 @@ class ProgressionEngine {
     if (!character || !character.progress) {
        // If no progress, check if this is the first quest in the first module
        const quest = this.getQuest(questId);
-       if (quest && quest.order === 1 && quest.moduleId === 'html') {
+       if (quest && quest._index === 0 && quest.moduleId === 'html') {
           return PROGRESSION_STATES.AVAILABLE;
        }
        return null;
@@ -108,7 +106,7 @@ class ProgressionEngine {
     }
 
     // Logic to determine if it's available (if previous quest is completed or it's the very first)
-    if (!progress.currentQuest && quest && quest.order === 1 && progress.currentModule === quest.moduleId) {
+    if (!progress.currentQuest && quest && quest._index === 0 && progress.currentModule === quest.moduleId) {
       return PROGRESSION_STATES.AVAILABLE;
     }
     
@@ -134,9 +132,12 @@ class ProgressionEngine {
     const questState = currentQuest ? this.getQuestState(currentQuest.id) : null;
     
     let nextUnlock = null;
-    if (currentQuest && currentQuest.nextQuestId) {
-      const nq = this.getQuest(currentQuest.nextQuestId);
-      nextUnlock = nq;
+    if (currentQuest) {
+       const moduleQuests = this.getQuestsForModule(currentQuest.moduleId);
+       const currentIndex = moduleQuests.findIndex(q => q.id === currentQuest.id);
+       if (currentIndex >= 0 && currentIndex < moduleQuests.length - 1) {
+          nextUnlock = moduleQuests[currentIndex + 1];
+       }
     }
     
     // Calculate Journey Progress based on total quests in journey
@@ -353,10 +354,10 @@ class ProgressionEngine {
           completedAt: new Date().toISOString(),
           score: p.quizResults?.score || 100,
           attempts: p.quizResults?.attempts || 1,
-          xpEarned: quest.rewardXP
+          xpEarned: quest.rewards.xp
         };
         
-        p.xp += quest.rewardXP;
+        p.xp += quest.rewards.xp;
         
         p.activeSubmission = null;
         p.isRewardPending = false;
@@ -399,32 +400,16 @@ class ProgressionEngine {
       }
     }
 
-    if (completedQuest.nextQuestId) {
-      const nextQ = this.getQuest(completedQuest.nextQuestId);
-      if (nextQ) {
-         // Next quest becomes available. We set it to null so it stays AVAILABLE until user starts it?
-         // Actually, wait! The FSM logic says if it's the next quest in line but currentQuest is null, it's locked.
-         // Let's set it as currentQuest but with a flag? No, if we set currentQuest = null, the Context logic will fetch the first quest of the module.
-         // If we are midway through a module, and we set currentQuest = null, `getCurrentContext` will fetch the first quest again! That's bad.
-         // So for fresh accounts, currentQuest is null. When started, it's semantic-html.
-         // When semantic-html is finished, currentQuest becomes html-forms.
-         // Wait, if it becomes html-forms, is it IN_PROGRESS or AVAILABLE? 
-         // getQuestState says: `if (progress.currentQuest === questId) return PROGRESSION_STATES.IN_PROGRESS;`
-         // This means it would immediately be IN_PROGRESS. We want it to be AVAILABLE until they press Start.
-         // So we need a way to distinguish current AVAILABLE quest vs IN_PROGRESS quest.
-         // Let's store `currentQuest` as the next one, but add `questStatus: 'AVAILABLE'`?
-         // Or better, let `currentQuest` mean "The quest I am currently focused on, whether available or in progress".
-         // Then use `isQuestStarted: boolean`.
-         // For now, let's just make `currentQuest` the focus quest.
-         // Wait! If we change `getQuestState` to check `isQuestStarted`, that requires schema changes.
-         // Let's use `currentQuest` as the focus quest.
-         // If `currentQuest === questId` AND `!progress.isQuestStarted`, return `AVAILABLE`.
-         progress.currentQuest = nextQ.id;
-         progress.isQuestStarted = false; // Add this flag
-         if (nextQ.moduleId !== completedQuest.moduleId) {
-            console.log(`[Unlock Engine] Transitioning to new Module: ${nextQ.moduleId}`);
-            progress.currentModule = nextQ.moduleId;
-         }
+    const currentIndex = currentModuleQuests.findIndex(q => q.id === completedQuest.id);
+    const nextQ = currentIndex >= 0 && currentIndex < currentModuleQuests.length - 1 ? currentModuleQuests[currentIndex + 1] : null;
+
+    if (nextQ) {
+      console.log(`[Unlock Engine] Next quest available in module: ${nextQ.id}`);
+      progress.currentQuest = nextQ.id;
+      progress.isQuestStarted = false; // Add this flag
+      if (nextQ.moduleId !== completedQuest.moduleId) {
+         console.log(`[Unlock Engine] Transitioning to new Module: ${nextQ.moduleId}`);
+         progress.currentModule = nextQ.moduleId;
       }
     } else {
       console.log(`[Unlock Engine] Journey complete or no more quests!`);

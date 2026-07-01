@@ -81,11 +81,11 @@ export class QuestView {
         createElement('span', { className: 'bg-black text-white px-3 py-1', style: 'border-radius: 20px;' }, quest.difficulty),
         createElement('span', { className: 'd-flex align-center gap-1 text-gray' }, [
            createElement('i', { className: 'ph-bold ph-hourglass-high' }),
-           quest.estimatedTime
+           `${quest.estimatedMinutes} Minutes`
         ]),
         createElement('span', { className: 'd-flex align-center gap-1 text-warning' }, [
            createElement('i', { className: 'ph-fill ph-star' }),
-           `+${quest.rewardXP} XP`
+           `+${quest.rewards.xp} XP`
         ])
       ])
     ]);
