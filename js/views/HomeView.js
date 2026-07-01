@@ -29,7 +29,10 @@ export class HomeView {
         deliverable: "GitHub Repository",
         quizStatus: "Available after submission"
       },
-      nextUnlock: "HTML Forms",
+      nextUnlock: {
+        title: "HTML Forms",
+        preview: ["Forms", "Inputs", "Buttons", "Validation"]
+      },
       resources: [
         { type: 'Documentation', title: 'MDN Web Docs', icon: 'ph-book-bookmark' },
         { type: 'Video', title: 'YouTube Tutorial', icon: 'ph-video' },
@@ -103,26 +106,45 @@ export class HomeView {
       ])
     ]);
 
-    // 3. Next Unlock Attachment (Phase 3 Redesign)
+    // 3. Next Unlock Attachment (Phase 3 Redesign - Teaser Card)
     const nextUnlock = createElement('div', { 
       className: 'p-6 animate-slide-up delay-200', 
-      style: `${cardStyle} background: var(--color-black); color: var(--color-white); padding: 32px;` 
+      style: `${cardStyle} box-shadow: 4px 4px 0px var(--color-black); transition: all 0.2s; cursor: default;`,
+      onmouseenter: (e) => { 
+        const icon = e.currentTarget.querySelector('.lock-icon');
+        const preview = e.currentTarget.querySelector('.teaser-preview');
+        if(icon) icon.style.transform = 'translateY(-2px) rotate(5deg)';
+        if(preview) { preview.style.filter = 'blur(0px)'; preview.style.opacity = '0.9'; }
+      },
+      onmouseleave: (e) => { 
+        const icon = e.currentTarget.querySelector('.lock-icon');
+        const preview = e.currentTarget.querySelector('.teaser-preview');
+        if(icon) icon.style.transform = 'none';
+        if(preview) { preview.style.filter = 'blur(1px)'; preview.style.opacity = '0.5'; }
+      }
     }, [
-      createElement('div', { className: 'd-flex justify-between align-center w-100 flex-wrap', style: 'gap: 24px;' }, [
-        createElement('div', { className: 'd-flex flex-column', style: 'flex: 1;' }, [
-          // Kicker
-          createElement('div', { className: 'd-flex align-center gap-2 mb-3' }, [
-            createElement('i', { className: 'ph-fill ph-lock-key text-gray text-lg' }),
-            createElement('span', { className: 'text-gray text-xs font-bold', style: 'letter-spacing: 2px;' }, 'NEXT UNLOCK')
-          ]),
-          // Target Module
-          createElement('h2', { className: 'm-0 text-3xl font-black text-white mb-2' }, [mockData.nextUnlock]),
-          // Condition
-          createElement('p', { className: 'm-0 font-bold text-gray text-sm', style: 'line-height: 1.5;' }, 'Complete today\'s mission to unlock this content.')
+      createElement('div', { className: 'd-flex flex-column gap-3' }, [
+        // Kicker & Icon
+        createElement('div', { className: 'd-flex align-center gap-2 mb-1' }, [
+          createElement('i', { className: 'ph-fill ph-lock-key text-gray text-xl lock-icon', style: 'transition: transform 0.2s;' }),
+          createElement('span', { className: 'text-gray text-xs font-bold' }, 'NEXT UNLOCK')
         ]),
-        // Decorative Icon
-        createElement('div', { className: 'd-flex align-center justify-center', style: 'background: var(--color-gray-800); border-radius: 50%; width: 80px; height: 80px; border: 2px solid var(--color-gray-700);' }, [
-          createElement('i', { className: 'ph-duotone ph-lock-key text-white', style: 'font-size: 40px;' })
+        // Target Module
+        createElement('h3', { className: 'm-0 text-xl font-black text-black' }, mockData.nextUnlock.title),
+        // Condition text
+        createElement('p', { className: 'm-0 font-bold text-gray text-sm' }, `Complete ${mockData.module} to unlock.`),
+        
+        // Separator
+        createElement('hr', { style: 'border: none; border-top: 2px dashed var(--color-gray-300); margin: 16px 0; width: 100%;' }),
+        
+        // Teaser Preview
+        createElement('div', { className: 'd-flex flex-column gap-2 teaser-preview', style: 'opacity: 0.5; filter: blur(1px); user-select: none; transition: all 0.3s;' }, [
+          createElement('span', { className: 'text-xs font-bold text-gray mb-1' }, 'YOU WILL LEARN:'),
+          ...mockData.nextUnlock.preview.map(item => 
+            createElement('div', { className: 'd-flex align-center gap-2 text-sm font-bold text-black' }, [
+              createElement('i', { className: 'ph-bold ph-check text-gray' }), item
+            ])
+          )
         ])
       ])
     ]);
