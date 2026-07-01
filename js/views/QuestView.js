@@ -408,7 +408,7 @@ export class QuestView {
              }
 
              return createElement('div', {}, [
-                createElement('p', { className: 'font-bold mb-3' }, `${index + 1}. ${q.question}`),
+                createElement('p', { className: 'font-bold mb-3' }, [`${index + 1}. ${q.question}`]),
                 createElement('div', { className: 'd-flex flex-column gap-2' }, q.options.map((opt, optIndex) => 
                    createElement('label', { 
                       className: 'd-flex align-center gap-3 p-3 card-interactive', 
@@ -422,7 +422,7 @@ export class QuestView {
                          disabled: questState === PROGRESSION_STATES.REWARD_PENDING,
                          onchange: () => { this.quizAnswers[index] = optIndex; }
                       }),
-                      createElement('span', { className: 'font-bold' }, opt)
+                      createElement('span', { className: 'font-bold' }, [opt])
                    ])
                 )),
                 explanationBox ? explanationBox : createElement('span', {}, [])
