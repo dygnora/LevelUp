@@ -7,6 +7,7 @@ export const htmlQuests = [
         title: 'HTML Basics & Structure',
         objective: 'Create your very first web page by understanding the fundamental skeleton of HTML.',
         whyItMatters: 'HTML is the foundational building block of the Web. Without it, browsers wouldn\'t know how to display text, images, or links. Mastering this structure is the first step to building anything on the internet.',
+        keyConcepts: ['HTML5', 'Boilerplate', 'head vs body', 'Tags', 'Elements'],
         learningOutcomes: [
             'Explain what HTML is and its role in web development.',
             'Understand the basic HTML document structure.',
@@ -14,7 +15,6 @@ export const htmlQuests = [
             'Use common text formatting tags (h1-h6, p).',
             'Push your very first project to a public GitHub repository.'
         ],
-        keyConcepts: ['HTML5', 'Boilerplate', 'head vs body', 'Tags', 'Elements'],
         commonMistakes: [
             'Forgetting to close tags (e.g. <p> without </p>).',
             'Placing visible content inside the <head> element.',
@@ -58,7 +58,7 @@ export const htmlQuests = [
             label: 'GitHub Repository URL',
             requirements: [
                 'Public repository',
-                'index.html',
+                'project/ folder structure with index.html',
                 'README.md',
                 'Proper commit history'
             ]
@@ -121,6 +121,7 @@ export const htmlQuests = [
         title: 'Semantic HTML',
         objective: 'Build a well-structured webpage using semantic HTML elements that are easier for both users and search engines to understand.',
         whyItMatters: 'Using the right tags gives your content meaning. This boosts your website\'s SEO (making it easier to find on Google) and ensures screen readers can accurately interpret the page for visually impaired users.',
+        keyConcepts: ['header', 'main', 'footer', 'article', 'section', 'nav', 'aside', 'div vs semantic'],
         learningOutcomes: [
             'Explain what semantic HTML is and why it matters.',
             'Choose semantic tags over generic divs.',
@@ -128,7 +129,6 @@ export const htmlQuests = [
             'Improve document structure for accessibility.',
             'Organize page sections correctly.'
         ],
-        keyConcepts: ['header', 'main', 'footer', 'article', 'section', 'nav', 'aside', 'div vs semantic'],
         commonMistakes: [
             'Using <div> for everything ("Div Soup").',
             'Using header tags (h1-h6) just to make text bold or big.',
@@ -172,6 +172,7 @@ export const htmlQuests = [
             label: 'GitHub Repository URL',
             requirements: [
                 'Public repository',
+                'project/ folder structure with index.html',
                 'Use only ONE <h1> per page',
                 'index.html using <header>, <main>, and <footer>',
                 'At least one <section> or <article>',
@@ -231,6 +232,7 @@ export const htmlQuests = [
         title: 'Interactive HTML Forms',
         objective: 'Build a functional user input form using various HTML form controls and validation attributes.',
         whyItMatters: 'Forms are the primary way users interact with web applications, from logging in to submitting surveys. Knowing how to capture and validate user data natively in HTML is an essential web development skill.',
+        keyConcepts: ['form', 'input', 'type attribute', 'label', 'for attribute', 'textarea', 'select', 'button', 'required'],
         learningOutcomes: [
             'Differentiate between various input types (text, email, password, radio, checkbox).',
             'Use the <form>, <label>, and <input> tags correctly.',
@@ -238,7 +240,6 @@ export const htmlQuests = [
             'Organize form elements using <fieldset> and <legend>.',
             'Build a complete contact form using semantic and accessible HTML elements.'
         ],
-        keyConcepts: ['form', 'input', 'type attribute', 'label', 'for attribute', 'textarea', 'select', 'button', 'required'],
         commonMistakes: [
             'Missing <label> elements, hurting accessibility.',
             'Forgetting the <form> wrapper around inputs.',
@@ -282,6 +283,7 @@ export const htmlQuests = [
             label: 'GitHub Repository URL',
             requirements: [
                 'Public repository',
+                'project/ folder structure with index.html',
                 'index.html with a valid <form>',
                 'Must include <input>, <textarea>, and a <button>',
                 'Use <label> for all inputs',
@@ -346,6 +348,7 @@ export const htmlQuests = [
         title: 'HTML Tables',
         objective: 'Build a well-structured and accessible HTML table to display tabular data.',
         whyItMatters: 'Tables are the standard way to present structured data, from pricing tiers to financial reports. Knowing how to correctly build accessible tables ensures all users can read and understand complex data presentations.',
+        keyConcepts: ['table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'colspan / rowspan', 'scope', 'caption'],
         learningOutcomes: [
             'Differentiate between tabular data and page layout.',
             'Use basic table elements (table, tr, th, td).',
@@ -353,7 +356,6 @@ export const htmlQuests = [
             'Merge cells vertically or horizontally using colspan and rowspan.',
             'Build a complete student grade table or product comparison table using semantic HTML table elements.'
         ],
-        keyConcepts: ['table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'colspan / rowspan', 'scope', 'caption'],
         commonMistakes: [
             'Using tables for page layouts instead of CSS Grid/Flexbox.',
             'Missing <th> elements, confusing screen readers.',
@@ -398,6 +400,7 @@ export const htmlQuests = [
             label: 'GitHub Repository URL',
             requirements: [
                 'Public repository',
+                'project/ folder structure with index.html',
                 'index.html containing a <table>',
                 'Use of <thead>, <tbody>, and <tfoot>',
                 'At least one <caption> element',
@@ -459,16 +462,17 @@ export const htmlQuests = [
         title: 'HTML Media: Images, Audio & Video',
         objective: 'Embed and control multimedia content like images, audio, and video on a webpage.',
         whyItMatters: 'A text-only web is boring. Rich media is essential for engaging user experiences, but it must be implemented correctly to preserve performance and accessibility.',
+        keyConcepts: ['img', 'src', 'alt', 'loading="lazy"', 'video', 'audio', 'source', 'controls', 'figure', 'figcaption'],
         learningOutcomes: [
             'Explain the difference between inline images and CSS background images.',
             'Embed images using the <img> tag and provide meaningful alt text.',
-            'Embed responsive videos and audio using <video> and <audio> tags.',
+            'Embed responsive videos and audio using <video>, <audio>, and <source> tags.',
             'Utilize the <figure> and <figcaption> elements for semantic media grouping.',
             'Build a multimedia gallery containing images, an embedded video, and audio.'
         ],
-        keyConcepts: ['img', 'src', 'alt', 'video', 'audio', 'controls', 'figure', 'figcaption'],
         commonMistakes: [
             'Forgetting the alt attribute on images, ruining accessibility.',
+            'Not using loading="lazy" for offscreen images, hurting performance.',
             'Using massive image files instead of optimized formats, slowing down the page.',
             'Autoplaying videos with sound (bad UX).',
             'Using <img> for purely decorative elements (should be CSS background).'
@@ -497,11 +501,11 @@ export const htmlQuests = [
                 url: 'https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Video_and_audio_content' 
             },
             { 
-                title: 'CodePen Challenge: Build a Media Gallery', 
+                title: 'Frontend Mentor: Build a Media Gallery Component', 
                 type: 'practice',
                 estimatedMinutes: 5,
                 difficulty: 'BEGINNER',
-                url: 'https://codepen.io/pen/' 
+                url: 'https://www.frontendmentor.io/challenges' 
             }
         ],
 
@@ -510,8 +514,10 @@ export const htmlQuests = [
             label: 'GitHub Repository URL',
             requirements: [
                 'Public repository',
+                'Proper project structure with an assets/ directory (e.g. assets/images, assets/video)',
                 'index.html containing at least one <img>, <video>, and <audio> element',
                 'Every <img> must have an alt attribute',
+                'At least one image must use loading="lazy"',
                 'Use <figure> and <figcaption> for at least one image',
                 'Provide playback controls for video and audio'
             ]
@@ -519,12 +525,19 @@ export const htmlQuests = [
 
         passingScore: 80,
         quiz: [
-            { 
-                question: 'What is the most important attribute for an <img> element to ensure accessibility?', 
-                options: ['src', 'alt', 'width', 'title'], 
+            {
+                question: 'Case Study: You are inserting a purely decorative squiggle graphic that adds no meaning to the content. How should you implement it?',
+                options: ['<img src="squiggle.png" alt="decorative squiggle">', '<img src="squiggle.png" alt="">', 'Leave out the alt attribute entirely.', 'Always use a <figure> for decorators.'],
                 correctAnswer: 1,
                 category: 'Accessibility',
-                explanation: 'The "alt" attribute provides alternative text for screen readers if the image fails to load or for visually impaired users.'
+                explanation: 'For purely decorative images that must be in the HTML, using an empty alt attribute (alt="") tells screen readers to safely ignore it.'
+            },
+            { 
+                question: 'Which element is used inside <video> or <audio> to specify multiple media files for browser compatibility?', 
+                options: ['<src>', '<track>', '<source>', '<file>'], 
+                correctAnswer: 2,
+                category: 'HTML Media',
+                explanation: 'The <source> element is used to specify multiple alternative media resources, allowing the browser to choose the most compatible format.'
             },
             { 
                 question: 'Which attribute should you add to a <video> or <audio> element to allow users to play, pause, and change volume?', 
@@ -546,18 +559,122 @@ export const htmlQuests = [
                 correctAnswer: 2,
                 category: 'User Experience',
                 explanation: 'Autoplaying media with sound is widely considered hostile to users and is often blocked by modern browsers automatically.'
-            },
-            {
-                question: 'Case Study: You have a decorative squiggle graphic used purely for background styling. How should you implement it?',
-                options: ['As an <img> with an empty alt attribute (alt="").', 'As a CSS background image.', 'As an <img> with alt="decorative squiggle".', 'Inside a <figure> element.'],
-                correctAnswer: 1,
-                category: 'Web Performance',
-                explanation: 'Purely decorative elements that add no semantic meaning should be applied via CSS background images, keeping the HTML focused on content.'
             }
         ],
 
         rewards: {
             xp: 30,
+            achievement: null
+        }
+    },
+    {
+        id: 'web-accessibility',
+        moduleId: 'html',
+        version: 1,
+        
+        title: 'Web Accessibility (a11y) Fundamentals',
+        objective: 'Ensure your web pages are usable by everyone, including people with disabilities, by combining semantic HTML with core accessibility principles.',
+        whyItMatters: 'Accessibility (a11y) is not an optional feature; it is a fundamental requirement. Building accessible websites ensures inclusive access to information, helps you reach a wider audience, and fundamentally improves the user experience for everyone.',
+        keyConcepts: ['a11y', 'WCAG', 'semantic HTML', 'aria-label', 'tabindex', 'color contrast', 'keyboard navigation'],
+        learningOutcomes: [
+            'Understand the importance of web accessibility and WCAG guidelines.',
+            'Recognize that semantic HTML is the foundation of an accessible web.',
+            'Navigate a webpage using only a keyboard.',
+            'Apply basic ARIA attributes (like aria-label) correctly when semantic HTML is insufficient.',
+            'Audit a webpage for color contrast and missing structural accessibility features.'
+        ],
+        commonMistakes: [
+            'Using ARIA excessively instead of native semantic HTML elements (No ARIA is better than bad ARIA).',
+            'Removing focus outlines (outline: none) without providing a visual alternative.',
+            'Relying solely on color to convey important information.',
+            'Skipping heading levels (e.g., jumping from <h1> directly to <h3>).'
+        ],
+        skills: ['Accessibility (a11y)', 'Inclusive Design', 'WCAG'],
+        difficulty: 'INTERMEDIATE',
+        estimatedMinutes: 30,
+        
+        resourcesRequired: true,
+        submissionRequired: true,
+        quizRequired: true,
+
+        resources: [
+            { 
+                title: 'MDN: Accessibility (a11y)', 
+                type: 'documentation',
+                estimatedMinutes: 15,
+                difficulty: 'INTERMEDIATE',
+                url: 'https://developer.mozilla.org/en-US/docs/Learn/Accessibility/What_is_accessibility' 
+            },
+            { 
+                title: 'WebAIM: Contrast Checker', 
+                type: 'reference',
+                estimatedMinutes: 5,
+                difficulty: 'BEGINNER',
+                url: 'https://webaim.org/resources/contrastchecker/' 
+            },
+            { 
+                title: 'MDN Playground: Audit & Fix an Inaccessible Form', 
+                type: 'practice',
+                estimatedMinutes: 10,
+                difficulty: 'INTERMEDIATE',
+                url: 'https://developer.mozilla.org/en-US/play' 
+            }
+        ],
+
+        submissionRequirement: { 
+            type: 'github', 
+            label: 'GitHub Repository URL',
+            requirements: [
+                'Public repository',
+                'project/ folder structure',
+                'An accessible contact form and article layout',
+                '100% semantic HTML (no div soup)',
+                'Proper heading hierarchy (h1 -> h2 -> h3)',
+                'All interactive elements must be keyboard navigable'
+            ]
+        },
+
+        passingScore: 80,
+        quiz: [
+            { 
+                question: 'What is the First Rule of ARIA?', 
+                options: ['Always use ARIA to describe elements.', 'If you can use a native HTML element with the semantics and behavior you require, do so instead of using ARIA.', 'ARIA should only be used for screen readers.', 'Every element must have an aria-label.'], 
+                correctAnswer: 1,
+                category: 'Accessibility',
+                explanation: 'Native semantic HTML elements have built-in accessibility. ARIA should only be used as a last resort when native elements are insufficient.'
+            },
+            { 
+                question: 'Why is it problematic to set CSS "outline: none" on interactive elements without providing a fallback?', 
+                options: ['It makes the elements invisible.', 'It breaks HTML validation.', 'It removes the visual focus indicator, making keyboard navigation impossible for sighted users.', 'It increases page loading time.'], 
+                correctAnswer: 2,
+                category: 'Accessibility',
+                explanation: 'Keyboard users rely on focus outlines to see which element is currently active. Removing it without adding a custom focus state destroys accessibility.'
+            },
+            { 
+                question: 'Which of the following is a violation of semantic heading hierarchy?', 
+                options: ['<h1> followed by <h2>', '<h2> followed by <h3>', '<h1> followed directly by <h4>', '<h3> followed by <h2>'], 
+                correctAnswer: 2,
+                category: 'Semantic HTML',
+                explanation: 'Headings should form a logical outline. Skipping levels (like going from h1 to h4) confuses screen reader users who use headings to navigate the page.'
+            },
+            {
+                question: 'Case Study: You have a button that just contains a magnifying glass icon for a search function. How do you make this accessible?',
+                options: ['Add an aria-label="Search" to the button.', 'Change it to a <div>.', 'Screen readers will automatically understand the icon.', 'Add title="magnifying glass".'],
+                correctAnswer: 0,
+                category: 'Accessibility',
+                explanation: 'When an interactive element lacks visible text, aria-label provides a text equivalent specifically for assistive technologies.'
+            },
+            {
+                question: 'When designing a form, why is it bad practice to rely solely on the border color turning red to indicate an error?',
+                options: ['Red is not web-safe.', 'It uses too much CSS.', 'Colorblind users or users with low vision may not perceive the color change.', 'Screen readers cannot read CSS colors.'],
+                correctAnswer: 2,
+                category: 'Inclusive Design',
+                explanation: 'Information should never be conveyed by color alone. You should also include a descriptive text message or an icon to indicate the error.'
+            }
+        ],
+
+        rewards: {
+            xp: 50,
             achievement: null
         }
     }
