@@ -8,7 +8,9 @@ export const themes = {
     glowB: '#FFB067',
     accent: '#F5B000',
     btnText: '#000000',
-    greeting: '🌅 Good morning, ready to level up?'
+    icon: '🌞',
+    greeting: 'Good morning',
+    subGreeting: 'A great day to build something new.'
   },
   sunset: {
     id: 'sunset',
@@ -18,7 +20,9 @@ export const themes = {
     glowB: '#FF0000',
     accent: '#CC0000',
     btnText: '#FFFFFF',
-    greeting: '🌆 Progress is built one quest at a time.'
+    icon: '🌇',
+    greeting: 'Good afternoon',
+    subGreeting: 'Keep your momentum going.'
   },
   night: {
     id: 'night',
@@ -28,7 +32,9 @@ export const themes = {
     glowB: '#7B2CBF',
     accent: '#4D96FF',
     btnText: '#FFFFFF',
-    greeting: '🌙 Time for deep work.'
+    icon: '🌙',
+    greeting: 'Good evening',
+    subGreeting: 'Perfect time for deep work.'
   }
 };
 

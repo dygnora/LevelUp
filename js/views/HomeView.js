@@ -3,6 +3,7 @@ import { createElement } from '../utils/dom.js';
 import { state } from '../state.js';
 import { AppLayout } from '../components/AppLayout.js';
 import { router } from '../router.js';
+import { themeManager } from '../managers/ThemeManager.js';
 
 export class HomeView {
   renderContent() {
@@ -12,6 +13,8 @@ export class HomeView {
        return createElement('div', {}, 'Loading character data...');
     }
 
+    const theme = themeManager.getCurrentTheme();
+
     // Realistic Mock Data for MVP Mission Control
     const mockData = {
       path: "Frontend Developer",
@@ -19,9 +22,10 @@ export class HomeView {
       module: "Semantic HTML",
       quest: {
         title: "Build Semantic Landing Page",
-        objective: "Create a responsive landing page using semantic HTML elements.",
-        estimatedTime: "30 Minutes",
-        reward: "40 XP",
+        objective: "Create a semantic landing page using <header>, <main>, <section>, dan <footer>.",
+        difficulty: "Beginner",
+        estimatedTime: "30 min",
+        reward: "+40 XP",
         deliverable: "GitHub Repository",
         quizStatus: "Available after submission"
       },
@@ -40,97 +44,62 @@ export class HomeView {
       achievement: "HTML Explorer"
     };
 
-    // 1. Greeting (Small and calm hierarchy)
+    // 1. Greeting (Dynamic from ThemeManager)
+    const firstName = (character.displayName || 'Deny').split(' ')[0];
     const headerContext = createElement('div', { className: 'mb-4 animate-slide-up', style: 'margin-bottom: 24px;' }, [
-      createElement('p', { className: 'm-0 text-gray font-bold text-sm mb-1' }, `Good Morning, ${character.displayName || 'Dino'}.`),
-      createElement('p', { className: 'm-0 text-black font-bold text-md' }, `${mockData.path} Journey`),
-      createElement('p', { className: 'm-0 text-gray font-bold text-sm' }, `Building the Web`) // Mock description
+      createElement('p', { className: 'm-0 text-gray font-bold text-sm mb-1' }, `${theme.greeting}, ${firstName}.`),
+      createElement('p', { className: 'm-0 text-black font-bold text-md' }, theme.subGreeting)
     ]);
 
     // Container standard styles
     const cardStyle = 'border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); border-radius: 8px; background: var(--color-white); width: 100%; margin-bottom: 24px; overflow: hidden;';
 
-    // 2. HERO: Today's Main Quest
+    // 2. HERO: Today's Main Quest (Redesign Phase 2)
     const heroQuest = createElement('div', { 
       className: 'animate-slide-up delay-100', 
       style: cardStyle
     }, [
-      // Header
-      createElement('div', { style: 'background: var(--theme-bg); padding: 24px; border-bottom: 3px solid var(--color-black);' }, [
-        createElement('span', { className: 'font-bold text-sm bg-black text-white px-3 py-1 mb-4 d-inline-block', style: 'border-radius: 20px; white-space: nowrap;' }, 'TODAY\'S MAIN QUEST'),
-        createElement('h1', { className: 'm-0 text-4xl font-black mb-2', style: 'color: var(--color-white); text-shadow: 2px 2px 0px var(--color-black);' }, mockData.quest.title),
-        createElement('p', { className: 'm-0 font-bold', style: 'color: var(--color-white); opacity: 0.9; font-size: 1.1rem; text-shadow: 1px 1px 0px var(--color-black);' }, mockData.quest.objective)
-      ]),
-      // Body (Untouched content)
+      // Content Box (White)
       createElement('div', { className: 'p-6' }, [
-        // Stats Row
-        createElement('div', { className: 'grid grid-cols-1 md-grid-cols-3 mb-6', style: 'gap: 16px;' }, [
-          createElement('div', { className: 'p-4 bg-gray-100', style: 'border: 2px solid var(--color-black); border-radius: 8px;' }, [
-            createElement('div', { className: 'text-gray text-xs font-bold mb-1' }, 'ESTIMATED TIME'),
-            createElement('div', { className: 'font-black d-flex align-center gap-2' }, [
-              createElement('i', { className: 'ph-bold ph-hourglass-high text-xl' }), mockData.quest.estimatedTime
-            ])
-          ]),
-          createElement('div', { className: 'p-4 bg-gray-100', style: 'border: 2px solid var(--color-black); border-radius: 8px;' }, [
-            createElement('div', { className: 'text-gray text-xs font-bold mb-1' }, 'DELIVERABLE'),
-            createElement('div', { className: 'font-black d-flex align-center gap-2' }, [
-              createElement('i', { className: 'ph-bold ph-github-logo text-xl' }), mockData.quest.deliverable
-            ])
-          ]),
-          createElement('div', { className: 'p-4 bg-gray-100', style: 'border: 2px solid var(--color-black); border-radius: 8px;' }, [
-            createElement('div', { className: 'text-gray text-xs font-bold mb-1' }, 'REWARD'),
-            createElement('div', { className: 'font-black d-flex align-center gap-2 text-warning' }, [
-              createElement('i', { className: 'ph-bold ph-star text-xl' }), mockData.quest.reward
-            ])
-          ])
-        ]),
+        createElement('span', { 
+           className: 'font-bold text-sm text-black px-3 py-1 mb-4 d-inline-block', 
+           style: 'background-color: var(--theme-accent); border-radius: 20px; white-space: nowrap;' 
+        }, `${theme.icon} TODAY'S MISSION`),
+        createElement('h1', { className: 'm-0 text-3xl font-black mb-3 text-black' }, mockData.quest.title),
+        createElement('p', { className: 'm-0 font-bold text-black text-md mb-6', style: 'opacity: 0.8;' }, mockData.quest.objective),
         
-        // Completion Flow & Quiz Status
-        createElement('div', { className: 'p-4 mb-6', style: 'border: 2px dashed var(--color-gray-400); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;' }, [
-          createElement('div', {}, [
-            createElement('div', { className: 'text-gray text-xs font-bold mb-2' }, 'TODAY\'S FLOW'),
-            createElement('div', { className: 'd-flex align-center flex-wrap', style: 'gap: 8px;' }, [
-              createElement('span', { className: 'bg-black text-white text-sm font-bold', style: 'padding: 4px 8px; border-radius: 4px;' }, '1. Learn'),
-              createElement('i', { className: 'ph-bold ph-arrow-right text-gray' }),
-              createElement('span', { className: 'bg-black text-white text-sm font-bold', style: 'padding: 4px 8px; border-radius: 4px;' }, '2. Build & Submit'),
-              createElement('i', { className: 'ph-bold ph-arrow-right text-gray' }),
-              createElement('span', { className: 'bg-black text-white text-sm font-bold', style: 'padding: 4px 8px; border-radius: 4px;' }, '3. Quiz'),
-              createElement('i', { className: 'ph-bold ph-arrow-right text-gray' }),
-              createElement('span', { className: 'bg-warning text-black text-sm font-bold', style: 'padding: 4px 8px; border-radius: 4px;' }, 'XP')
-            ])
-          ]),
-          createElement('div', { className: 'text-right' }, [
-            createElement('div', { className: 'text-gray text-xs font-bold mb-1' }, 'QUIZ STATUS'),
-            createElement('div', { className: 'font-bold d-flex align-center gap-2 text-sm text-gray' }, [
-              createElement('i', { className: 'ph-bold ph-lock-key text-lg' }),
-              mockData.quest.quizStatus
-            ])
-          ])
-        ]),
-
-        // Learning Resources
-        createElement('div', { className: 'mb-8' }, [
-          createElement('h3', { className: 'text-lg font-black mb-3' }, 'Learning Resources'),
-          createElement('div', { className: 'grid grid-cols-1 md-grid-cols-3', style: 'display: grid; gap: 16px;' }, mockData.resources.map(res => 
-            createElement('a', { href: '#', className: 'card-interactive p-3 d-flex align-center gap-3', style: 'border: 2px solid var(--color-black); border-radius: 8px; text-decoration: none; color: var(--color-black); background: var(--color-white);' }, [
-              createElement('div', { className: 'bg-gray-100 p-2 d-flex align-center justify-center', style: 'border-radius: 4px; border: 1px solid var(--color-black);' }, [
-                createElement('i', { className: `ph-duotone ${res.icon} text-xl` })
-              ]),
-              createElement('div', {}, [
-                createElement('div', { className: 'text-xs font-bold text-gray' }, res.type),
-                createElement('div', { className: 'font-bold text-sm' }, res.title)
+        // Metrics Row (Single Line)
+        createElement('div', { 
+           className: 'd-flex align-center justify-between flex-wrap p-4', 
+           style: 'border-top: 2px solid var(--color-black); border-bottom: 2px solid var(--color-black); gap: 16px; background-color: var(--color-gray-100); border-radius: 8px;'
+        }, [
+           createElement('div', { className: 'd-flex align-center gap-2' }, [
+              createElement('span', { className: 'text-gray text-xs font-bold' }, 'Difficulty'),
+              createElement('span', { className: 'font-black' }, mockData.quest.difficulty)
+           ]),
+           createElement('div', { className: 'd-flex align-center gap-2' }, [
+              createElement('span', { className: 'text-gray text-xs font-bold' }, 'Reward'),
+              createElement('span', { className: 'font-black text-warning d-flex align-center gap-1' }, [
+                 createElement('i', { className: 'ph-fill ph-star' }), mockData.quest.reward
               ])
-            ])
-          ))
-        ]),
-
-        // CTA Button
-        createElement('button', {
-          className: 'btn w-100 p-4',
-          style: 'background-color: var(--color-black); color: var(--color-white); font-size: 18px; font-weight: 900; border: none; box-shadow: 0 6px 0px rgba(0,0,0,0.8); cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;',
-          onmousedown: (e) => { e.currentTarget.style.transform = 'translateY(6px)'; e.currentTarget.style.boxShadow = '0 0px 0px rgba(0,0,0,0.8)'; },
-          onmouseup: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 0px rgba(0,0,0,0.8)'; }
-        }, 'START QUEST')
+           ]),
+           createElement('div', { className: 'd-flex align-center gap-2' }, [
+              createElement('span', { className: 'text-gray text-xs font-bold' }, 'Estimated'),
+              createElement('span', { className: 'font-black d-flex align-center gap-1' }, [
+                 createElement('i', { className: 'ph-bold ph-hourglass-high' }), mockData.quest.estimatedTime
+              ])
+           ])
+        ])
+      ]),
+      // CTA Button (Full Width flush to bottom)
+      createElement('button', {
+        className: 'btn w-100 p-4 d-flex justify-center align-center gap-2',
+        style: 'background-color: var(--theme-bg); color: var(--theme-btn-text); font-size: 18px; font-weight: 900; border: none; border-top: 3px solid var(--color-black); cursor: pointer; transition: background-color 0.2s;',
+        onmousedown: (e) => { e.currentTarget.style.opacity = '0.9'; },
+        onmouseup: (e) => { e.currentTarget.style.opacity = '1'; }
+      }, [
+        'Continue Learning',
+        createElement('i', { className: 'ph-bold ph-arrow-right text-xl' })
       ])
     ]);
 
