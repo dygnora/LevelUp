@@ -47,19 +47,21 @@ export class JourneyView {
      const journeyId = character.progress.currentJourney;
      const modules = progressionEngine.getJourneyModulesContext(journeyId);
 
-     const header = createElement('div', { className: 'd-flex flex-column align-center text-center mb-8' }, [
+     const header = createElement('div', { className: 'd-flex flex-column align-center text-center mb-10' }, [
         createElement('div', { className: 'd-flex justify-center mb-4' }, [
            createElement('div', { className: 'd-flex align-center justify-center text-4xl', style: 'width: 80px; height: 80px; background: var(--color-white); border: 4px solid var(--color-black); border-radius: 50%; box-shadow: 4px 4px 0px var(--color-black);' }, '🌐')
         ]),
-        createElement('h1', { className: 'm-0 text-2xl font-black text-uppercase tracking-wide' }, 'Continue Your Journey')
+        createElement('h1', { className: 'm-0 text-3xl font-black text-uppercase tracking-wide' }, 'Continue Your Journey')
      ]);
 
-     // Vertical Roadmap Tree
-     const treeContainer = createElement('div', { className: 'relative w-100 d-flex flex-column align-center py-8', style: 'min-height: 400px;' }, [
+     // Vertical Roadmap Tree Container
+     const treeContainer = createElement('div', { 
+        className: 'd-flex flex-column align-center', 
+        style: 'position: relative; width: 100%; max-width: 600px; padding: 32px 0;' 
+     }, [
         // Central thick vertical line
         createElement('div', { 
-           className: 'absolute', 
-           style: 'width: 6px; top: 0; bottom: 0; background: var(--color-black); z-index: 0; left: 50%; transform: translateX(-50%);' 
+           style: 'position: absolute; width: 6px; top: 0; bottom: 0; background: var(--color-black); z-index: 0; left: calc(50% - 3px);' 
         })
      ]);
 
@@ -96,32 +98,50 @@ export class JourneyView {
         }
 
         const nodeCircle = createElement('div', {
-           className: `d-flex align-center justify-center z-10 bg-white ${isClickable ? 'card-interactive cursor-pointer' : ''}`,
-           style: `width: 72px; height: 72px; border-radius: 50%; background: ${bgColor}; color: ${textColor}; border: 4px solid var(--color-black); box-shadow: ${shadowStyle}; transition: all 0.2s;`,
+           className: `d-flex align-center justify-center bg-white ${isClickable ? 'card-interactive cursor-pointer' : ''}`,
+           style: `width: 72px; height: 72px; border-radius: 50%; background: ${bgColor}; color: ${textColor}; border: 4px solid var(--color-black); box-shadow: ${shadowStyle}; transition: transform 0.2s, box-shadow 0.2s; position: relative; z-index: 10;`,
            onclick: () => { if (isClickable) this.openModule(mod.id); },
            onmouseenter: (e) => { if (isClickable) { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '8px 8px 0px var(--color-black)'; } },
            onmouseleave: (e) => { if (isClickable) { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = shadowStyle; } }
         }, [iconHtml]);
 
-        const isEven = index % 2 === 0;
-        const positionStyle = isEven 
-           ? 'left: calc(50% + 56px); text-align: left; align-items: flex-start;' 
-           : 'right: calc(50% + 56px); text-align: right; align-items: flex-end;';
-
         const nodeMetadata = createElement('div', { 
-           className: 'absolute d-flex flex-column justify-center z-10', 
-           style: `top: 50%; transform: translateY(-50%); width: 220px; ${positionStyle}` 
+           className: 'd-flex flex-column justify-center', 
+           style: 'width: 100%;' 
         }, [
            createElement('h3', { className: 'm-0 text-2xl font-black mb-1', style: `color: ${mod.status === 'COMING_SOON' ? 'var(--color-gray-500)' : 'var(--color-black)'}` }, mod.title),
            createElement('p', { className: 'm-0 text-sm font-bold text-gray mb-1' }, mod.description),
            mod.status !== 'COMING_SOON' ? createElement('p', { className: 'm-0 text-xs font-bold' }, `${mod.stats.total} Quests • ${mod.estimatedTime || 'TBD'}`) : '',
-           statusBadgeHtml
+           createElement('div', {}, [statusBadgeHtml])
         ]);
 
-        treeContainer.appendChild(createElement('div', { className: 'relative w-100 d-flex justify-center animate-fade-up', style: `margin-bottom: 72px; animation-delay: ${index * 100}ms;` }, [
-           nodeCircle,
-           nodeMetadata
-        ]));
+        const isEven = index % 2 === 0;
+
+        // 3-column layout row
+        const row = createElement('div', {
+           className: 'd-flex align-center w-100 animate-fade-up',
+           style: `margin-bottom: 64px; animation-delay: ${index * 100}ms; position: relative; z-index: 10;`
+        }, [
+           // Left Column
+           createElement('div', { 
+              className: 'd-flex flex-column align-end pr-4 text-right', 
+              style: 'flex: 1;' 
+           }, [!isEven ? nodeMetadata : '']),
+
+           // Center Column (Node)
+           createElement('div', { 
+              className: 'd-flex justify-center', 
+              style: 'flex-shrink: 0; width: 88px;' 
+           }, [nodeCircle]),
+
+           // Right Column
+           createElement('div', { 
+              className: 'd-flex flex-column align-start pl-4 text-left', 
+              style: 'flex: 1;' 
+           }, [isEven ? nodeMetadata : ''])
+        ]);
+
+        treeContainer.appendChild(row);
      });
 
      return createElement('div', { className: 'animate-fade-in d-flex flex-column align-center w-100' }, [
@@ -139,7 +159,7 @@ export class JourneyView {
      }));
 
      const backBtn = createElement('button', {
-        className: 'd-flex align-center gap-2 mb-6 px-4 py-2 bg-white font-bold text-sm card-interactive',
+        className: 'd-flex align-center gap-2 mb-8 px-4 py-2 bg-white font-bold text-sm card-interactive',
         style: 'border: 2px solid var(--color-black); box-shadow: 2px 2px 0px var(--color-black); border-radius: 20px; cursor: pointer; align-self: flex-start;',
         onclick: () => this.closeModule()
      }, [
@@ -147,16 +167,18 @@ export class JourneyView {
         'Journey Overview'
      ]);
 
-     const header = createElement('div', { className: 'd-flex flex-column align-center text-center mb-8' }, [
+     const header = createElement('div', { className: 'd-flex flex-column align-center text-center mb-10' }, [
         createElement('h1', { className: 'm-0 text-3xl font-black mb-2 text-uppercase' }, `${module.title} Roadmap`),
         createElement('p', { className: 'm-0 text-md font-bold text-gray' }, module.description)
      ]);
 
      // Vertical Roadmap Tree for Quests
-     const treeContainer = createElement('div', { className: 'relative w-100 d-flex flex-column align-center py-8', style: 'min-height: 400px;' }, [
+     const treeContainer = createElement('div', { 
+        className: 'd-flex flex-column align-center', 
+        style: 'position: relative; width: 100%; max-width: 600px; padding: 16px 0;' 
+     }, [
         createElement('div', { 
-           className: 'absolute', 
-           style: 'width: 4px; top: 0; bottom: 0; background: var(--color-black); z-index: 0; left: 50%; transform: translateX(-50%);' 
+           style: 'position: absolute; width: 4px; top: 0; bottom: 0; background: var(--color-black); z-index: 0; left: calc(50% - 2px);' 
         })
      ]);
 
@@ -183,26 +205,23 @@ export class JourneyView {
         const isClickable = (quest.state === 'AVAILABLE' || quest.state === 'IN_PROGRESS' || quest.state === 'COMPLETED' || quest.state === 'SUBMITTED');
 
         const questNodeCircle = createElement('div', {
-           className: 'd-flex align-center justify-center bg-white z-10',
-           style: `width: 56px; height: 56px; border-radius: 50%; background: ${bgColor}; color: ${textColor}; border: 3px solid var(--color-black); box-shadow: ${shadowStyle};`
+           className: 'd-flex align-center justify-center bg-white',
+           style: `width: 56px; height: 56px; border-radius: 50%; background: ${bgColor}; color: ${textColor}; border: 3px solid var(--color-black); box-shadow: ${shadowStyle}; transition: transform 0.2s; position: relative; z-index: 10;`
         }, [iconHtml]);
 
-        const isEven = index % 2 === 0;
-        const positionStyle = isEven 
-           ? 'left: calc(50% + 40px); text-align: left; align-items: flex-start;' 
-           : 'right: calc(50% + 40px); text-align: right; align-items: flex-end;';
-
         const questMetadata = createElement('div', {
-           className: 'absolute d-flex flex-column justify-center z-10',
-           style: `top: 50%; transform: translateY(-50%); width: 200px; ${positionStyle}`
+           className: 'd-flex flex-column justify-center',
+           style: 'width: 100%;'
         }, [
-           createElement('h3', { className: 'm-0 text-lg font-bold', style: quest.state === 'COMPLETED' ? 'text-decoration: line-through; color: var(--color-gray-500);' : '' }, quest.title),
+           createElement('h3', { className: 'm-0 text-lg font-bold', style: quest.state === 'COMPLETED' ? 'text-decoration: line-through; color: var(--color-gray-500);' : 'color: var(--color-black);' }, quest.title),
            createElement('span', { className: 'text-xs font-bold text-gray mt-1' }, quest.difficulty || 'Beginner')
         ]);
 
-        const questWrapper = createElement('div', {
-           className: `relative w-100 d-flex justify-center animate-fade-up ${isClickable ? 'cursor-pointer' : ''}`,
-           style: `margin-bottom: 48px; animation-delay: ${index * 80}ms; ${!isClickable ? 'opacity: 0.7;' : ''}`,
+        const isEven = index % 2 === 0;
+
+        const questRow = createElement('div', {
+           className: `d-flex align-center w-100 animate-fade-up ${isClickable ? 'cursor-pointer' : ''}`,
+           style: `margin-bottom: 40px; animation-delay: ${index * 80}ms; ${!isClickable ? 'opacity: 0.7;' : ''} position: relative; z-index: 10;`,
            onmouseenter: (e) => { if (isClickable) questNodeCircle.style.transform = 'scale(1.1)'; },
            onmouseleave: (e) => { if (isClickable) questNodeCircle.style.transform = 'scale(1)'; },
            onclick: () => {
@@ -214,11 +233,26 @@ export class JourneyView {
               }
            }
         }, [
-           questNodeCircle,
-           questMetadata
+           // Left Column
+           createElement('div', { 
+              className: 'd-flex flex-column align-end pr-4 text-right', 
+              style: 'flex: 1;' 
+           }, [!isEven ? questMetadata : '']),
+
+           // Center Column
+           createElement('div', { 
+              className: 'd-flex justify-center', 
+              style: 'flex-shrink: 0; width: 72px;' 
+           }, [questNodeCircle]),
+
+           // Right Column
+           createElement('div', { 
+              className: 'd-flex flex-column align-start pl-4 text-left', 
+              style: 'flex: 1;' 
+           }, [isEven ? questMetadata : ''])
         ]);
 
-        treeContainer.appendChild(questWrapper);
+        treeContainer.appendChild(questRow);
      });
 
      return createElement('div', { className: 'animate-fade-in d-flex flex-column align-center w-100' }, [
