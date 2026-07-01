@@ -199,7 +199,7 @@ export class HomeView {
            iconHtml = createElement('i', { className: 'ph-fill ph-play text-xl' });
            textStyle = '';
         } else {
-           blockStyle = 'background: transparent; border: 2px dashed var(--color-gray-400); color: var(--color-gray-400);';
+           blockStyle = 'background: var(--color-gray-100); border: 2px solid var(--color-gray-300); color: var(--color-gray-400);';
            iconHtml = createElement('i', { className: 'ph-bold ph-lock-key text-lg' });
            textStyle = '';
         }
@@ -230,7 +230,7 @@ export class HomeView {
     
     // Trigger progress bar animation after DOM mount
     setTimeout(() => {
-       const pb = journeyProgress.querySelector('div[style*="transition: width 700ms"]');
+       const pb = journeyProgress.querySelector('.progress-bar-striped');
        if(pb) pb.style.width = `${mockJourneyStats.percentage}%`;
     }, 50);
 
