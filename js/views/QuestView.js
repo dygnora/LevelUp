@@ -61,136 +61,83 @@ export class QuestView {
 
     const { journey, module, quest, state: questState } = context;
 
-    // --- SHARED HEADER ---
-    const header = createElement('div', { className: 'mb-8 animate-fade-in' }, [
-      createElement('button', { 
-         className: 'btn bg-transparent p-0 mb-4 font-bold text-gray d-flex align-center gap-2',
-         style: 'border: none; cursor: pointer;',
-         onclick: () => router.navigate('/home')
-      }, [
-         createElement('i', { className: 'ph-bold ph-arrow-left' }),
-         'Back to Base Camp'
-      ]),
-      createElement('div', { className: 'd-flex align-center gap-2 text-sm font-bold text-gray mb-2' }, [
-        createElement('span', {}, journey.title),
-        createElement('i', { className: 'ph-bold ph-caret-right' }),
-        createElement('span', {}, module.title)
-      ]),
-      createElement('h1', { className: 'text-4xl m-0 font-black mb-2' }, quest.title),
-      createElement('div', { className: 'd-flex align-center gap-3 text-sm font-bold' }, [
-        createElement('span', { className: 'bg-black text-white px-3 py-1', style: 'border-radius: 20px;' }, quest.difficulty),
-        createElement('span', { className: 'd-flex align-center gap-1 text-gray' }, [
-           createElement('i', { className: 'ph-bold ph-hourglass-high' }),
-           `${quest.estimatedMinutes} Minutes`
-        ]),
-        createElement('span', { className: 'd-flex align-center gap-1 text-warning' }, [
-           createElement('i', { className: 'ph-fill ph-star' }),
-           `+${quest.rewards.xp} XP`
+    // --- HERO BANNER ---
+    const headerBanner = createElement('div', { 
+        className: 'w-100 bg-primary text-black animate-fade-in', 
+        style: 'border-bottom: 4px solid var(--color-black); box-shadow: 0 6px 0 var(--color-black); margin-bottom: 40px;' 
+    }, [
+        createElement('div', { className: 'max-w-1200 p-6', style: 'margin: 0 auto;' }, [
+            createElement('button', { 
+               className: 'btn bg-transparent p-0 mb-4 font-bold text-black d-flex align-center gap-2',
+               style: 'border: none; cursor: pointer;',
+               onclick: () => router.navigate('/home')
+            }, [
+               createElement('i', { className: 'ph-bold ph-arrow-left' }),
+               'Back to Base Camp'
+            ]),
+            createElement('div', { className: 'd-flex align-center gap-2 text-sm font-bold mb-2', style: 'color: rgba(0,0,0,0.7);' }, [
+              createElement('span', {}, journey.title),
+              createElement('i', { className: 'ph-bold ph-caret-right' }),
+              createElement('span', {}, module.title)
+            ]),
+            createElement('h1', { className: 'text-4xl m-0 font-black mb-4', style: 'letter-spacing: -1px;' }, quest.title),
+            createElement('div', { className: 'd-flex align-center gap-3 text-sm font-bold flex-wrap' }, [
+              createElement('span', { className: 'bg-black text-white px-3 py-1', style: 'border-radius: 20px;' }, quest.difficulty),
+              createElement('span', { className: 'd-flex align-center gap-1 bg-white px-3 py-1', style: 'border-radius: 20px; border: 2px solid var(--color-black); box-shadow: 2px 2px 0 var(--color-black);' }, [
+                 createElement('i', { className: 'ph-bold ph-hourglass-high' }),
+                 `${quest.estimatedMinutes} Minutes`
+              ]),
+              createElement('span', { className: 'd-flex align-center gap-1 bg-white text-warning px-3 py-1', style: 'border-radius: 20px; border: 2px solid var(--color-black); box-shadow: 2px 2px 0 var(--color-black);' }, [
+                 createElement('i', { className: 'ph-fill ph-star' }),
+                 `+${quest.rewards.xp} XP`
+              ])
+            ])
         ])
-      ])
     ]);
 
-    const errorArea = this.engineError ? this._renderError(this.engineError) : createElement('div', {}, []);
+    // --- COLUMNS ---
+    const mainCol = createElement('div', { className: 'd-flex flex-column', style: 'flex: 1; min-width: 300px; gap: 24px;' });
+    const sidebarCol = createElement('div', { className: 'd-flex flex-column sidebar-col', style: 'width: 350px; flex-shrink: 0; gap: 24px;' });
+    const contentGrid = createElement('div', { className: 'd-flex max-w-1200 px-6 pb-12 w-100 flex-wrap', style: 'margin: 0 auto; gap: 32px;' }, [mainCol, sidebarCol]);
 
-    const contentArea = createElement('div', { className: 'w-100' }, [ errorArea ]);
+    // MAIN CONTENT
+    const errorArea = this.engineError ? this._renderError(this.engineError) : null;
+    if (errorArea) mainCol.appendChild(errorArea);
 
-    // --- STATE: AVAILABLE ---
-    if (questState === PROGRESSION_STATES.AVAILABLE) {
-        contentArea.appendChild(this._renderObjectiveCard(quest));
-        contentArea.appendChild(createElement('button', {
-             className: 'btn w-100 p-4 mt-6 animate-slide-up delay-200',
-             style: 'background-color: var(--color-primary); color: var(--color-black); font-size: 20px; font-weight: 900; border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;',
-             onclick: () => this.handleAction('START_QUEST'),
-             onmousedown: (e) => { e.currentTarget.style.transform = 'translateY(6px)'; e.currentTarget.style.boxShadow = '0 0px 0px var(--color-black)'; },
-             onmouseup: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '6px 6px 0px var(--color-black)'; }
-        }, 'START MISSION'));
+    mainCol.appendChild(this._renderObjectiveCard(quest));
+
+    if (questState === PROGRESSION_STATES.IN_PROGRESS) {
+        mainCol.appendChild(this._renderSubmissionForm(quest));
+        if (quest.quizRequired !== false) mainCol.appendChild(this._renderLockedQuiz());
+    } else if (questState === PROGRESSION_STATES.SUBMITTED) {
+        if (quest.quizRequired !== false) mainCol.appendChild(this._renderLockedQuiz());
+    } else if (questState === PROGRESSION_STATES.QUIZ_AVAILABLE || questState === PROGRESSION_STATES.REWARD_PENDING) {
+        if (quest.quizRequired !== false) mainCol.appendChild(this._renderQuizForm(quest, questState));
+    } else if (questState === PROGRESSION_STATES.COMPLETED) {
+        mainCol.appendChild(this._renderCompletedState(quest));
     }
 
-    // --- STATE: IN_PROGRESS ---
-    else if (questState === PROGRESSION_STATES.IN_PROGRESS) {
-        contentArea.appendChild(this._renderObjectiveCard(quest));
-        if (quest.resourcesRequired !== false) {
-           contentArea.appendChild(this._renderResourcesCard(quest));
-        }
-        contentArea.appendChild(this._renderSubmissionForm(quest));
-        if (quest.quizRequired !== false) {
-           contentArea.appendChild(this._renderLockedQuiz());
-        }
-    }
-
-    // --- STATE: SUBMITTED ---
-    else if (questState === PROGRESSION_STATES.SUBMITTED) {
-        contentArea.appendChild(this._renderObjectiveCard(quest));
-        contentArea.appendChild(this._renderSubmittedState());
-        contentArea.appendChild(this._renderLockedQuiz());
-    }
-
-    // --- STATE: QUIZ_AVAILABLE ---
-    else if (questState === PROGRESSION_STATES.QUIZ_AVAILABLE) {
-        contentArea.appendChild(this._renderObjectiveCard(quest));
-        contentArea.appendChild(this._renderSubmittedState());
-        contentArea.appendChild(this._renderQuizForm(quest, questState));
-    }
-
-    // --- STATE: REWARD_PENDING ---
-    // (We render the QUIZ_AVAILABLE view underneath the modal)
-    else if (questState === PROGRESSION_STATES.REWARD_PENDING) {
-        contentArea.appendChild(this._renderObjectiveCard(quest));
-        if (quest.submissionRequired !== false) {
-            contentArea.appendChild(this._renderSubmittedState());
-        }
-        if (quest.quizRequired !== false) {
-            contentArea.appendChild(this._renderQuizForm(quest, questState)); // Render underneath overlay
-        }
-    }
-
-    // --- COMPLETED ---
-    else if (questState === PROGRESSION_STATES.COMPLETED) {
-        contentArea.appendChild(this._renderObjectiveCard(quest));
-        
-        const ctaButtons = [];
-        if (quest.nextQuestId) {
-            ctaButtons.push(
-               createElement('button', { 
-                   className: 'btn bg-primary text-black mt-4',
-                   style: 'font-weight: 900; box-shadow: 4px 4px 0px var(--color-black); border: 2px solid var(--color-black);',
-                   onclick: () => {
-                       // Automatically set next quest as active and navigate to it?
-                       // Or go back to home. Actually, just go back to home for now where they can start it.
-                       router.navigate('/home');
-                   }
-               }, 'Continue Learning')
-            );
-        }
-        
-        ctaButtons.push(
-           createElement('button', { 
-               className: 'btn bg-black text-white mt-4 ml-4',
-               onclick: () => router.navigate('/home')
-           }, 'Return to Base')
-        );
-
-        contentArea.appendChild(createElement('div', { 
-           className: 'card p-6 text-center bg-gray-100', style: 'border: 3px dashed var(--color-gray-400);' 
-        }, [
-           createElement('i', { className: 'ph-duotone ph-check-circle text-success text-5xl mb-4' }),
-           createElement('h2', { className: 'text-2xl m-0' }, 'Mission Completed'),
-           createElement('div', { className: 'mt-6 d-flex justify-center' }, ctaButtons)
-        ]));
+    // SIDEBAR CONTENT
+    sidebarCol.appendChild(this._renderStatusCard(questState, quest));
+    if (quest.resourcesRequired !== false && questState !== PROGRESSION_STATES.AVAILABLE) {
+       sidebarCol.appendChild(this._renderResourcesCard(quest));
     }
 
     // CSS Utilities
     const style = createElement('style', {}, `
-      .max-w-700 { max-width: 700px; margin: 0 auto; }
+      .max-w-1200 { max-width: 1200px; margin: 0 auto; }
       .bg-white { background-color: var(--color-white); }
       .bg-black { background-color: var(--color-black); }
       .text-white { color: var(--color-white); }
+      @media (max-width: 800px) {
+         .sidebar-col { width: 100% !important; order: -1; }
+      }
     `);
     document.head.appendChild(style);
 
-    const mainContainer = createElement('div', { className: 'animate-fade-in max-w-700 mt-4', style: 'position: relative;' }, [
-      header,
-      contentArea
+    const mainContainer = createElement('div', { className: 'animate-fade-in w-100', style: 'position: relative;' }, [
+      headerBanner,
+      contentGrid
     ]);
 
     // Append Reward Overlay if needed
@@ -204,6 +151,80 @@ export class QuestView {
 
   // --- UI COMPONENT HELPERS ---
   
+  _renderStatusCard(questState, quest) {
+      let icon, title, description, btnHtml = null;
+
+      if (questState === PROGRESSION_STATES.AVAILABLE) {
+          icon = 'ph-lock-key-open';
+          title = 'Mission Available';
+          description = 'Read the briefing and start when ready.';
+          btnHtml = createElement('button', {
+             className: 'btn w-100 p-3 mt-4 animate-slide-up delay-200',
+             style: 'background-color: var(--color-primary); color: var(--color-black); font-size: 16px; font-weight: 900; border: 3px solid var(--color-black); box-shadow: 4px 4px 0px var(--color-black); cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;',
+             onclick: () => this.handleAction('START_QUEST'),
+             onmousedown: (e) => { e.currentTarget.style.transform = 'translateY(4px)'; e.currentTarget.style.boxShadow = '0 0px 0px var(--color-black)'; },
+             onmouseup: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '4px 4px 0px var(--color-black)'; }
+          }, 'START MISSION');
+      } else if (questState === PROGRESSION_STATES.IN_PROGRESS) {
+          icon = 'ph-person-simple-run';
+          title = 'Mission Active';
+          description = 'You are currently working on this mission.';
+      } else if (questState === PROGRESSION_STATES.SUBMITTED) {
+          icon = 'ph-check-circle';
+          title = 'Project Submitted';
+          description = 'Complete the final quiz to earn your reward.';
+      } else if (questState === PROGRESSION_STATES.QUIZ_AVAILABLE || questState === PROGRESSION_STATES.REWARD_PENDING) {
+          icon = 'ph-exam';
+          title = 'Final Evaluation';
+          description = 'Pass the knowledge check to complete the mission.';
+      } else if (questState === PROGRESSION_STATES.COMPLETED) {
+          icon = 'ph-medal';
+          title = 'Mission Accomplished';
+          description = 'You have successfully completed this mission.';
+      }
+
+      return createElement('div', { 
+         className: 'card p-5 animate-slide-up delay-100 bg-white', 
+         style: 'border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black);' 
+      }, [
+          createElement('div', { className: 'd-flex align-center gap-3 mb-2' }, [
+             createElement('i', { className: `ph-duotone ${icon} text-3xl text-primary` }),
+             createElement('h3', { className: 'text-lg font-black m-0' }, title)
+          ]),
+          createElement('p', { className: 'text-sm font-bold text-gray m-0' }, description),
+          btnHtml || createElement('div', {}, [])
+      ]);
+  }
+
+  _renderCompletedState(quest) {
+        const ctaButtons = [];
+        if (quest.nextQuestId) {
+            ctaButtons.push(
+               createElement('button', { 
+                   className: 'btn bg-primary text-black mt-4',
+                   style: 'font-weight: 900; box-shadow: 4px 4px 0px var(--color-black); border: 2px solid var(--color-black);',
+                   onclick: () => router.navigate('/home')
+               }, 'Continue Learning')
+            );
+        }
+        
+        ctaButtons.push(
+           createElement('button', { 
+               className: 'btn bg-black text-white mt-4 ml-4',
+               onclick: () => router.navigate('/home')
+           }, 'Return to Base')
+        );
+
+        return createElement('div', { 
+           className: 'card p-6 text-center bg-gray-100 animate-slide-up', 
+           style: 'border: 3px dashed var(--color-gray-400);' 
+        }, [
+           createElement('i', { className: 'ph-duotone ph-check-circle text-success text-5xl mb-4' }),
+           createElement('h2', { className: 'text-2xl m-0' }, 'Mission Completed'),
+           createElement('div', { className: 'mt-6 d-flex justify-center flex-wrap gap-2' }, ctaButtons)
+        ]);
+  }
+
   _renderError(error) {
       return createElement('div', { 
           className: 'bg-black text-white p-4 mb-6 d-flex align-center gap-3 animate-pop-in',
@@ -349,17 +370,6 @@ export class QuestView {
              onmousedown: (e) => { e.currentTarget.style.transform = 'translateY(4px)'; e.currentTarget.style.boxShadow = '0 0px 0px rgba(0,0,0,0.5)'; },
              onmouseup: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '4px 4px 0px rgba(0,0,0,0.5)'; }
           }, 'SUBMIT MISSION')
-       ]);
-  }
-
-  _renderSubmittedState() {
-      return createElement('div', { 
-          className: 'card p-4 mb-8 text-center animate-fade-in', 
-          style: 'border: 2px dashed var(--color-black); background: var(--color-gray-100);' 
-       }, [
-          createElement('i', { className: 'ph-duotone ph-check-circle text-success text-3xl mb-2' }),
-          createElement('h3', { className: 'm-0 font-bold' }, 'Project Submitted!'),
-          createElement('p', { className: 'text-sm text-gray m-0 mt-1' }, 'Scroll down to take the final quiz.')
        ]);
   }
 
