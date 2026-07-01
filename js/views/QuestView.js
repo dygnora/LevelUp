@@ -237,12 +237,22 @@ export class QuestView {
           ]) : createElement('div', {}, []),
 
           quest.commonMistakes && quest.commonMistakes.length > 0 ? createElement('div', {
-              className: 'p-4',
+              className: 'p-4 mb-4',
               style: 'background-color: #fff5f5; border-radius: 8px; border: 2px solid #ffc9c9;'
           }, [
               createElement('strong', { className: 'd-block mb-2 text-sm text-uppercase', style: 'color: #e03131;' }, 'Common Mistakes to Avoid'),
               createElement('ul', { className: 'm-0 pl-4', style: 'color: #c92a2a;' }, quest.commonMistakes.map(mistake => 
                   createElement('li', { className: 'mb-1 font-bold' }, mistake)
+              ))
+          ]) : createElement('div', {}, []),
+
+          quest.keyConcepts && quest.keyConcepts.length > 0 ? createElement('div', { className: 'mt-2' }, [
+              createElement('strong', { className: 'd-block mb-2 text-sm text-gray text-uppercase' }, 'Key Concepts Preview'),
+              createElement('div', { className: 'd-flex gap-2 flex-wrap' }, quest.keyConcepts.map(concept => 
+                  createElement('span', { 
+                      className: 'px-3 py-1 bg-black text-white font-bold text-xs',
+                      style: 'border-radius: 20px;'
+                  }, concept)
               ))
           ]) : createElement('div', {}, [])
        ]);

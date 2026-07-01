@@ -14,6 +14,7 @@ export const htmlQuests = [
             'Use common text formatting tags (h1-h6, p).',
             'Push your very first project to a public GitHub repository.'
         ],
+        keyConcepts: ['HTML5', 'Boilerplate', 'head vs body', 'Tags', 'Elements'],
         commonMistakes: [
             'Forgetting to close tags (e.g. <p> without </p>).',
             'Placing visible content inside the <head> element.',
@@ -127,6 +128,7 @@ export const htmlQuests = [
             'Improve document structure for accessibility.',
             'Organize page sections correctly.'
         ],
+        keyConcepts: ['header', 'main', 'footer', 'article', 'section', 'nav', 'aside', 'div vs semantic'],
         commonMistakes: [
             'Using <div> for everything ("Div Soup").',
             'Using header tags (h1-h6) just to make text bold or big.',
@@ -236,6 +238,7 @@ export const htmlQuests = [
             'Organize form elements using <fieldset> and <legend>.',
             'Build a complete contact form using semantic and accessible HTML elements.'
         ],
+        keyConcepts: ['form', 'input', 'type attribute', 'label', 'for attribute', 'textarea', 'select', 'button', 'required'],
         commonMistakes: [
             'Missing <label> elements, hurting accessibility.',
             'Forgetting the <form> wrapper around inputs.',
@@ -348,13 +351,15 @@ export const htmlQuests = [
             'Use basic table elements (table, tr, th, td).',
             'Structure complex tables using semantic grouping elements (thead, tbody, tfoot).',
             'Merge cells vertically or horizontally using colspan and rowspan.',
-            'Build a complete, accessible data table.'
+            'Build a complete student grade table or product comparison table using semantic HTML table elements.'
         ],
+        keyConcepts: ['table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'colspan / rowspan', 'scope', 'caption'],
         commonMistakes: [
             'Using tables for page layouts instead of CSS Grid/Flexbox.',
             'Missing <th> elements, confusing screen readers.',
             'Forgetting to specify the scope attribute on headers (scope="col" or "row").',
-            'Nesting tables excessively.'
+            'Nesting tables excessively.',
+            'Using empty cells only for spacing.'
         ],
         skills: ['HTML Tables', 'Data Presentation', 'Accessibility'],
         difficulty: 'BEGINNER',
@@ -380,7 +385,7 @@ export const htmlQuests = [
                 url: 'https://www.w3schools.com/html/html_tables.asp' 
             },
             { 
-                title: 'CodePen Challenge: Build a Pricing Table', 
+                title: 'CodePen Challenge: Build a Product Comparison Table', 
                 type: 'practice',
                 estimatedMinutes: 10,
                 difficulty: 'BEGINNER',
@@ -395,6 +400,8 @@ export const htmlQuests = [
                 'Public repository',
                 'index.html containing a <table>',
                 'Use of <thead>, <tbody>, and <tfoot>',
+                'At least one <caption> element',
+                'Minimum 5 rows and 3 columns',
                 'At least one merged cell using colspan or rowspan',
                 'Proper commit history'
             ]
@@ -403,11 +410,11 @@ export const htmlQuests = [
         passingScore: 80,
         quiz: [
             { 
-                question: 'Which element is used to define a table row?', 
-                options: ['<td>', '<th>', '<tr>', '<table>'], 
-                correctAnswer: 2,
+                question: 'Which element provides a semantic title or description for the table itself?', 
+                options: ['<thead>', '<caption>', '<summary>', '<title>'], 
+                correctAnswer: 1,
                 category: 'HTML Tables',
-                explanation: 'The <tr> tag defines a row in an HTML table, which can then contain <th> (header) or <td> (data) cells.'
+                explanation: 'The <caption> element specifies the title of a table and helps screen readers give context to users before reading the data.'
             },
             { 
                 question: 'Which attribute should you use to make a cell span across two columns?', 
@@ -436,6 +443,116 @@ export const htmlQuests = [
                 correctAnswer: 2,
                 category: 'HTML Tables',
                 explanation: 'The <tfoot> element is used to group footer content in an HTML table, often summarizing the columns.'
+            }
+        ],
+
+        rewards: {
+            xp: 30,
+            achievement: null
+        }
+    },
+    {
+        id: 'html-media',
+        moduleId: 'html',
+        version: 1,
+        
+        title: 'HTML Media: Images, Audio & Video',
+        objective: 'Embed and control multimedia content like images, audio, and video on a webpage.',
+        whyItMatters: 'A text-only web is boring. Rich media is essential for engaging user experiences, but it must be implemented correctly to preserve performance and accessibility.',
+        learningOutcomes: [
+            'Explain the difference between inline images and CSS background images.',
+            'Embed images using the <img> tag and provide meaningful alt text.',
+            'Embed responsive videos and audio using <video> and <audio> tags.',
+            'Utilize the <figure> and <figcaption> elements for semantic media grouping.',
+            'Build a multimedia gallery containing images, an embedded video, and audio.'
+        ],
+        keyConcepts: ['img', 'src', 'alt', 'video', 'audio', 'controls', 'figure', 'figcaption'],
+        commonMistakes: [
+            'Forgetting the alt attribute on images, ruining accessibility.',
+            'Using massive image files instead of optimized formats, slowing down the page.',
+            'Autoplaying videos with sound (bad UX).',
+            'Using <img> for purely decorative elements (should be CSS background).'
+        ],
+        skills: ['HTML Media', 'Web Performance', 'Accessibility'],
+        difficulty: 'BEGINNER',
+        estimatedMinutes: 30,
+        
+        resourcesRequired: true,
+        submissionRequired: true,
+        quizRequired: true,
+
+        resources: [
+            { 
+                title: 'MDN: Images in HTML', 
+                type: 'documentation',
+                estimatedMinutes: 15,
+                difficulty: 'BEGINNER',
+                url: 'https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Images_in_HTML' 
+            },
+            { 
+                title: 'MDN: Video and Audio content', 
+                type: 'reference',
+                estimatedMinutes: 10,
+                difficulty: 'BEGINNER',
+                url: 'https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Video_and_audio_content' 
+            },
+            { 
+                title: 'CodePen Challenge: Build a Media Gallery', 
+                type: 'practice',
+                estimatedMinutes: 5,
+                difficulty: 'BEGINNER',
+                url: 'https://codepen.io/pen/' 
+            }
+        ],
+
+        submissionRequirement: { 
+            type: 'github', 
+            label: 'GitHub Repository URL',
+            requirements: [
+                'Public repository',
+                'index.html containing at least one <img>, <video>, and <audio> element',
+                'Every <img> must have an alt attribute',
+                'Use <figure> and <figcaption> for at least one image',
+                'Provide playback controls for video and audio'
+            ]
+        },
+
+        passingScore: 80,
+        quiz: [
+            { 
+                question: 'What is the most important attribute for an <img> element to ensure accessibility?', 
+                options: ['src', 'alt', 'width', 'title'], 
+                correctAnswer: 1,
+                category: 'Accessibility',
+                explanation: 'The "alt" attribute provides alternative text for screen readers if the image fails to load or for visually impaired users.'
+            },
+            { 
+                question: 'Which attribute should you add to a <video> or <audio> element to allow users to play, pause, and change volume?', 
+                options: ['autoplay', 'controls', 'interactive', 'player'], 
+                correctAnswer: 1,
+                category: 'HTML Media',
+                explanation: 'The "controls" attribute adds standard browser controls (play, pause, volume, etc.) to the media element.'
+            },
+            { 
+                question: 'How do you semantically group an image with its caption?', 
+                options: ['Wrap them in a <div>', 'Use a <table>', 'Use <figure> and <figcaption>', 'Use <picture> and <span>'], 
+                correctAnswer: 2,
+                category: 'Semantic HTML',
+                explanation: 'The <figure> element is used to encapsulate media, and <figcaption> provides the semantic caption for that media.'
+            },
+            {
+                question: 'Why should you avoid using the "autoplay" attribute on videos with sound?',
+                options: ['It breaks HTML validation.', 'It prevents the video from looping.', 'It creates a poor and intrusive user experience.', 'It requires too much bandwidth.'],
+                correctAnswer: 2,
+                category: 'User Experience',
+                explanation: 'Autoplaying media with sound is widely considered hostile to users and is often blocked by modern browsers automatically.'
+            },
+            {
+                question: 'Case Study: You have a decorative squiggle graphic used purely for background styling. How should you implement it?',
+                options: ['As an <img> with an empty alt attribute (alt="").', 'As a CSS background image.', 'As an <img> with alt="decorative squiggle".', 'Inside a <figure> element.'],
+                correctAnswer: 1,
+                category: 'Web Performance',
+                explanation: 'Purely decorative elements that add no semantic meaning should be applied via CSS background images, keeping the HTML focused on content.'
             }
         ],
 
