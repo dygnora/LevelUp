@@ -7,8 +7,8 @@ class Router {
     this.currentRoute = null;
     this.appContainer = document.getElementById('app');
     
-    // Listen for hash changes
-    window.addEventListener('hashchange', () => this.handleRoute());
+    // Listen for history changes
+    window.addEventListener('popstate', () => this.handleRoute());
 
     // Intercept global link clicks to support old '/' links gracefully
     document.addEventListener('click', (e) => {
@@ -28,8 +28,9 @@ class Router {
     // Standardize path format
     if (!path.startsWith('/')) path = '/' + path;
     
-    if (window.location.hash !== `#${path}`) {
-      window.location.hash = path;
+    if (window.location.pathname !== path) {
+      window.history.pushState({}, '', path);
+      this.handleRoute();
     } else {
       this.handleRoute(); // Manually trigger if navigating to same route programmatically
     }
@@ -41,7 +42,7 @@ class Router {
       return;
     }
 
-    let path = window.location.hash.slice(1) || '/';
+    let path = window.location.pathname || '/';
     // Remove query params if any
     if (path.includes('?')) path = path.split('?')[0];
     let matchedPath = null;
