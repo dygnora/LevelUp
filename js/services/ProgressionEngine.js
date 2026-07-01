@@ -3,6 +3,10 @@ import { state } from '../state.js';
 import { levelTable } from '../data/levelTable.js';
 import { rankTable } from '../data/rankTable.js';
 import { achievementDefinitions } from '../data/achievements.js';
+import { journeys } from '../data/journeys.js';
+import { modules } from '../data/modules.js';
+import { quests } from '../data/quests.js';
+import { dbService } from './dbService.js';
 
 // --- FSM STATES ---
 export const PROGRESSION_STATES = {
@@ -10,77 +14,16 @@ export const PROGRESSION_STATES = {
   IN_PROGRESS: 'IN_PROGRESS',
   SUBMITTED: 'SUBMITTED',
   QUIZ_AVAILABLE: 'QUIZ_AVAILABLE',
-  QUIZ_PASSED: 'QUIZ_PASSED',
   REWARD_PENDING: 'REWARD_PENDING',
   COMPLETED: 'COMPLETED',
   UNLOCKED: 'UNLOCKED' // Used for modules/journeys
 };
 
-// --- FLAT MOCK DATA ---
-const mockJourneys = {
-  'frontend': { id: 'frontend', title: 'Frontend Developer', description: 'Building the Web', icon: '🌐' }
-};
-
-const mockModules = {
-  'html': { id: 'html', journeyId: 'frontend', title: 'HTML', order: 1, description: 'Foundation of the Web', estimatedTime: '~4 Hours' },
-  'css': { id: 'css', journeyId: 'frontend', title: 'CSS', order: 2, description: 'Bring your pages to life', estimatedTime: '~8 Hours' },
-  'js': { id: 'js', journeyId: 'frontend', title: 'JavaScript', order: 3, description: 'Make your website interactive', estimatedTime: '~12 Hours' }
-};
-
-const mockQuests = {
-  'semantic-html': {
-    id: 'semantic-html',
-    moduleId: 'html',
-    order: 1,
-    title: 'Build Semantic Landing Page',
-    objective: 'Create a responsive landing page using semantic HTML5 tags.',
-    difficulty: 'BEGINNER',
-    estimatedTime: '30 Minutes',
-    resources: [
-      { title: 'MDN Web Docs', type: 'Documentation', url: 'https://developer.mozilla.org/en-US/docs/Glossary/Semantics' }
-    ],
-    submissionRequirement: { type: 'github', label: 'GitHub Repository URL' },
-    quiz: [
-      { question: 'Which tag is used for the main navigation?', options: ['<nav>', '<header>', '<section>'], correctAnswer: 0 }
-    ],
-    rewardXP: 40,
-    nextQuestId: 'html-forms'
-  },
-  'html-forms': {
-    id: 'html-forms',
-    moduleId: 'html',
-    order: 2,
-    title: 'Interactive HTML Forms',
-    objective: 'Build a contact form with full validation.',
-    difficulty: 'BEGINNER',
-    estimatedTime: '45 Minutes',
-    resources: [],
-    submissionRequirement: { type: 'github', label: 'GitHub Repository URL' },
-    quiz: [],
-    rewardXP: 50,
-    nextQuestId: 'css-basics' // Jump to CSS module
-  },
-  'css-basics': {
-    id: 'css-basics',
-    moduleId: 'css',
-    order: 1,
-    title: 'Style the Landing Page',
-    objective: 'Apply CSS to make your landing page beautiful.',
-    difficulty: 'INTERMEDIATE',
-    estimatedTime: '1 Hour',
-    resources: [],
-    submissionRequirement: { type: 'github', label: 'GitHub Repository URL' },
-    quiz: [],
-    rewardXP: 60,
-    nextQuestId: null
-  }
-};
-
 class ProgressionEngine {
   constructor() {
-    this.journeys = mockJourneys;
-    this.modules = mockModules;
-    this.quests = mockQuests;
+    this.journeys = journeys;
+    this.modules = modules;
+    this.quests = quests;
   }
 
   // --- GETTERS ---
@@ -114,6 +57,7 @@ class ProgressionEngine {
     }
 
     const progress = character.progress;
+    const quest = this.getQuest(questId);
     
     if (progress.completedQuests && progress.completedQuests[questId]) {
       return PROGRESSION_STATES.COMPLETED;
@@ -123,17 +67,22 @@ class ProgressionEngine {
       if (progress.isRewardPending) {
          return PROGRESSION_STATES.REWARD_PENDING;
       }
-      if (progress.isQuizPassed) {
-         return PROGRESSION_STATES.QUIZ_PASSED;
-      }
+      
+      // If quiz is passed, it should be REWARD_PENDING (handled above)
+      // If active submission exists:
       if (progress.activeSubmission && progress.activeSubmission.questId === questId) {
-         const quest = this.getQuest(questId);
-         if (quest && quest.quiz && quest.quiz.length > 0) {
+         if (quest && quest.quizRequired) {
              return PROGRESSION_STATES.QUIZ_AVAILABLE;
          }
+         // If no quiz required, activeSubmission immediately transitions to REWARD_PENDING?
+         // No, the dispatch should handle that. If they submit and no quiz, dispatch skips to reward pending.
+         // Let's rely on state.
          return PROGRESSION_STATES.SUBMITTED;
       }
+      
       if (progress.isQuestStarted) {
+        // If they started, and no submission is required?
+        // Usually IN_PROGRESS implies working on it. If they click "MARK COMPLETE", dispatch handles the jump.
         return PROGRESSION_STATES.IN_PROGRESS;
       } else {
         return PROGRESSION_STATES.AVAILABLE;
@@ -294,32 +243,45 @@ class ProgressionEngine {
 
     console.log(`[Progression Engine] Processing Action: ${actionType}`, payload);
 
+    let isProgressionChanged = false;
+
     switch (actionType) {
+      case 'OPEN_RESOURCE': {
+        // Just for analytics MVP, does not affect progression state but we can log it
+        console.log('[Analytics] Resource opened:', payload.url);
+        break; // Doesn't persist to Firestore for MVP
+      }
       case 'START_QUEST': {
         const { questId } = payload;
         // Validate if they can start it
         p.currentQuest = questId;
         p.isQuestStarted = true;
         p.activeSubmission = null;
-        p.isQuizPassed = false;
         p.isRewardPending = false;
+        isProgressionChanged = true;
         break;
       }
       case 'SUBMIT_PROJECT': {
         const { questId, type, value } = payload;
+        const quest = this.getQuest(questId);
         p.activeSubmission = {
           questId,
           type,
           value,
           submittedAt: new Date().toISOString()
         };
+        if (!quest.quizRequired) {
+            // Skip quiz straight to reward
+            p.isRewardPending = true;
+        }
+        isProgressionChanged = true;
         break;
       }
       case 'PASS_QUIZ': {
         const { questId, score, attempts } = payload;
-        p.isQuizPassed = true;
         p.isRewardPending = true;
         p.quizResults = { score, attempts };
+        isProgressionChanged = true;
         break;
       }
       case 'CLAIM_REWARD': {
@@ -339,20 +301,26 @@ class ProgressionEngine {
         
         // Reset local quest state flags
         p.activeSubmission = null;
-        p.isQuizPassed = false;
         p.isRewardPending = false;
         p.isQuestStarted = false;
 
         // 2. Unlock Engine: Determine what happens next
         this._evaluateUnlock(p, quest);
+        isProgressionChanged = true;
         break;
       }
     }
 
     // Save back to local state (which triggers UI re-renders)
-    state.set('character', { ...character, progress: p });
+    const updatedCharacter = { ...character, progress: p };
+    state.set('character', updatedCharacter);
     
-    // In a real app, we would also await dbService.updateCharacter(...) here
+    // Persist to authoritative save if progress actually changed
+    if (isProgressionChanged && character.id) {
+       dbService.updateCharacter(character.id, updatedCharacter).catch(err => {
+           console.error("[Persistence Error]", err);
+       });
+    }
   }
 
   // --- UNLOCK ENGINE (Internal logic) ---

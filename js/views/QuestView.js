@@ -4,6 +4,7 @@ import { state } from '../state.js';
 import { AppLayout } from '../components/AppLayout.js';
 import { router } from '../router.js';
 import { progressionEngine, PROGRESSION_STATES } from '../services/ProgressionEngine.js';
+import { RewardOverlay } from '../components/RewardOverlay.js';
 
 export class QuestView {
   constructor() {
@@ -53,7 +54,7 @@ export class QuestView {
       this.reRender();
     } else if (actionType === 'CLAIM_REWARD') {
       progressionEngine.dispatch('CLAIM_REWARD', { questId });
-      router.navigate('/home');
+      this.reRender();
     }
   }
 
@@ -119,9 +120,13 @@ export class QuestView {
     // --- STATE: IN_PROGRESS ---
     else if (questState === PROGRESSION_STATES.IN_PROGRESS) {
         contentArea.appendChild(this._renderObjectiveCard(quest));
-        contentArea.appendChild(this._renderResourcesCard(quest));
+        if (quest.resourcesRequired !== false) {
+           contentArea.appendChild(this._renderResourcesCard(quest));
+        }
         contentArea.appendChild(this._renderSubmissionForm(quest));
-        contentArea.appendChild(this._renderLockedQuiz());
+        if (quest.quizRequired !== false) {
+           contentArea.appendChild(this._renderLockedQuiz());
+        }
     }
 
     // --- STATE: SUBMITTED ---
@@ -138,26 +143,50 @@ export class QuestView {
         contentArea.appendChild(this._renderQuizForm(quest));
     }
 
-    // --- STATE: QUIZ_PASSED / REWARD_PENDING ---
+    // --- STATE: REWARD_PENDING ---
     // (We render the QUIZ_AVAILABLE view underneath the modal)
-    else if (questState === PROGRESSION_STATES.QUIZ_PASSED || questState === PROGRESSION_STATES.REWARD_PENDING) {
+    else if (questState === PROGRESSION_STATES.REWARD_PENDING) {
         contentArea.appendChild(this._renderObjectiveCard(quest));
-        contentArea.appendChild(this._renderSubmittedState());
-        contentArea.appendChild(this._renderQuizForm(quest)); // Render underneath overlay
+        if (quest.submissionRequired !== false) {
+            contentArea.appendChild(this._renderSubmittedState());
+        }
+        if (quest.quizRequired !== false) {
+            contentArea.appendChild(this._renderQuizForm(quest)); // Render underneath overlay
+        }
     }
 
     // --- COMPLETED ---
     else if (questState === PROGRESSION_STATES.COMPLETED) {
         contentArea.appendChild(this._renderObjectiveCard(quest));
+        
+        const ctaButtons = [];
+        if (quest.nextQuestId) {
+            ctaButtons.push(
+               createElement('button', { 
+                   className: 'btn bg-primary text-black mt-4',
+                   style: 'font-weight: 900; box-shadow: 4px 4px 0px var(--color-black); border: 2px solid var(--color-black);',
+                   onclick: () => {
+                       // Automatically set next quest as active and navigate to it?
+                       // Or go back to home. Actually, just go back to home for now where they can start it.
+                       router.navigate('/home');
+                   }
+               }, 'Continue Learning')
+            );
+        }
+        
+        ctaButtons.push(
+           createElement('button', { 
+               className: 'btn bg-black text-white mt-4 ml-4',
+               onclick: () => router.navigate('/home')
+           }, 'Return to Base')
+        );
+
         contentArea.appendChild(createElement('div', { 
            className: 'card p-6 text-center bg-gray-100', style: 'border: 3px dashed var(--color-gray-400);' 
         }, [
            createElement('i', { className: 'ph-duotone ph-check-circle text-success text-5xl mb-4' }),
            createElement('h2', { className: 'text-2xl m-0' }, 'Mission Completed'),
-           createElement('button', { 
-               className: 'btn bg-black text-white mt-4',
-               onclick: () => router.navigate('/home')
-           }, 'Return to Base')
+           createElement('div', { className: 'mt-6 d-flex justify-center' }, ctaButtons)
         ]));
     }
 
@@ -176,8 +205,9 @@ export class QuestView {
     ]);
 
     // Append Reward Overlay if needed
-    if (questState === PROGRESSION_STATES.QUIZ_PASSED || questState === PROGRESSION_STATES.REWARD_PENDING) {
-        mainContainer.appendChild(this._renderRewardOverlay(quest));
+    if (questState === PROGRESSION_STATES.REWARD_PENDING) {
+        const overlay = new RewardOverlay(quest, () => this.handleAction('CLAIM_REWARD'));
+        mainContainer.appendChild(overlay.render());
     }
 
     return mainContainer;
@@ -313,39 +343,7 @@ export class QuestView {
        ]);
   }
 
-  _renderRewardOverlay(quest) {
-      // Fullscreen Neo-Brutalist Overlay
-      return createElement('div', { 
-          className: 'fixed inset-0 d-flex align-center justify-center p-4',
-          style: 'background: rgba(0,0,0,0.85); z-index: 9999; animation: fadeIn 0.3s ease-out forwards; backdrop-filter: blur(4px);'
-      }, [
-          createElement('div', { 
-              className: 'card max-w-sm w-full text-center', 
-              style: 'background: var(--color-white); border: 4px solid var(--color-black); box-shadow: 12px 12px 0px var(--color-black); border-radius: 16px; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;'
-          }, [
-              createElement('div', { className: 'mb-4' }, [
-                  createElement('i', { className: 'ph-fill ph-confetti text-primary', style: 'font-size: 64px;' })
-              ]),
-              createElement('h2', { className: 'text-3xl font-black mb-2 m-0 uppercase' }, 'Mission Complete'),
-              createElement('p', { className: 'text-gray text-lg font-bold mb-6' }, quest.title),
-              
-              createElement('div', { 
-                  className: 'bg-black text-warning py-4 px-6 mb-8 d-inline-block',
-                  style: 'border-radius: 30px; border: 2px solid var(--color-black);'
-              }, [
-                  createElement('span', { className: 'text-3xl font-black' }, `+${quest.rewardXP} XP`)
-              ]),
 
-              createElement('button', {
-                  className: 'btn w-100 p-4 bg-primary text-black',
-                  style: 'font-size: 20px; font-weight: 900; border: 3px solid var(--color-black); box-shadow: 4px 4px 0px var(--color-black); cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;',
-                  onclick: () => this.handleAction('CLAIM_REWARD'),
-                  onmousedown: (e) => { e.currentTarget.style.transform = 'translateY(4px)'; e.currentTarget.style.boxShadow = '0 0px 0px var(--color-black)'; },
-                  onmouseup: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '4px 4px 0px var(--color-black)'; }
-              }, 'CLAIM REWARD')
-          ])
-      ]);
-  }
 
   render() {
     const layout = new AppLayout(this.renderContent(), '/quest');
