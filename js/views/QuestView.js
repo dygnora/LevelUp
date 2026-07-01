@@ -129,7 +129,7 @@ export class QuestView {
     else if (questState === PROGRESSION_STATES.QUIZ_AVAILABLE) {
         contentArea.appendChild(this._renderObjectiveCard(quest));
         contentArea.appendChild(this._renderSubmittedState());
-        contentArea.appendChild(this._renderQuizForm(quest));
+        contentArea.appendChild(this._renderQuizForm(quest, questState));
     }
 
     // --- STATE: REWARD_PENDING ---
@@ -140,7 +140,7 @@ export class QuestView {
             contentArea.appendChild(this._renderSubmittedState());
         }
         if (quest.quizRequired !== false) {
-            contentArea.appendChild(this._renderQuizForm(quest)); // Render underneath overlay
+            contentArea.appendChild(this._renderQuizForm(quest, questState)); // Render underneath overlay
         }
     }
 
@@ -301,12 +301,14 @@ export class QuestView {
       ]);
   }
 
-  _renderQuizForm(quest) {
+  _renderQuizForm(quest, questState) {
       if (!quest.quiz || quest.quiz.length === 0) {
           // If a quest has no quiz, directly allow claiming reward after submission
           // For MVP, we assume all quests have a quiz or we simulate an empty one.
           return createElement('div', {}, []);
       }
+
+      const hasSubmitted = questState === PROGRESSION_STATES.REWARD_PENDING || (this.engineError && this.engineError.code === 'QUIZ_FAILED');
 
       return createElement('div', { 
           className: 'card p-6 mb-8 animate-slide-up', 
@@ -316,8 +318,27 @@ export class QuestView {
              createElement('i', { className: 'ph-bold ph-exam text-primary' }),
              'Knowledge Check'
           ]),
-          createElement('div', { className: 'd-flex flex-column gap-6 mb-6' }, quest.quiz.map((q, index) => 
-             createElement('div', {}, [
+          createElement('div', { className: 'd-flex flex-column gap-6 mb-6' }, quest.quiz.map((q, index) => {
+             
+             let explanationBox = null;
+             if (hasSubmitted && this.quizAnswers[index] !== undefined) {
+                 const selectedAnswer = this.quizAnswers[index];
+                 const isCorrect = selectedAnswer === q.correctAnswer;
+                 const boxClass = isCorrect ? 'bg-success text-white' : 'bg-warning text-black';
+                 const icon = isCorrect ? 'ph-check-circle' : 'ph-x-circle';
+                 explanationBox = createElement('div', {
+                     className: `p-3 mt-3 d-flex gap-2 ${boxClass}`,
+                     style: 'border-radius: 8px; border: 2px solid var(--color-black);'
+                 }, [
+                     createElement('i', { className: `ph-fill ${icon} text-xl mt-1` }),
+                     createElement('div', {}, [
+                         createElement('strong', { className: 'd-block mb-1' }, isCorrect ? 'Correct!' : 'Incorrect.'),
+                         createElement('span', { className: 'text-sm font-bold' }, q.explanation)
+                     ])
+                 ]);
+             }
+
+             return createElement('div', {}, [
                 createElement('p', { className: 'font-bold mb-3' }, `${index + 1}. ${q.question}`),
                 createElement('div', { className: 'd-flex flex-column gap-2' }, q.options.map((opt, optIndex) => 
                    createElement('label', { 
@@ -328,14 +349,19 @@ export class QuestView {
                          type: 'radio', 
                          name: `quiz-${index}`, 
                          value: optIndex,
+                         checked: this.quizAnswers[index] === optIndex,
+                         disabled: questState === PROGRESSION_STATES.REWARD_PENDING,
                          onchange: () => { this.quizAnswers[index] = optIndex; }
                       }),
                       createElement('span', { className: 'font-bold' }, opt)
                    ])
-                ))
+                )),
+                explanationBox ? explanationBox : createElement('span', {}, [])
              ])
-          )),
-          createElement('button', {
+          })),
+          questState === PROGRESSION_STATES.REWARD_PENDING 
+            ? createElement('div', { className: 'text-center font-bold text-success' }, 'Quiz Passed!')
+            : createElement('button', {
              className: 'btn w-100 p-4',
              style: 'background-color: var(--color-warning); color: var(--color-black); font-size: 18px; font-weight: 900; border: 3px solid var(--color-black); box-shadow: 4px 4px 0px var(--color-black); cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;',
              onclick: () => this.handleAction('SUBMIT_QUIZ'),
