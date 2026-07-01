@@ -110,7 +110,7 @@ export class ChooseJourneyView {
   render() {
     const container = createElement('div', { className: 'centered-layout flex-column align-center' }, [
       createElement('div', { className: 'text-center mb-8 animate-fade-in' }, [
-        createElement('h1', { className: 'text-white font-bold', style: 'font-size: 5.25rem; margin-bottom: 24px; text-shadow: 6px 6px 0px var(--color-black); letter-spacing: -2px;' }, 'Select Your Class'),
+        createElement('h1', { className: 'text-white font-bold', style: 'font-size: 5.25rem; margin-bottom: 24px; text-shadow: 6px 6px 0px var(--color-black); letter-spacing: -2px;' }, 'Select Your Path'),
         createElement('p', { className: 'font-bold', style: 'font-size: 1.7rem; color: var(--color-black); margin: 0 0 12px 0; text-shadow: 2px 2px 0px var(--color-white);' }, 'Choose your primary learning journey to begin.'),
         createElement('p', { className: 'font-bold', style: 'font-size: 1.3rem; color: var(--color-black); max-width: 850px; margin: 0 auto 48px auto; line-height: 1.5; text-shadow: 2px 2px 0px var(--color-white);' }, 'Don\'t worry, you can always learn other skills later. This just sets your starting point.')
       ]),
