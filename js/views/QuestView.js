@@ -10,52 +10,39 @@ export class QuestView {
   constructor() {
     this.quizAnswers = {};
     this.submissionValue = '';
+    this.engineError = null;
   }
 
   handleAction(actionType) {
     const character = state.get('character');
     const questId = character?.progress?.currentQuest;
     if (!questId) return;
+    
+    this.engineError = null;
+    let result = { success: true };
 
     if (actionType === 'START_QUEST') {
-       progressionEngine.dispatch('START_QUEST', { questId });
-       this.reRender();
+       result = progressionEngine.dispatch('START_QUEST', { questId });
     } else if (actionType === 'SUBMIT_PROJECT') {
-      if (!this.submissionValue.trim()) {
-         alert('Please enter a valid submission URL.');
-         return;
-      }
-      progressionEngine.dispatch('SUBMIT_PROJECT', {
+       result = progressionEngine.dispatch('SUBMIT_PROJECT', {
          questId,
-         type: 'github', // hardcoded for MVP
+         type: 'github',
          value: this.submissionValue
-      });
-      this.reRender();
-    } else if (actionType === 'PASS_QUIZ') {
-      const quest = progressionEngine.getQuest(questId);
-      // Validate all answers are correct
-      let allCorrect = true;
-      quest.quiz.forEach((q, index) => {
-         if (this.quizAnswers[index] !== q.correctAnswer) {
-            allCorrect = false;
-         }
-      });
-      
-      if (!allCorrect) {
-         alert('Some answers are incorrect. Please try again!');
-         return;
-      }
-
-      progressionEngine.dispatch('PASS_QUIZ', {
+       });
+    } else if (actionType === 'SUBMIT_QUIZ') {
+       result = progressionEngine.dispatch('SUBMIT_QUIZ', {
          questId,
-         score: 100,
-         attempts: 1
-      });
-      this.reRender();
+         answers: this.quizAnswers
+       });
     } else if (actionType === 'CLAIM_REWARD') {
-      progressionEngine.dispatch('CLAIM_REWARD', { questId });
-      this.reRender();
+       result = progressionEngine.dispatch('CLAIM_REWARD', { questId });
     }
+
+    if (!result.success) {
+       this.engineError = result;
+    }
+    
+    this.reRender();
   }
 
   reRender() {
@@ -103,7 +90,9 @@ export class QuestView {
       ])
     ]);
 
-    const contentArea = createElement('div', { className: 'w-100' }, []);
+    const errorArea = this.engineError ? this._renderError(this.engineError) : createElement('div', {}, []);
+
+    const contentArea = createElement('div', { className: 'w-100' }, [ errorArea ]);
 
     // --- STATE: AVAILABLE ---
     if (questState === PROGRESSION_STATES.AVAILABLE) {
@@ -214,6 +203,19 @@ export class QuestView {
   }
 
   // --- UI COMPONENT HELPERS ---
+  
+  _renderError(error) {
+      return createElement('div', { 
+          className: 'bg-black text-white p-4 mb-6 d-flex align-center gap-3 animate-pop-in',
+          style: 'border: 3px solid var(--color-warning); border-radius: 8px;'
+      }, [
+          createElement('i', { className: 'ph-fill ph-warning-circle text-warning text-3xl' }),
+          createElement('div', {}, [
+              createElement('div', { className: 'text-sm font-bold text-warning mb-1' }, `ERROR: ${error.code}`),
+              createElement('div', { className: 'font-bold' }, error.message)
+          ])
+      ]);
+  }
 
   _renderObjectiveCard(quest) {
       return createElement('div', { 
@@ -336,7 +338,7 @@ export class QuestView {
           createElement('button', {
              className: 'btn w-100 p-4',
              style: 'background-color: var(--color-warning); color: var(--color-black); font-size: 18px; font-weight: 900; border: 3px solid var(--color-black); box-shadow: 4px 4px 0px var(--color-black); cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;',
-             onclick: () => this.handleAction('PASS_QUIZ'),
+             onclick: () => this.handleAction('SUBMIT_QUIZ'),
              onmousedown: (e) => { e.currentTarget.style.transform = 'translateY(4px)'; e.currentTarget.style.boxShadow = '0 0px 0px var(--color-black)'; },
              onmouseup: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '4px 4px 0px var(--color-black)'; }
           }, 'COMPLETE QUEST')

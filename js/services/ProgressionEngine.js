@@ -44,6 +44,24 @@ class ProgressionEngine {
       .sort((a, b) => a.order - b.order);
   }
 
+  // --- UTILS ---
+  _normalizeProgress(p) {
+    if (!p) p = {};
+    return {
+      currentJourney: p.currentJourney || 'frontend',
+      currentModule: p.currentModule || 'html',
+      currentQuest: p.currentQuest || null,
+      completedQuests: p.completedQuests || {},
+      completedModules: p.completedModules || [],
+      xp: p.xp || 0,
+      level: p.level || 1,
+      activeSubmission: p.activeSubmission || null,
+      isQuestStarted: !!p.isQuestStarted,
+      isRewardPending: !!p.isRewardPending,
+      quizResults: p.quizResults || null
+    };
+  }
+
   // Gets the exact state of a quest for the current user
   getQuestState(questId) {
     const character = state.get('character');
@@ -56,7 +74,7 @@ class ProgressionEngine {
        return null;
     }
 
-    const progress = character.progress;
+    const progress = this._normalizeProgress(character.progress);
     const quest = this.getQuest(questId);
     
     if (progress.completedQuests && progress.completedQuests[questId]) {
@@ -100,23 +118,14 @@ class ProgressionEngine {
   // Returns the entire active progression context for UI
   getCurrentContext() {
     const character = state.get('character') || {};
-    const p = character.progress || {
-        currentJourney: 'frontend',
-        currentModule: 'html',
-        currentQuest: null,
-        completedQuests: {},
-        completedModules: [],
-        xp: 0,
-        level: 1,
-        activeSubmission: null
-    };
+    const p = this._normalizeProgress(character.progress);
     
     const currentJourney = this.getJourney(p.currentJourney);
     const currentModule = this.getModule(p.currentModule);
     
     // If currentQuest is null, it means they haven't started. The target quest is the first quest of the module.
     let targetQuestId = p.currentQuest;
-    if (!targetQuestId) {
+    if (!targetQuestId && currentModule) {
        const moduleQuests = this.getQuestsForModule(currentModule.id);
        if (moduleQuests.length > 0) targetQuestId = moduleQuests[0].id;
     }
@@ -131,11 +140,13 @@ class ProgressionEngine {
     }
     
     // Calculate Journey Progress based on total quests in journey
-    const modulesInJourney = this.getModulesForJourney(currentJourney.id);
     let totalQuestsInJourney = 0;
-    modulesInJourney.forEach(m => {
-       totalQuestsInJourney += this.getQuestsForModule(m.id).length;
-    });
+    if (currentJourney) {
+        const modulesInJourney = this.getModulesForJourney(currentJourney.id);
+        modulesInJourney.forEach(m => {
+           totalQuestsInJourney += this.getQuestsForModule(m.id).length;
+        });
+    }
     
     const completedQuestsCount = Object.keys(p.completedQuests || {}).length;
 
@@ -170,12 +181,15 @@ class ProgressionEngine {
     else if (ctx.state === 'SUBMITTED') ctaLabel = 'Take Quiz';
     else if (ctx.state === 'COMPLETED') ctaLabel = 'Continue Journey';
 
-    const roadmapQuests = this.getQuestsForModule(ctx.module.id).slice(0, 4);
-    const roadmap = roadmapQuests.map(q => ({
-       id: q.id,
-       title: q.title,
-       state: this.getQuestState(q.id)
-    }));
+    let roadmap = [];
+    if (ctx.module) {
+        const roadmapQuests = this.getQuestsForModule(ctx.module.id).slice(0, 4);
+        roadmap = roadmapQuests.map(q => ({
+           id: q.id,
+           title: q.title,
+           state: this.getQuestState(q.id)
+        }));
+    }
 
     return {
        firstName,
@@ -222,37 +236,32 @@ class ProgressionEngine {
 
   dispatch(actionType, payload) {
     const character = state.get('character');
-    if (!character) return;
+    if (!character) return { success: false, code: 'NO_CHARACTER', message: 'Character not found.' };
 
-    let p = character.progress;
-    
-    // Ensure progress object exists
-    if (!p) {
-      p = {
-        currentJourney: 'frontend',
-        currentModule: 'html',
-        currentQuest: null,
-        completedQuests: {},
-        completedModules: [],
-        xp: 0,
-        level: 1,
-        activeSubmission: null
-      };
-    }
+    let p = this._normalizeProgress(character.progress);
 
     console.log(`[Progression Engine] Processing Action: ${actionType}`, payload);
 
     let isProgressionChanged = false;
+    let result = { success: true };
 
     switch (actionType) {
       case 'OPEN_RESOURCE': {
-        // Just for analytics MVP, does not affect progression state but we can log it
         console.log('[Analytics] Resource opened:', payload.url);
-        break; // Doesn't persist to Firestore for MVP
+        break;
       }
       case 'START_QUEST': {
         const { questId } = payload;
-        // Validate if they can start it
+        const quest = this.getQuest(questId);
+        if (!quest) {
+           return { success: false, code: 'UNKNOWN_QUEST', message: 'Quest not found.' };
+        }
+        
+        const state = this.getQuestState(questId);
+        if (state !== PROGRESSION_STATES.AVAILABLE) {
+           return { success: false, code: 'INVALID_STATE_TRANSITION', message: 'Quest is not available to start.' };
+        }
+
         p.currentQuest = questId;
         p.isQuestStarted = true;
         p.activeSubmission = null;
@@ -263,23 +272,64 @@ class ProgressionEngine {
       case 'SUBMIT_PROJECT': {
         const { questId, type, value } = payload;
         const quest = this.getQuest(questId);
+        const state = this.getQuestState(questId);
+        
+        if (state !== PROGRESSION_STATES.IN_PROGRESS) {
+            return { success: false, code: 'INVALID_STATE_TRANSITION', message: 'You must start the quest before submitting.' };
+        }
+        
+        // Submission Validation
+        if (quest.submissionRequirement.type === 'github') {
+            if (!value || !value.startsWith('https://github.com/')) {
+               return { success: false, code: 'INVALID_SUBMISSION_URL', message: 'Please enter a valid GitHub repository URL starting with https://github.com/' };
+            }
+        } else if (quest.submissionRequirement.type === 'url') {
+            if (!value || !value.startsWith('http')) {
+               return { success: false, code: 'INVALID_SUBMISSION_URL', message: 'Please enter a valid URL.' };
+            }
+        }
+
         p.activeSubmission = {
           questId,
           type,
           value,
           submittedAt: new Date().toISOString()
         };
+        
         if (!quest.quizRequired) {
-            // Skip quiz straight to reward
             p.isRewardPending = true;
         }
         isProgressionChanged = true;
         break;
       }
-      case 'PASS_QUIZ': {
-        const { questId, score, attempts } = payload;
+      case 'SUBMIT_QUIZ': {
+        const { questId, answers } = payload;
+        const quest = this.getQuest(questId);
+        const state = this.getQuestState(questId);
+        
+        if (state !== PROGRESSION_STATES.QUIZ_AVAILABLE && state !== PROGRESSION_STATES.IN_PROGRESS) {
+            return { success: false, code: 'INVALID_STATE_TRANSITION', message: 'Quiz is not available.' };
+        }
+        
+        // Engine calculates score
+        let correctAnswers = 0;
+        const totalQuestions = quest.quiz.length;
+        
+        quest.quiz.forEach((q, index) => {
+           if (answers[index] === q.correctAnswer) {
+              correctAnswers++;
+           }
+        });
+        
+        const score = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 100;
+        const passingScore = quest.passingScore || 100;
+        
+        if (score < passingScore) {
+           return { success: false, code: 'QUIZ_FAILED', message: `You scored ${Math.round(score)}%. You need ${passingScore}% to pass.` };
+        }
+        
         p.isRewardPending = true;
-        p.quizResults = { score, attempts };
+        p.quizResults = { score, attempts: (p.quizResults?.attempts || 0) + 1 };
         isProgressionChanged = true;
         break;
       }
@@ -287,7 +337,16 @@ class ProgressionEngine {
         const { questId } = payload;
         const quest = this.getQuest(questId);
         
-        // 1. Mark as completed
+        // Idempotency check
+        if (p.completedQuests && p.completedQuests[questId]) {
+            return { success: false, code: 'REWARD_ALREADY_CLAIMED', message: 'Reward already claimed for this quest.' };
+        }
+        
+        const state = this.getQuestState(questId);
+        if (state !== PROGRESSION_STATES.REWARD_PENDING) {
+            return { success: false, code: 'INVALID_STATE_TRANSITION', message: 'Reward is not pending.' };
+        }
+        
         if (!p.completedQuests) p.completedQuests = {};
         p.completedQuests[questId] = {
           completedAt: new Date().toISOString(),
@@ -298,28 +357,30 @@ class ProgressionEngine {
         
         p.xp += quest.rewardXP;
         
-        // Reset local quest state flags
         p.activeSubmission = null;
         p.isRewardPending = false;
         p.isQuestStarted = false;
 
-        // 2. Unlock Engine: Determine what happens next
         this._evaluateUnlock(p, quest);
         isProgressionChanged = true;
         break;
       }
+      default:
+        return { success: false, code: 'UNKNOWN_ACTION', message: 'Invalid action.' };
     }
 
-    // Save back to local state (which triggers UI re-renders)
-    const updatedCharacter = { ...character, progress: p };
-    state.set('character', updatedCharacter);
-    
-    // Persist to authoritative save if progress actually changed
-    if (isProgressionChanged && character.id) {
-       dbService.updateCharacter(character.id, updatedCharacter).catch(err => {
-           console.error("[Persistence Error]", err);
-       });
+    if (result.success) {
+        const updatedCharacter = { ...character, progress: p };
+        state.set('character', updatedCharacter);
+        
+        if (isProgressionChanged && character.id) {
+           dbService.updateCharacter(character.id, updatedCharacter).catch(err => {
+               console.error("[Persistence Error]", err);
+           });
+        }
     }
+    
+    return result;
   }
 
   // --- UNLOCK ENGINE (Internal logic) ---

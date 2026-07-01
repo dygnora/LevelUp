@@ -17,6 +17,7 @@ export const quests = {
     quiz: [
       { question: 'Which tag is used for the main navigation?', options: ['<nav>', '<header>', '<section>'], correctAnswer: 0 }
     ],
+    passingScore: 100,
     rewardXP: 40,
     nextQuestId: 'html-forms'
   },
