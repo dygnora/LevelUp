@@ -575,12 +575,12 @@ export const htmlQuests = [
         title: 'Web Accessibility (a11y) Fundamentals',
         objective: 'Ensure your web pages are usable by everyone, including people with disabilities, by combining semantic HTML with core accessibility principles.',
         whyItMatters: 'Accessibility (a11y) is not an optional feature; it is a fundamental requirement. Building accessible websites ensures inclusive access to information, helps you reach a wider audience, and fundamentally improves the user experience for everyone.',
-        keyConcepts: ['a11y', 'WCAG', 'semantic HTML', 'aria-label', 'tabindex', 'color contrast', 'keyboard navigation'],
+        keyConcepts: ['a11y', 'Accessible Design Principles', 'semantic HTML', 'aria-label', 'tabindex', 'color contrast', 'keyboard navigation'],
         learningOutcomes: [
-            'Understand the importance of web accessibility and WCAG guidelines.',
+            'Understand the importance of web accessibility and universal design.',
             'Recognize that semantic HTML is the foundation of an accessible web.',
             'Navigate a webpage using only a keyboard.',
-            'Apply basic ARIA attributes (like aria-label) correctly when semantic HTML is insufficient.',
+            'Recognize when native HTML is sufficient and when ARIA is actually needed.',
             'Audit a webpage for color contrast and missing structural accessibility features.'
         ],
         commonMistakes: [
@@ -626,11 +626,15 @@ export const htmlQuests = [
             label: 'GitHub Repository URL',
             requirements: [
                 'Public repository',
-                'project/ folder structure',
+                'project/ folder structure with an assets/ directory',
                 'An accessible contact form and article layout',
                 '100% semantic HTML (no div soup)',
                 'Proper heading hierarchy (h1 -> h2 -> h3)',
-                'All interactive elements must be keyboard navigable'
+                'All interactive elements must be keyboard navigable',
+                'All images include meaningful alt text',
+                'Form inputs are correctly associated with labels',
+                'Tables use caption and scope attributes',
+                'Embedded media includes accessible controls'
             ]
         },
 
@@ -658,23 +662,88 @@ export const htmlQuests = [
                 explanation: 'Headings should form a logical outline. Skipping levels (like going from h1 to h4) confuses screen reader users who use headings to navigate the page.'
             },
             {
-                question: 'Case Study: You have a button that just contains a magnifying glass icon for a search function. How do you make this accessible?',
-                options: ['Add an aria-label="Search" to the button.', 'Change it to a <div>.', 'Screen readers will automatically understand the icon.', 'Add title="magnifying glass".'],
-                correctAnswer: 0,
-                category: 'Accessibility',
-                explanation: 'When an interactive element lacks visible text, aria-label provides a text equivalent specifically for assistive technologies.'
-            },
-            {
                 question: 'When designing a form, why is it bad practice to rely solely on the border color turning red to indicate an error?',
                 options: ['Red is not web-safe.', 'It uses too much CSS.', 'Colorblind users or users with low vision may not perceive the color change.', 'Screen readers cannot read CSS colors.'],
                 correctAnswer: 2,
                 category: 'Inclusive Design',
                 explanation: 'Information should never be conveyed by color alone. You should also include a descriptive text message or an icon to indicate the error.'
+            },
+            {
+                question: 'Case Study: You are auditing a webpage and find this code: <div><img src="user.jpg"><input type="text"></div>. Which accessibility issues exist here?',
+                options: [
+                    'Missing alt text on img, missing label for input, and using a non-semantic div wrapper.',
+                    'The input needs an ARIA role.',
+                    'The div should be replaced with a span.',
+                    'There are no accessibility issues.'
+                ],
+                correctAnswer: 0,
+                category: 'Accessibility Audit',
+                explanation: 'An image without alt text is inaccessible to screen readers, an input without a label lacks context, and divs provide no semantic structure.'
             }
         ],
 
         rewards: {
             xp: 50,
+            achievement: null
+        }
+    },
+    {
+        id: 'html-mini-project',
+        moduleId: 'html',
+        version: 1,
+        
+        title: 'HTML Capstone: Personal Portfolio',
+        objective: 'Build a complete Personal Portfolio Landing Page using all the HTML skills you have learned.',
+        whyItMatters: 'Real-world projects require combining multiple skills. This capstone project proves you can synthesize HTML basics, semantics, forms, tables, media, and accessibility into a single, cohesive, production-ready document.',
+        keyConcepts: ['Capstone', 'Synthesis', 'Project Structure', 'HTML5', 'Portfolio'],
+        learningOutcomes: [
+            'Combine semantic HTML, forms, tables, and media into a single web page.',
+            'Implement a logical folder structure for a real-world project.',
+            'Audit and ensure 100% accessibility compliance for the entire page.'
+        ],
+        commonMistakes: [
+            'Forgetting to link assets correctly relative to the new folder structure.',
+            'Sacrificing semantic HTML for quick layout hacks.',
+            'Reverting to "div soup" when dealing with complex nested elements.',
+            'Treating accessibility as an afterthought rather than a core feature.'
+        ],
+        skills: ['HTML5', 'Project Architecture', 'Capstone', 'Synthesis'],
+        difficulty: 'PROJECT',
+        estimatedMinutes: 120,
+        
+        resourcesRequired: true,
+        submissionRequired: true,
+        quizRequired: false,
+
+        resources: [
+            { 
+                title: 'Figma / Reference Design: Personal Portfolio', 
+                type: 'practice',
+                estimatedMinutes: 120,
+                difficulty: 'PROJECT',
+                url: 'https://www.figma.com/' 
+            }
+        ],
+
+        submissionRequirement: { 
+            type: 'github', 
+            label: 'GitHub Repository URL',
+            requirements: [
+                'project/ folder structure (index.html, assets/images, etc.)',
+                'Semantic HTML layout (header, nav, main, footer, section)',
+                'Functional Contact Form with labels and validation',
+                'A data Table (e.g., Skills or Experience Pricing)',
+                'Embedded media (profile picture with alt, or video intro)',
+                '100% Accessible (Keyboard navigable, ARIA where needed, alt text)',
+                'Proper README.md documentation included'
+            ]
+        },
+
+        passingScore: null,
+        quiz: [],
+
+        rewards: {
+            xp: 120,
             achievement: null
         }
     }
