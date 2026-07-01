@@ -51,3 +51,50 @@
 .bg-black { background-color: var(--color-black); }
 .bg-gray-100 { background-color: var(--color-gray-100); }
 .bg-primary { background-color: var(--color-primary); }
+
+/* --- Phase 5: Micro Interactions & Emotional Feedback --- */
+
+/* Page Entrance (Staggered Fade Up) */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  opacity: 0;
+  animation: fadeUp 300ms ease-out forwards;
+}
+
+.delay-0 { animation-delay: 0ms; }
+.delay-100 { animation-delay: 100ms; }
+.delay-140 { animation-delay: 140ms; }
+.delay-180 { animation-delay: 180ms; }
+.delay-220 { animation-delay: 220ms; }
+.delay-260 { animation-delay: 260ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-340 { animation-delay: 340ms; }
+.delay-380 { animation-delay: 380ms; }
+
+/* Interactive Cursor Feedback */
+.clickable, .card-interactive, a, button {
+  cursor: pointer;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    transform: none !important;
+  }
+  .card-interactive:hover,
+  .btn-interactive:hover,
+  .btn-interactive:active,
+  .icon-tilt:hover {
+    transform: none !important;
+  }
+}

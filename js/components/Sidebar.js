@@ -24,9 +24,15 @@ export class Sidebar {
         createElement('a', { 
           href: item.path,
           className: `d-flex align-center gap-2 p-3 font-bold`,
-          style: `border-radius: var(--radius-md); color: var(--color-black); text-decoration: none; transition: all 0.2s ease; ${isActive ? 'background-color: var(--theme-bg); border: 2px solid var(--color-black); box-shadow: 3px 3px 0px var(--color-black); transform: translateX(2px);' : 'border: 2px solid transparent;'}`
+          style: `border-radius: var(--radius-md); color: var(--color-black); text-decoration: none; transition: background-color 200ms ease, color 200ms ease; ${isActive ? 'background-color: var(--theme-bg); border: 2px solid var(--color-black); box-shadow: 3px 3px 0px var(--color-black);' : 'border: 2px solid transparent;'}`,
+          onmouseenter: (e) => {
+             if (!isActive) e.currentTarget.style.backgroundColor = 'var(--color-gray-100)';
+          },
+          onmouseleave: (e) => {
+             if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';
+          }
         }, [
-          createElement('i', { className: `${isActive ? 'ph-fill' : 'ph'} ${item.icon} text-lg` }),
+          createElement('i', { className: `${isActive ? 'ph-fill' : 'ph'} ${item.icon} text-lg`, style: 'transition: color 200ms ease;' }),
           item.label
         ])
       ]);

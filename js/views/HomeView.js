@@ -49,7 +49,7 @@ export class HomeView {
 
     // 1. Greeting (Dynamic from ThemeManager)
     const firstName = (character.displayName || 'Deny').split(' ')[0];
-    const headerContext = createElement('div', { className: 'mb-4 animate-slide-up', style: 'margin-bottom: 24px;' }, [
+    const headerContext = createElement('div', { className: 'mb-4 animate-fade-up delay-0', style: 'margin-bottom: 24px;' }, [
       createElement('p', { className: 'm-0 text-gray font-bold text-sm mb-1' }, `${theme.greeting}, ${firstName}.`),
       createElement('p', { className: 'm-0 text-black font-bold text-md' }, theme.subGreeting)
     ]);
@@ -65,8 +65,16 @@ export class HomeView {
     else if (questState === 'COMPLETED') ctaLabel = 'Continue Journey';
 
     const heroQuest = createElement('div', { 
-      className: 'animate-slide-up delay-100', 
-      style: cardStyle
+      className: 'animate-fade-up delay-100 card-interactive', 
+      style: `${cardStyle} transition: transform 150ms ease, box-shadow 150ms ease;`,
+      onmouseenter: (e) => { 
+         e.currentTarget.style.transform = 'translateY(-2px)';
+         e.currentTarget.style.boxShadow = '8px 8px 0px var(--color-black)';
+      },
+      onmouseleave: (e) => { 
+         e.currentTarget.style.transform = 'translateY(0)';
+         e.currentTarget.style.boxShadow = '6px 6px 0px var(--color-black)';
+      }
     }, [
       // Content Box (White)
       createElement('div', { className: 'p-6' }, [
@@ -95,10 +103,12 @@ export class HomeView {
       ]),
       // CTA Button (Full Width flush to bottom)
       createElement('button', {
-        className: 'btn w-100 p-4 d-flex justify-center align-center gap-2',
-        style: 'background-color: var(--theme-bg); color: var(--theme-btn-text); font-size: 18px; font-weight: 900; border: none; border-top: 3px solid var(--color-black); cursor: pointer; transition: background-color 0.2s;',
-        onmousedown: (e) => { e.currentTarget.style.opacity = '0.9'; },
-        onmouseup: (e) => { e.currentTarget.style.opacity = '1'; },
+        className: 'btn-interactive w-100 p-4 d-flex justify-center align-center gap-2',
+        style: 'background-color: var(--theme-bg); color: var(--theme-btn-text); font-size: 18px; font-weight: 900; border: none; border-top: 3px solid var(--color-black); cursor: pointer; transition: transform 120ms ease, background-color 200ms ease; transform-origin: center;',
+        onmouseenter: (e) => { e.currentTarget.style.transform = 'scale(1.02)'; },
+        onmouseleave: (e) => { e.currentTarget.style.transform = 'scale(1)'; },
+        onmousedown: (e) => { e.currentTarget.style.transform = 'scale(0.98)'; },
+        onmouseup: (e) => { e.currentTarget.style.transform = 'scale(1.02)'; },
         onclick: () => router.navigate('/quest')
       }, [
         ctaLabel,
@@ -108,18 +118,18 @@ export class HomeView {
 
     // 3. Next Unlock Attachment (Phase 3 Redesign - Teaser Card)
     const nextUnlock = createElement('div', { 
-      className: 'p-6 animate-slide-up delay-200', 
+      className: 'p-6 animate-fade-up delay-180 card-interactive', 
       style: `${cardStyle} box-shadow: 4px 4px 0px var(--color-black); transition: all 0.2s; cursor: default;`,
       onmouseenter: (e) => { 
         const icon = e.currentTarget.querySelector('.lock-icon');
         const preview = e.currentTarget.querySelector('.teaser-preview');
-        if(icon) icon.style.transform = 'translateY(-2px) rotate(5deg)';
+        if(icon) { icon.style.transform = 'rotate(5deg)'; }
         if(preview) { preview.style.filter = 'blur(0px)'; preview.style.opacity = '0.9'; }
       },
       onmouseleave: (e) => { 
         const icon = e.currentTarget.querySelector('.lock-icon');
         const preview = e.currentTarget.querySelector('.teaser-preview');
-        if(icon) icon.style.transform = 'none';
+        if(icon) { icon.style.transform = 'rotate(0deg)'; }
         if(preview) { preview.style.filter = 'blur(1px)'; preview.style.opacity = '0.5'; }
       }
     }, [
@@ -152,7 +162,7 @@ export class HomeView {
     // 4. Journey Progress (Phase 4 Redesign - Neo-Brutalist Blocks)
     const mockJourneyStats = { completed: 2, total: 8, percentage: 25 };
     const journeyProgress = createElement('div', { 
-      className: 'p-6 animate-slide-up delay-300', 
+      className: 'p-6 animate-fade-up delay-260 card-interactive', 
       style: `${cardStyle} box-shadow: 6px 6px 0px var(--color-black); transition: transform 0.2s, box-shadow 0.2s;`,
       onmouseenter: (e) => { 
          e.currentTarget.style.transform = 'translateY(-2px)';
@@ -205,8 +215,8 @@ export class HomeView {
         }
 
         return createElement('div', { 
-          className: 'd-flex align-center p-3 card-interactive',
-          style: `border-radius: 16px; gap: 12px; ${blockStyle} transition: transform 0.2s, box-shadow 0.2s;`
+          className: 'd-flex align-center p-3 card-interactive animate-fade-up',
+          style: `border-radius: 16px; gap: 12px; ${blockStyle} transition: transform 0.2s, box-shadow 0.2s; animation-delay: ${260 + (index * 40)}ms;`
         }, [
           iconHtml,
           createElement('span', { className: 'font-bold text-sm', style: textStyle }, [item.title])
