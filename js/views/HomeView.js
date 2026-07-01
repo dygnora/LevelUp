@@ -40,30 +40,28 @@ export class HomeView {
       achievement: "HTML Explorer"
     };
 
-    // 1. Greeting & Breadcrumb
-    const headerContext = createElement('div', { className: 'mb-4 animate-slide-up' }, [
-      createElement('p', { className: 'm-0 text-gray font-bold text-sm mb-1' }, `Good Morning, ${character.displayName || 'Hero'}`),
-      createElement('h2', { className: 'm-0 text-xl font-bold d-flex align-center gap-2 flex-wrap' }, [
-        createElement('span', { style: 'color: var(--color-black);' }, mockData.path),
-        createElement('i', { className: 'ph-bold ph-caret-right text-gray' }),
-        createElement('span', { className: 'text-gray' }, mockData.chapter),
-        createElement('i', { className: 'ph-bold ph-caret-right text-gray' }),
-        createElement('span', { style: 'color: var(--theme-bg); text-shadow: 1px 1px 0px var(--color-black);' }, mockData.module)
-      ])
+    // 1. Greeting (Small and calm hierarchy)
+    const headerContext = createElement('div', { className: 'mb-4 animate-slide-up', style: 'margin-bottom: 24px;' }, [
+      createElement('p', { className: 'm-0 text-gray font-bold text-sm mb-1' }, `Good Morning, ${character.displayName || 'Dino'}.`),
+      createElement('p', { className: 'm-0 text-black font-bold text-md' }, `${mockData.path} Journey`),
+      createElement('p', { className: 'm-0 text-gray font-bold text-sm' }, `Building the Web`) // Mock description
     ]);
+
+    // Container standard styles
+    const cardStyle = 'border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); border-radius: 8px; background: var(--color-white); width: 100%; margin-bottom: 24px; overflow: hidden;';
 
     // 2. HERO: Today's Main Quest
     const heroQuest = createElement('div', { 
-      className: 'card animate-slide-up delay-100 mb-6', 
-      style: 'border: 4px solid var(--color-black); box-shadow: 12px 12px 0px var(--color-black); background: var(--color-white); padding: 0; overflow: hidden;'
+      className: 'animate-slide-up delay-100', 
+      style: cardStyle
     }, [
       // Header
-      createElement('div', { style: 'background: var(--theme-bg); padding: 32px; border-bottom: 4px solid var(--color-black);' }, [
+      createElement('div', { style: 'background: var(--theme-bg); padding: 24px; border-bottom: 3px solid var(--color-black);' }, [
         createElement('span', { className: 'font-bold text-sm bg-black text-white px-3 py-1 mb-4 d-inline-block', style: 'border-radius: 20px; white-space: nowrap;' }, 'TODAY\'S MAIN QUEST'),
         createElement('h1', { className: 'm-0 text-4xl font-black mb-2', style: 'color: var(--color-white); text-shadow: 2px 2px 0px var(--color-black);' }, mockData.quest.title),
         createElement('p', { className: 'm-0 font-bold', style: 'color: var(--color-white); opacity: 0.9; font-size: 1.1rem; text-shadow: 1px 1px 0px var(--color-black);' }, mockData.quest.objective)
       ]),
-      // Body
+      // Body (Untouched content)
       createElement('div', { className: 'p-6' }, [
         // Stats Row
         createElement('div', { className: 'grid grid-cols-1 md-grid-cols-3 mb-6', style: 'gap: 16px;' }, [
@@ -138,8 +136,8 @@ export class HomeView {
 
     // 3. Next Unlock Attachment
     const nextUnlock = createElement('div', { 
-      className: 'card p-4 d-flex align-center gap-3 animate-slide-up delay-200 mb-8', 
-      style: 'border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); background: var(--theme-bg); margin-top: -12px; width: 92%; margin-left: auto; margin-right: auto; position: relative; z-index: 10;' 
+      className: 'p-4 d-flex align-center gap-3 animate-slide-up delay-200', 
+      style: `${cardStyle} background: var(--theme-bg); padding: 24px;` 
     }, [
       createElement('div', { className: 'bg-white p-2 d-flex align-center justify-center', style: 'border: 2px solid var(--color-black); border-radius: 50%;' }, [
         createElement('i', { className: 'ph-duotone ph-lock-key-open text-xl text-black' })
@@ -151,49 +149,63 @@ export class HomeView {
       ])
     ]);
 
-    // 4. Secondary Grid (Preview & Achievement)
-    const secondaryGrid = createElement('div', { className: 'grid grid-cols-1 md-grid-cols-2', style: 'gap: 24px;' }, [
-      // Journey Preview
-      createElement('div', { className: 'card animate-slide-up delay-300', style: 'border: 3px solid var(--color-black); background: var(--color-white); padding: 24px; display: flex; flex-direction: column;' }, [
-        createElement('h3', { className: 'text-xl font-black mb-4' }, 'Journey Preview'),
-        createElement('div', { className: 'd-flex flex-column gap-3 mb-4' }, mockData.roadmap.map(item => 
-          createElement('div', { className: 'd-flex align-center gap-3 p-2', style: item.status === 'current' ? 'background: var(--color-gray-100); border: 1px solid var(--color-black); border-radius: 6px;' : '' }, [
-            item.status === 'completed' 
-              ? createElement('i', { className: 'ph-fill ph-check-circle text-success text-2xl' })
-              : item.status === 'current'
-                ? createElement('i', { className: 'ph-fill ph-play-circle text-2xl', style: 'color: var(--theme-bg)' })
-                : createElement('i', { className: 'ph-fill ph-lock-key text-gray text-2xl' }),
-            createElement('span', { className: `font-bold ${item.status === 'locked' ? 'text-gray' : 'text-black'}` }, item.title)
-          ])
-        )),
-        createElement('button', { className: 'btn w-100 mt-auto', style: 'border: 2px solid var(--color-black); background: var(--color-white); color: var(--color-black); font-weight: bold;', onclick: () => router.navigate('/journey') }, 'Open Roadmap')
-      ]),
-      // Achievement
-      createElement('div', { className: 'card animate-slide-up delay-400', style: 'border: 3px solid var(--color-black); background: var(--color-white); padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;' }, [
+    // 4. Journey Progress
+    const journeyProgress = createElement('div', { 
+      className: 'animate-slide-up delay-300', 
+      style: `${cardStyle} padding: 24px; display: flex; flex-direction: column;` 
+    }, [
+      createElement('h3', { className: 'text-xl font-black mb-4' }, 'Journey Preview'),
+      createElement('div', { className: 'd-flex flex-column gap-3 mb-4' }, mockData.roadmap.map(item => 
+        createElement('div', { className: 'd-flex align-center gap-3 p-2', style: item.status === 'current' ? 'background: var(--color-gray-100); border: 1px solid var(--color-black); border-radius: 6px;' : '' }, [
+          item.status === 'completed' 
+            ? createElement('i', { className: 'ph-fill ph-check-circle text-success text-2xl' })
+            : item.status === 'current'
+              ? createElement('i', { className: 'ph-fill ph-play-circle text-2xl', style: 'color: var(--theme-bg)' })
+              : createElement('i', { className: 'ph-fill ph-lock-key text-gray text-2xl' }),
+          createElement('span', { className: `font-bold ${item.status === 'locked' ? 'text-gray' : 'text-black'}` }, item.title)
+        ])
+      )),
+      createElement('button', { className: 'btn w-100 mt-auto', style: 'border: 2px solid var(--color-black); background: var(--color-white); color: var(--color-black); font-weight: bold;', onclick: () => router.navigate('/journey') }, 'Open Roadmap')
+    ]);
+
+    // 5. Achievement (Conditional)
+    let recentAchievement = createElement('div', {}, []);
+    if (mockData.achievement) {
+      recentAchievement = createElement('div', { 
+        className: 'animate-slide-up delay-400', 
+        style: `${cardStyle} padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;` 
+      }, [
         createElement('h3', { className: 'text-xl font-black mb-4 w-100 text-left' }, 'Recent Achievement'),
         createElement('div', { className: 'mb-4' }, [
           createElement('i', { className: 'ph-duotone ph-trophy', style: 'font-size: 80px; color: var(--theme-bg); filter: drop-shadow(4px 4px 0px var(--color-black));' })
         ]),
         createElement('div', { className: 'font-black text-2xl mb-2' }, mockData.achievement),
         createElement('div', { className: 'text-sm font-bold text-white bg-black px-4 py-2', style: 'border-radius: 20px;' }, 'Unlocked Today')
-      ])
+      ]);
+    }
+
+    // Wrap elements in a single column layout container
+    const layoutContainer = createElement('div', { 
+      className: 'd-flex flex-column', 
+      style: 'max-width: 1100px; margin: 0 auto; padding-top: 32px; padding-bottom: 48px; width: 100%;' 
+    }, [
+      headerContext,
+      heroQuest,
+      nextUnlock,
+      journeyProgress,
+      recentAchievement
     ]);
 
     // CSS Utilities
     const style = createElement('style', {}, `
-      @media(min-width: 768px) { .md-grid-cols-2 { grid-template-columns: repeat(2, 1fr); } .md-grid-cols-3 { grid-template-columns: repeat(3, 1fr); } }
+      @media(min-width: 768px) { .md-grid-cols-3 { grid-template-columns: repeat(3, 1fr); } }
       .bg-white { background-color: var(--color-white); }
       .bg-black { background-color: var(--color-black); }
       .text-white { color: var(--color-white); }
     `);
     document.head.appendChild(style);
 
-    return createElement('div', { className: 'animate-fade-in' }, [
-      headerContext,
-      heroQuest,
-      nextUnlock,
-      secondaryGrid
-    ]);
+    return createElement('div', { className: 'animate-fade-in w-100' }, [layoutContainer]);
   }
 
   render() {
