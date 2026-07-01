@@ -57,13 +57,8 @@ export class JourneyView {
      // Vertical Roadmap Tree Container
      const treeContainer = createElement('div', { 
         className: 'd-flex flex-column align-center', 
-        style: 'position: relative; width: 100%; max-width: 600px; padding: 32px 0;' 
-     }, [
-        // Central thick vertical line
-        createElement('div', { 
-           style: 'position: absolute; width: 6px; top: 0; bottom: 0; background: var(--color-black); z-index: 0; left: calc(50% - 3px);' 
-        })
-     ]);
+        style: 'width: 100%; max-width: 600px; padding: 16px 0;' 
+     });
 
      modules.forEach((mod, index) => {
         let bgColor = 'var(--color-gray-100)';
@@ -117,6 +112,12 @@ export class JourneyView {
 
         const isEven = index % 2 === 0;
 
+        // Connecting line to next node
+        const hasNext = index < modules.length - 1;
+        const line = hasNext ? createElement('div', {
+           style: 'position: absolute; width: 6px; background: var(--color-black); top: 50%; height: calc(100% + 64px); left: calc(50% - 3px); z-index: 0;'
+        }) : '';
+
         // 3-column layout row
         const row = createElement('div', {
            className: 'd-flex align-center w-100 animate-fade-up',
@@ -131,8 +132,8 @@ export class JourneyView {
            // Center Column (Node)
            createElement('div', { 
               className: 'd-flex justify-center', 
-              style: 'flex-shrink: 0; width: 88px;' 
-           }, [nodeCircle]),
+              style: 'flex-shrink: 0; width: 88px; position: relative;' 
+           }, [line, nodeCircle]),
 
            // Right Column
            createElement('div', { 
@@ -175,12 +176,8 @@ export class JourneyView {
      // Vertical Roadmap Tree for Quests
      const treeContainer = createElement('div', { 
         className: 'd-flex flex-column align-center', 
-        style: 'position: relative; width: 100%; max-width: 600px; padding: 16px 0;' 
-     }, [
-        createElement('div', { 
-           style: 'position: absolute; width: 4px; top: 0; bottom: 0; background: var(--color-black); z-index: 0; left: calc(50% - 2px);' 
-        })
-     ]);
+        style: 'width: 100%; max-width: 600px; padding: 16px 0;' 
+     });
 
      quests.forEach((quest, index) => {
         let bgColor, textColor, iconHtml, shadowStyle;
@@ -219,6 +216,12 @@ export class JourneyView {
 
         const isEven = index % 2 === 0;
 
+        // Connecting line to next node
+        const hasNext = index < quests.length - 1;
+        const line = hasNext ? createElement('div', {
+           style: 'position: absolute; width: 4px; background: var(--color-black); top: 50%; height: calc(100% + 40px); left: calc(50% - 2px); z-index: 0;'
+        }) : '';
+
         const questRow = createElement('div', {
            className: `d-flex align-center w-100 animate-fade-up ${isClickable ? 'cursor-pointer' : ''}`,
            style: `margin-bottom: 40px; animation-delay: ${index * 80}ms; ${!isClickable ? 'opacity: 0.7;' : ''} position: relative; z-index: 10;`,
@@ -242,8 +245,8 @@ export class JourneyView {
            // Center Column
            createElement('div', { 
               className: 'd-flex justify-center', 
-              style: 'flex-shrink: 0; width: 72px;' 
-           }, [questNodeCircle]),
+              style: 'flex-shrink: 0; width: 72px; position: relative;' 
+           }, [line, questNodeCircle]),
 
            // Right Column
            createElement('div', { 
