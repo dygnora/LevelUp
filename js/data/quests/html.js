@@ -14,6 +14,12 @@ export const htmlQuests = [
             'Use common text formatting tags (h1-h6, p).',
             'Push your very first project to a public GitHub repository.'
         ],
+        commonMistakes: [
+            'Forgetting to close tags (e.g. <p> without </p>).',
+            'Placing visible content inside the <head> element.',
+            'Using multiple <h1> tags, confusing screen readers.',
+            'Misspelling the <!DOCTYPE html> declaration.'
+        ],
         skills: ['HTML', 'Boilerplate', 'GitHub'],
         difficulty: 'BEGINNER',
         estimatedMinutes: 20,
@@ -121,6 +127,12 @@ export const htmlQuests = [
             'Improve document structure for accessibility.',
             'Organize page sections correctly.'
         ],
+        commonMistakes: [
+            'Using <div> for everything ("Div Soup").',
+            'Using header tags (h1-h6) just to make text bold or big.',
+            'Using <section> without a heading element inside it.',
+            'Forgetting the <main> tag to wrap the core content.'
+        ],
         skills: ['Semantic HTML', 'Accessibility', 'SEO', 'Web Structure'],
         difficulty: 'BEGINNER',
         estimatedMinutes: 25,
@@ -222,7 +234,13 @@ export const htmlQuests = [
             'Use the <form>, <label>, and <input> tags correctly.',
             'Implement client-side validation using attributes like required and minlength.',
             'Organize form elements using <fieldset> and <legend>.',
-            'Structure a clean, accessible contact form.'
+            'Build a complete contact form using semantic and accessible HTML elements.'
+        ],
+        commonMistakes: [
+            'Missing <label> elements, hurting accessibility.',
+            'Forgetting the <form> wrapper around inputs.',
+            'Not adding a submit <button>, trapping the user.',
+            'Using the wrong input type (e.g., using text instead of email) losing built-in validation.'
         ],
         skills: ['HTML Forms', 'Client-side Validation', 'Accessibility'],
         difficulty: 'BEGINNER',
@@ -248,11 +266,11 @@ export const htmlQuests = [
                 url: 'https://www.w3schools.com/html/html_form_input_types.asp' 
             },
             { 
-                title: 'CodePen Challenge: Build a Contact Form', 
+                title: 'Frontend Mentor: Build a Contact Form', 
                 type: 'practice',
                 estimatedMinutes: 10,
                 difficulty: 'BEGINNER',
-                url: 'https://codepen.io/pen/' 
+                url: 'https://www.frontendmentor.io/challenges/contact-form--GgfNf-Xb' 
             }
         ],
 
@@ -261,8 +279,8 @@ export const htmlQuests = [
             label: 'GitHub Repository URL',
             requirements: [
                 'Public repository',
-                'index.html with a <form>',
-                'At least 3 different input types',
+                'index.html with a valid <form>',
+                'Must include <input>, <textarea>, and a <button>',
                 'Use <label> for all inputs',
                 'Include at least one validation attribute (e.g. required)'
             ]
@@ -278,13 +296,6 @@ export const htmlQuests = [
                 explanation: 'The <select> element is used to create a drop-down list. It contains <option> elements that define the available options.'
             },
             { 
-                question: 'What is the purpose of the <label> element?', 
-                options: ['To style the text inside the form.', 'To define the title of the form.', 'To associate text with a specific form control, improving accessibility.', 'To group related form elements together.'], 
-                correctAnswer: 2,
-                category: 'HTML Forms',
-                explanation: 'The <label> element provides a usability improvement for visually impaired users and increases the hit area for checkboxes/radios.'
-            },
-            { 
                 question: 'Which attribute ensures that a user cannot submit the form without filling out a specific input field?', 
                 options: ['validate', 'important', 'mandatory', 'required'], 
                 correctAnswer: 3,
@@ -292,11 +303,23 @@ export const htmlQuests = [
                 explanation: 'The "required" attribute is a boolean attribute that specifies that an input field must be filled out before submitting the form.'
             },
             {
-                question: 'How do you link a <label> to an <input> element?',
-                options: ['Using the "name" attribute on the input and the "id" on the label.', 'Using the "id" attribute on the input and the "for" attribute on the label.', 'Using the "class" attribute on both.', 'They are automatically linked if they are next to each other.'],
+                question: 'Which implementation is more accessible for screen readers and improves the clickable hit area?',
+                options: [
+                    'Name: <input name="name">',
+                    '<label for="name">Name:</label> <input id="name">',
+                    '<div class="label">Name:</div> <input id="name">',
+                    '<span>Name:</span> <input class="name">'
+                ],
                 correctAnswer: 1,
+                category: 'Accessibility',
+                explanation: 'Linking a <label> via the "for" attribute to an input\'s "id" provides programmatic context for screen readers and makes the label text clickable.'
+            },
+            {
+                question: 'Which tag creates a multi-line text input field?',
+                options: ['<input type="textarea">', '<input type="multiline">', '<textarea>', '<text>'],
+                correctAnswer: 2,
                 category: 'HTML Forms',
-                explanation: 'The "for" attribute of the <label> tag should be equal to the "id" attribute of the <input> element to bind them together.'
+                explanation: 'The <textarea> tag defines a multi-line text input control, often used for messages or comments.'
             },
             {
                 question: 'Case Study: You are creating a registration form where users must agree to the Terms of Service. Which input type is the best choice?',
@@ -304,6 +327,115 @@ export const htmlQuests = [
                 correctAnswer: 2,
                 category: 'HTML Forms',
                 explanation: 'A checkbox (<input type="checkbox">) is the standard UI component for a binary (yes/no) choice such as agreeing to terms.'
+            }
+        ],
+
+        rewards: {
+            xp: 30,
+            achievement: null
+        }
+    },
+    {
+        id: 'html-tables',
+        moduleId: 'html',
+        version: 1,
+        
+        title: 'HTML Tables',
+        objective: 'Build a well-structured and accessible HTML table to display tabular data.',
+        whyItMatters: 'Tables are the standard way to present structured data, from pricing tiers to financial reports. Knowing how to correctly build accessible tables ensures all users can read and understand complex data presentations.',
+        learningOutcomes: [
+            'Differentiate between tabular data and page layout.',
+            'Use basic table elements (table, tr, th, td).',
+            'Structure complex tables using semantic grouping elements (thead, tbody, tfoot).',
+            'Merge cells vertically or horizontally using colspan and rowspan.',
+            'Build a complete, accessible data table.'
+        ],
+        commonMistakes: [
+            'Using tables for page layouts instead of CSS Grid/Flexbox.',
+            'Missing <th> elements, confusing screen readers.',
+            'Forgetting to specify the scope attribute on headers (scope="col" or "row").',
+            'Nesting tables excessively.'
+        ],
+        skills: ['HTML Tables', 'Data Presentation', 'Accessibility'],
+        difficulty: 'BEGINNER',
+        estimatedMinutes: 30,
+        
+        resourcesRequired: true,
+        submissionRequired: true,
+        quizRequired: true,
+
+        resources: [
+            { 
+                title: 'MDN: HTML table basics', 
+                type: 'documentation',
+                estimatedMinutes: 15,
+                difficulty: 'BEGINNER',
+                url: 'https://developer.mozilla.org/en-US/docs/Learn/HTML/Tables/Basics' 
+            },
+            { 
+                title: 'W3C: HTML Tables', 
+                type: 'reference',
+                estimatedMinutes: 5,
+                difficulty: 'BEGINNER',
+                url: 'https://www.w3schools.com/html/html_tables.asp' 
+            },
+            { 
+                title: 'CodePen Challenge: Build a Pricing Table', 
+                type: 'practice',
+                estimatedMinutes: 10,
+                difficulty: 'BEGINNER',
+                url: 'https://codepen.io/pen/' 
+            }
+        ],
+
+        submissionRequirement: { 
+            type: 'github', 
+            label: 'GitHub Repository URL',
+            requirements: [
+                'Public repository',
+                'index.html containing a <table>',
+                'Use of <thead>, <tbody>, and <tfoot>',
+                'At least one merged cell using colspan or rowspan',
+                'Proper commit history'
+            ]
+        },
+
+        passingScore: 80,
+        quiz: [
+            { 
+                question: 'Which element is used to define a table row?', 
+                options: ['<td>', '<th>', '<tr>', '<table>'], 
+                correctAnswer: 2,
+                category: 'HTML Tables',
+                explanation: 'The <tr> tag defines a row in an HTML table, which can then contain <th> (header) or <td> (data) cells.'
+            },
+            { 
+                question: 'Which attribute should you use to make a cell span across two columns?', 
+                options: ['rowspan="2"', 'colspan="2"', 'span="2"', 'merge="2"'], 
+                correctAnswer: 1,
+                category: 'HTML Tables',
+                explanation: 'The colspan attribute defines the number of columns a cell should span.'
+            },
+            { 
+                question: 'Why is it considered bad practice to use HTML tables for page layout?', 
+                options: ['Tables load too slowly.', 'Tables are deprecated in HTML5.', 'Tables break screen readers and are not responsive.', 'Browsers block tables.'], 
+                correctAnswer: 2,
+                category: 'Accessibility',
+                explanation: 'Tables are designed for tabular data. Using them for layout breaks accessibility tools and makes responsive design incredibly difficult.'
+            },
+            {
+                question: 'Which attribute on a <th> element helps screen readers understand whether the header applies to a row or a column?',
+                options: ['type', 'scope', 'direction', 'target'],
+                correctAnswer: 1,
+                category: 'Accessibility',
+                explanation: 'The scope attribute (e.g., scope="col" or scope="row") clearly defines the header\'s relationship to the data cells.'
+            },
+            {
+                question: 'Case Study: You are displaying a monthly financial report with a final row showing the Total Revenue. Which tag should wrap the final row?',
+                options: ['<thead>', '<tbody>', '<tfoot>', '<summary>'],
+                correctAnswer: 2,
+                category: 'HTML Tables',
+                explanation: 'The <tfoot> element is used to group footer content in an HTML table, often summarizing the columns.'
             }
         ],
 
