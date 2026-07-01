@@ -172,7 +172,7 @@ export class HomeView {
          // Badge
          createElement('div', { 
             className: 'px-3 py-2 font-bold text-xs d-flex align-center', 
-            style: 'background: var(--color-black); color: var(--color-white); border-radius: 4px; gap: 8px; white-space: nowrap; border: 2px solid var(--color-black); box-shadow: 2px 2px 0px var(--color-gray-400);' 
+            style: 'background: var(--color-black); color: var(--color-white); border-radius: 20px; gap: 8px; white-space: nowrap; border: 2px solid var(--color-black); box-shadow: 2px 2px 0px var(--color-gray-400);' 
          }, [
             createElement('i', { className: 'ph-fill ph-flag text-base' }),
             createElement('span', {}, `${mockJourneyStats.completed}/${mockJourneyStats.total} Quests`)
@@ -180,7 +180,7 @@ export class HomeView {
       ]),
       
       // 2. Thick Segmented Progress Bar
-      createElement('div', { className: 'mb-6', style: 'width: 100%; height: 24px; background: var(--color-gray-100); border: 3px solid var(--color-black); position: relative; box-shadow: 4px 4px 0px var(--color-black);' }, [
+      createElement('div', { className: 'mb-6', style: 'width: 100%; height: 24px; background: var(--color-gray-100); border: 3px solid var(--color-black); position: relative; box-shadow: 4px 4px 0px var(--color-black); border-radius: 24px; overflow: hidden;' }, [
          createElement('div', { 
             className: 'progress-bar-striped',
             style: `width: 0%; border-right: 3px solid var(--color-black);` 
@@ -206,7 +206,7 @@ export class HomeView {
 
         return createElement('div', { 
           className: 'd-flex align-center p-3 card-interactive',
-          style: `border-radius: 8px; gap: 12px; ${blockStyle} transition: transform 0.2s, box-shadow 0.2s;`
+          style: `border-radius: 16px; gap: 12px; ${blockStyle} transition: transform 0.2s, box-shadow 0.2s;`
         }, [
           iconHtml,
           createElement('span', { className: 'font-bold text-sm', style: textStyle }, [item.title])
@@ -216,8 +216,8 @@ export class HomeView {
       // 4. Open Journey (Brutalist Button)
       createElement('div', { className: 'd-flex mt-5', style: 'justify-content: flex-end;' }, [
          createElement('button', { 
-            className: 'font-black text-sm d-flex align-center gap-2 p-3',
-            style: 'background: var(--color-white); color: var(--color-black); border: 2px solid var(--color-black); box-shadow: 3px 3px 0px var(--color-black); cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;',
+            className: 'font-black text-sm d-flex align-center gap-2 p-3 px-4',
+            style: 'background: var(--color-white); color: var(--color-black); border: 2px solid var(--color-black); box-shadow: 3px 3px 0px var(--color-black); cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; border-radius: 24px;',
             onmousedown: (e) => { e.currentTarget.style.transform = 'translateY(2px)'; e.currentTarget.style.boxShadow = '1px 1px 0px var(--color-black)'; },
             onmouseup: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '3px 3px 0px var(--color-black)'; },
             onclick: () => router.navigate('/journey')
