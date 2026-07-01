@@ -54,7 +54,13 @@ export class HomeView {
     // Container standard styles
     const cardStyle = 'border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); border-radius: 8px; background: var(--color-white); width: 100%; margin-bottom: 24px; overflow: hidden;';
 
-    // 2. HERO: Today's Main Quest (Redesign Phase 2)
+    // 2. HERO: Today's Main Quest (Redesign Phase 2 + Revisions)
+    const questState = 'AVAILABLE'; // Mock FSM state (Phase 6 will connect this to ProgressionEngine)
+    let ctaLabel = 'Start Learning';
+    if (questState === 'IN_PROGRESS') ctaLabel = 'Continue Learning';
+    else if (questState === 'SUBMITTED') ctaLabel = 'Take Quiz';
+    else if (questState === 'COMPLETED') ctaLabel = 'Continue Journey';
+
     const heroQuest = createElement('div', { 
       className: 'animate-slide-up delay-100', 
       style: cardStyle
@@ -66,28 +72,21 @@ export class HomeView {
            style: 'background-color: var(--theme-accent); border-radius: 20px; white-space: nowrap;' 
         }, `${theme.icon} TODAY'S MISSION`),
         createElement('h1', { className: 'm-0 text-3xl font-black mb-3 text-black' }, mockData.quest.title),
-        createElement('p', { className: 'm-0 font-bold text-black text-md mb-6', style: 'opacity: 0.8;' }, mockData.quest.objective),
+        createElement('p', { 
+           className: 'm-0 font-bold text-black text-md mb-2', 
+           style: 'opacity: 0.8; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;' 
+        }, [mockData.quest.objective]), // Array forces createTextNode avoiding HTML injection
         
-        // Metrics Row (Single Line)
-        createElement('div', { 
-           className: 'd-flex align-center justify-between flex-wrap p-4', 
-           style: 'border-top: 2px solid var(--color-black); border-bottom: 2px solid var(--color-black); gap: 16px; background-color: var(--color-gray-100); border-radius: 8px;'
-        }, [
-           createElement('div', { className: 'd-flex align-center gap-2' }, [
-              createElement('span', { className: 'text-gray text-xs font-bold' }, 'Difficulty'),
-              createElement('span', { className: 'font-black' }, mockData.quest.difficulty)
+        // Metrics Row (Pills, very light)
+        createElement('div', { className: 'd-flex align-center gap-2 mt-4 mb-2 flex-wrap' }, [
+           createElement('span', { className: 'd-inline-flex align-center text-sm font-bold px-3 py-1', style: 'background: var(--color-gray-100); border-radius: 20px; gap: 4px;' }, [
+              createElement('span', {}, '🟢'), createElement('span', {}, mockData.quest.difficulty)
            ]),
-           createElement('div', { className: 'd-flex align-center gap-2' }, [
-              createElement('span', { className: 'text-gray text-xs font-bold' }, 'Reward'),
-              createElement('span', { className: 'font-black text-warning d-flex align-center gap-1' }, [
-                 createElement('i', { className: 'ph-fill ph-star' }), mockData.quest.reward
-              ])
+           createElement('span', { className: 'd-inline-flex align-center text-sm font-bold px-3 py-1', style: 'background: var(--color-gray-100); border-radius: 20px; gap: 4px;' }, [
+              createElement('span', {}, '⏱'), createElement('span', {}, mockData.quest.estimatedTime)
            ]),
-           createElement('div', { className: 'd-flex align-center gap-2' }, [
-              createElement('span', { className: 'text-gray text-xs font-bold' }, 'Estimated'),
-              createElement('span', { className: 'font-black d-flex align-center gap-1' }, [
-                 createElement('i', { className: 'ph-bold ph-hourglass-high' }), mockData.quest.estimatedTime
-              ])
+           createElement('span', { className: 'd-inline-flex align-center text-sm font-bold px-3 py-1 text-warning', style: 'background: var(--color-gray-100); border-radius: 20px; gap: 4px;' }, [
+              createElement('span', {}, '⭐'), createElement('span', {}, mockData.quest.reward)
            ])
         ])
       ]),
@@ -96,25 +95,26 @@ export class HomeView {
         className: 'btn w-100 p-4 d-flex justify-center align-center gap-2',
         style: 'background-color: var(--theme-bg); color: var(--theme-btn-text); font-size: 18px; font-weight: 900; border: none; border-top: 3px solid var(--color-black); cursor: pointer; transition: background-color 0.2s;',
         onmousedown: (e) => { e.currentTarget.style.opacity = '0.9'; },
-        onmouseup: (e) => { e.currentTarget.style.opacity = '1'; }
+        onmouseup: (e) => { e.currentTarget.style.opacity = '1'; },
+        onclick: () => router.navigate('/quest')
       }, [
-        'Continue Learning',
+        ctaLabel,
         createElement('i', { className: 'ph-bold ph-arrow-right text-xl' })
       ])
     ]);
 
     // 3. Next Unlock Attachment
     const nextUnlock = createElement('div', { 
-      className: 'p-4 d-flex align-center gap-3 animate-slide-up delay-200', 
-      style: `${cardStyle} background: var(--theme-bg); padding: 24px;` 
+      className: 'p-4 d-flex align-center animate-slide-up delay-200', 
+      style: `${cardStyle} background: var(--theme-bg); padding: 24px; gap: 16px;` 
     }, [
-      createElement('div', { className: 'bg-white p-2 d-flex align-center justify-center', style: 'border: 2px solid var(--color-black); border-radius: 50%;' }, [
+      createElement('div', { className: 'bg-white p-2 d-flex align-center justify-center', style: 'border: 2px solid var(--color-black); border-radius: 50%; min-width: 48px; min-height: 48px;' }, [
         createElement('i', { className: 'ph-duotone ph-lock-key-open text-xl text-black' })
       ]),
-      createElement('div', { className: 'd-flex align-center flex-wrap gap-2 text-white' }, [
+      createElement('div', { className: 'd-flex align-center flex-wrap text-white', style: 'gap: 8px;' }, [
         createElement('span', { className: 'font-black' }, 'NEXT UNLOCK:'),
         createElement('span', { className: 'font-bold' }, `Complete this quest to unlock`),
-        createElement('span', { className: 'font-black bg-white text-black px-2 py-1 d-inline-block', style: 'border: 2px solid var(--color-black); border-radius: 6px; box-shadow: 2px 2px 0px var(--color-black);' }, mockData.nextUnlock)
+        createElement('span', { className: 'font-black bg-white text-black px-2 py-1 d-inline-block', style: 'border: 2px solid var(--color-black); border-radius: 6px; box-shadow: 2px 2px 0px var(--color-black);' }, [mockData.nextUnlock])
       ])
     ]);
 
@@ -124,14 +124,14 @@ export class HomeView {
       style: `${cardStyle} padding: 24px; display: flex; flex-direction: column;` 
     }, [
       createElement('h3', { className: 'text-xl font-black mb-4' }, 'Journey Preview'),
-      createElement('div', { className: 'd-flex flex-column gap-3 mb-4' }, mockData.roadmap.map(item => 
-        createElement('div', { className: 'd-flex align-center gap-3 p-2', style: item.status === 'current' ? 'background: var(--color-gray-100); border: 1px solid var(--color-black); border-radius: 6px;' : '' }, [
+      createElement('div', { className: 'd-flex flex-column mb-4', style: 'gap: 12px;' }, mockData.roadmap.map(item => 
+        createElement('div', { className: 'd-flex align-center p-2', style: `gap: 12px; ${item.status === 'current' ? 'background: var(--color-gray-100); border: 1px solid var(--color-black); border-radius: 6px;' : ''}` }, [
           item.status === 'completed' 
             ? createElement('i', { className: 'ph-fill ph-check-circle text-success text-2xl' })
             : item.status === 'current'
               ? createElement('i', { className: 'ph-fill ph-play-circle text-2xl', style: 'color: var(--theme-bg)' })
               : createElement('i', { className: 'ph-fill ph-lock-key text-gray text-2xl' }),
-          createElement('span', { className: `font-bold ${item.status === 'locked' ? 'text-gray' : 'text-black'}` }, item.title)
+          createElement('span', { className: `font-bold ${item.status === 'locked' ? 'text-gray' : 'text-black'}` }, [item.title])
         ])
       )),
       createElement('button', { className: 'btn w-100 mt-auto', style: 'border: 2px solid var(--color-black); background: var(--color-white); color: var(--color-black); font-weight: bold;', onclick: () => router.navigate('/journey') }, 'Open Roadmap')
