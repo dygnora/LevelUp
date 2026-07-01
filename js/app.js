@@ -17,6 +17,12 @@ function initApp() {
   // Initialize Dynamic Theme System
   themeManager.init();
 
+  // Initialize Motion Preferences
+  const reducedMotion = localStorage.getItem('reducedMotion') === 'true';
+  if (reducedMotion) {
+    document.body.classList.add('reduced-motion');
+  }
+
   // Register Routes
   router.addRoute('/', SplashView, false);
   router.addRoute('/login', LoginView, false);

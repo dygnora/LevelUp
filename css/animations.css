@@ -37,3 +37,21 @@
 .delay-100 { animation-delay: 100ms; }
 .delay-200 { animation-delay: 200ms; }
 .delay-300 { animation-delay: 300ms; }
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body.reduced-motion * {
+  /* Disable translate and scale, keep fade/opacity by setting animations to a fast fade */
+  animation-name: fadeIn !important;
+  animation-duration: 0.15s !important;
+  transform: none !important;
+  transition: opacity 0.15s ease-in-out, background-color 0.15s ease-in-out, color 0.15s ease-in-out !important;
+}
