@@ -157,13 +157,15 @@ export class JourneyView {
         state: progressionEngine.getQuestState(q.id)
      }));
 
-     const backBtn = createElement('button', {
-        className: 'd-flex align-center gap-2 mb-8 px-4 py-2 bg-white font-bold text-sm card-interactive',
-        style: 'border: 2px solid var(--color-black); box-shadow: 2px 2px 0px var(--color-black); border-radius: 20px; cursor: pointer; align-self: flex-start;',
-        onclick: () => this.closeModule()
-     }, [
-        createElement('i', { className: 'ph-bold ph-arrow-left text-lg' }),
-        'Journey Overview'
+     const backBtn = createElement('div', { style: 'width: 100%; max-width: 600px;' }, [
+         createElement('button', {
+            className: 'btn bg-transparent p-0 mb-6 font-bold text-gray d-flex align-center gap-2',
+            style: 'border: none; cursor: pointer;',
+            onclick: () => this.closeModule()
+         }, [
+            createElement('i', { className: 'ph-bold ph-arrow-left' }),
+            'Back to Journey Overview'
+         ])
      ]);
 
      const header = createElement('div', { className: 'd-flex flex-column align-center text-center mb-10' }, [
@@ -208,7 +210,7 @@ export class JourneyView {
                  if (quest.state === 'AVAILABLE') {
                     progressionEngine.dispatch('START_QUEST', { questId: quest.id });
                  }
-                 // router.navigate('/quest');
+                 router.navigate('/quest');
               }
            },
            onmouseenter: (e) => { if (isClickable) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '6px 6px 0px var(--color-black)'; } },
