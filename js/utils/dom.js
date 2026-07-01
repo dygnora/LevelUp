@@ -20,7 +20,11 @@ export function createElement(tag, attributes = {}, children = null) {
     } else if (key.startsWith('on') && typeof value === 'function') {
       element.addEventListener(key.substring(2).toLowerCase(), value);
     } else {
-      element.setAttribute(key, value);
+      if (typeof value === 'boolean') {
+        if (value) element.setAttribute(key, '');
+      } else {
+        element.setAttribute(key, value);
+      }
     }
   }
 
