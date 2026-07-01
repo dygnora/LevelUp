@@ -180,9 +180,10 @@ export class HomeView {
       ]),
       
       // 2. Thick Segmented Progress Bar
-      createElement('div', { className: 'mb-6', style: 'width: 100%; height: 16px; background: var(--color-gray-100); border: 2px solid var(--color-black); position: relative;' }, [
+      createElement('div', { className: 'mb-6', style: 'width: 100%; height: 24px; background: var(--color-gray-100); border: 3px solid var(--color-black); position: relative; box-shadow: 4px 4px 0px var(--color-black);' }, [
          createElement('div', { 
-            style: `width: 0%; height: 100%; background: var(--theme-accent); border-right: 2px solid var(--color-black); transition: width 700ms cubic-bezier(0.4, 0, 0.2, 1);` 
+            className: 'progress-bar-striped',
+            style: `width: 0%; border-right: 3px solid var(--color-black);` 
          }, [])
       ]),
 
