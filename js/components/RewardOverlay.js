@@ -10,8 +10,8 @@ export class RewardOverlay {
 
     render() {
         return createElement('div', { 
-            className: 'fixed inset-0 d-flex align-center justify-center p-4',
-            style: 'background: rgba(0,0,0,0.85); z-index: 9999; animation: fadeIn 0.3s ease-out forwards; backdrop-filter: blur(4px);'
+            className: 'd-flex align-center justify-center p-4',
+            style: 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 9999; animation: fadeUp 0.3s ease-out forwards; backdrop-filter: blur(4px);'
         }, [
             createElement('div', { 
                 className: 'card max-w-sm w-full text-center', 

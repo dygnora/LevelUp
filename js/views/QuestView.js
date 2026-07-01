@@ -140,13 +140,15 @@ export class QuestView {
       contentGrid
     ]);
 
+    const wrapper = createElement('div', { className: 'w-100' }, [mainContainer]);
+
     // Append Reward Overlay if needed
     if (questState === PROGRESSION_STATES.REWARD_PENDING) {
         const overlay = new RewardOverlay(quest, () => this.handleAction('CLAIM_REWARD'));
-        mainContainer.appendChild(overlay.render());
+        wrapper.appendChild(overlay.render());
     }
 
-    return mainContainer;
+    return wrapper;
   }
 
   // --- UI COMPONENT HELPERS ---
@@ -412,7 +414,7 @@ export class QuestView {
                      createElement('i', { className: `ph-fill ${icon} text-xl mt-1` }),
                      createElement('div', {}, [
                          createElement('strong', { className: 'd-block mb-1' }, isCorrect ? 'Correct!' : 'Incorrect.'),
-                         createElement('span', { className: 'text-sm font-bold' }, q.explanation)
+                         createElement('span', { className: 'text-sm font-bold' }, [q.explanation])
                      ])
                  ]);
              }
