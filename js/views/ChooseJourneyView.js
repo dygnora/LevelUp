@@ -74,6 +74,31 @@ export class ChooseJourneyView {
     this.paths.forEach((path, index) => {
       const validIcon = path.icon === 'server' ? 'hard-drives' : path.icon === 'layers' ? 'stack' : path.icon === 'monitor' ? 'desktop' : path.icon;
       
+      const isAvailable = path.id === 'frontend';
+      let buttonHtml;
+      
+      if (isAvailable) {
+        buttonHtml = createElement('button', {
+          className: 'btn w-100 p-4 mt-auto',
+          style: `background-color: ${path.color || 'var(--theme-bg)'}; color: var(--color-black); font-weight: 800; font-size: 16px; border: 3px solid var(--color-black); box-shadow: 4px 4px 0px var(--color-black); transition: all 0.2s ease; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px;`,
+          onclick: () => this.handleSelect(path.id),
+          onmouseover: (e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '4px 6px 0px var(--color-black)'; },
+          onmouseout: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '4px 4px 0px var(--color-black)'; }
+        }, [
+          'Select Class',
+          createElement('i', { className: 'ph-bold ph-arrow-right' })
+        ]);
+      } else {
+        buttonHtml = createElement('button', {
+          className: 'btn w-100 p-4 mt-auto',
+          style: `background-color: var(--color-gray-200); color: var(--color-gray-600); font-weight: 800; font-size: 16px; border: 3px dashed var(--color-gray-400); cursor: not-allowed; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: none;`,
+          disabled: 'true'
+        }, [
+          'Coming Soon',
+          createElement('i', { className: 'ph-bold ph-lock-key' })
+        ]);
+      }
+      
       const card = createElement('div', { 
         className: `card journey-card animate-slide-up delay-${(index + 1) * 100}`,
         style: `border: 3px solid var(--color-black); box-shadow: 8px 8px 0px var(--color-black); padding: 0; overflow: hidden; display: flex; flex-direction: column; background: var(--color-white); transition: all 0.2s ease; cursor: default;`
@@ -100,16 +125,7 @@ export class ChooseJourneyView {
               ])
             ])
           ]),
-          createElement('button', {
-            className: 'btn w-100 p-4 mt-auto',
-            style: `background-color: ${path.color || 'var(--theme-bg)'}; color: var(--color-black); font-weight: 800; font-size: 16px; border: 3px solid var(--color-black); box-shadow: 4px 4px 0px var(--color-black); transition: all 0.2s ease; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px;`,
-            onclick: () => this.handleSelect(path.id),
-            onmouseover: (e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '4px 6px 0px var(--color-black)'; },
-            onmouseout: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '4px 4px 0px var(--color-black)'; }
-          }, [
-            'Select Class',
-            createElement('i', { className: 'ph-bold ph-arrow-right' })
-          ])
+          buttonHtml
         ])
       ]);
       
