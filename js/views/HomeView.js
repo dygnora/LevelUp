@@ -170,10 +170,10 @@ export class HomeView {
       ]),
       
       // 2. Module Progress (Game-like)
-      createElement('div', { className: 'mb-4 p-3 bg-gray-100', style: 'border: 2px solid var(--color-black); border-radius: 8px;' }, [
+      createElement('div', { className: 'mb-4 bg-gray-100', style: 'border: 2px solid var(--color-black); border-radius: 8px; padding: 16px;' }, [
          createElement('div', { className: 'd-flex justify-between align-center mb-2' }, [
-            createElement('span', { className: 'font-bold text-black text-sm' }, `${mockData.chapter} Progress`),
-            createElement('span', { className: 'font-bold text-gray text-xs' }, `${mockJourneyStats.percentage}%`)
+            createElement('span', { className: 'font-bold text-sm', style: 'color: var(--color-black);' }, `${mockData.chapter} Progress`),
+            createElement('span', { className: 'font-bold text-xs', style: 'color: var(--color-gray-600);' }, `${mockJourneyStats.percentage}%`)
          ]),
          // Progress Bar Background
          createElement('div', { style: 'width: 100%; height: 12px; background: var(--color-gray-300); border-radius: 6px; overflow: hidden; border: 1px solid var(--color-black); position: relative;' }, [
@@ -182,38 +182,37 @@ export class HomeView {
                style: `width: 0%; height: 100%; background: var(--theme-accent); border-right: 1px solid var(--color-black); transition: width 700ms cubic-bezier(0.4, 0, 0.2, 1);` 
             }, [])
          ]),
-         createElement('div', { className: 'mt-2 text-right text-xs font-bold text-black' }, `${mockJourneyStats.completed} of ${mockJourneyStats.total} Quests Completed`)
+         createElement('div', { className: 'mt-2 text-right text-xs font-bold', style: 'color: var(--color-black);' }, `${mockJourneyStats.completed} of ${mockJourneyStats.total} Quests Completed`)
       ]),
 
       // 3. Current Roadmap Preview
-      createElement('div', { className: 'd-flex flex-column mb-4' }, mockData.roadmap.slice(0, 4).map((item, index) => {
+      createElement('div', { className: 'd-flex flex-column mb-4', style: 'gap: 12px; padding: 0 8px;' }, mockData.roadmap.slice(0, 4).map((item, index) => {
         let iconHtml, textColor;
         if (item.status === 'completed') {
-           iconHtml = createElement('i', { className: 'ph-bold ph-check text-success' });
-           textColor = 'text-gray';
+           iconHtml = createElement('i', { className: 'ph-bold ph-check text-success text-lg' });
+           textColor = 'var(--color-gray-600)';
         } else if (item.status === 'current') {
-           iconHtml = createElement('i', { className: 'ph-fill ph-play text-black', style: 'color: var(--theme-accent);' });
-           textColor = 'text-black';
+           iconHtml = createElement('i', { className: 'ph-fill ph-play text-lg', style: 'color: var(--theme-accent);' });
+           textColor = 'var(--color-black)';
         } else {
-           iconHtml = createElement('i', { className: 'ph-bold ph-lock-key text-gray-400' });
-           textColor = 'text-gray-400';
+           iconHtml = createElement('i', { className: 'ph-bold ph-lock-key text-gray-400 text-lg' });
+           textColor = 'var(--color-gray-400)';
         }
 
         return createElement('div', { 
-          className: 'd-flex align-center gap-2 py-2',
-          style: index !== mockData.roadmap.slice(0, 4).length - 1 ? 'border-bottom: 1px dashed var(--color-gray-300);' : ''
+          className: 'd-flex align-center gap-2'
         }, [
           createElement('div', { className: 'd-flex align-center justify-center', style: 'width: 24px;' }, [iconHtml]),
-          createElement('span', { className: `font-bold text-sm ${textColor}` }, [item.title])
+          createElement('span', { className: 'font-bold text-sm', style: `color: ${textColor};` }, [item.title])
         ]);
       })),
 
       // 4. Open Journey (Lightweight Link)
-      createElement('div', { className: 'd-flex justify-end mt-2' }, [
+      createElement('div', { className: 'd-flex mt-2', style: 'justify-content: flex-end;' }, [
          createElement('a', { 
             href: 'javascript:void(0)', 
-            className: 'font-bold text-black text-sm d-flex align-center gap-1',
-            style: 'text-decoration: none; border-bottom: 2px solid transparent; padding-bottom: 2px; transition: border-color 0.2s;',
+            className: 'font-bold text-sm d-flex align-center gap-1',
+            style: 'color: var(--color-black); text-decoration: none; border-bottom: 2px solid transparent; padding-bottom: 2px; transition: border-color 0.2s;',
             onmouseenter: (e) => e.currentTarget.style.borderBottom = '2px solid var(--color-black)',
             onmouseleave: (e) => e.currentTarget.style.borderBottom = '2px solid transparent',
             onclick: () => router.navigate('/journey')
