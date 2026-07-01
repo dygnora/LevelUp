@@ -90,8 +90,7 @@ class ProgressionEngine {
     }
 
     // Logic to determine if it's available (if previous quest is completed or it's the very first)
-    const quest = this.getQuest(questId);
-    if (!progress.currentQuest && quest.order === 1 && progress.currentModule === quest.moduleId) {
+    if (!progress.currentQuest && quest && quest.order === 1 && progress.currentModule === quest.moduleId) {
       return PROGRESSION_STATES.AVAILABLE;
     }
     
