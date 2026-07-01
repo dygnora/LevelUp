@@ -16,9 +16,9 @@ const mockJourneys = {
 };
 
 const mockModules = {
-  'html': { id: 'html', journeyId: 'frontend', title: 'HTML', order: 1 },
-  'css': { id: 'css', journeyId: 'frontend', title: 'CSS', order: 2 },
-  'js': { id: 'js', journeyId: 'frontend', title: 'JavaScript', order: 3 }
+  'html': { id: 'html', journeyId: 'frontend', title: 'HTML', order: 1, description: 'Foundation of the Web', estimatedTime: '~4 Hours' },
+  'css': { id: 'css', journeyId: 'frontend', title: 'CSS', order: 2, description: 'Bring your pages to life', estimatedTime: '~8 Hours' },
+  'js': { id: 'js', journeyId: 'frontend', title: 'JavaScript', order: 3, description: 'Make your website interactive', estimatedTime: '~12 Hours' }
 };
 
 const mockQuests = {
@@ -228,6 +228,33 @@ class ProgressionEngine {
        roadmap,
        latestAchievement
     };
+  }
+
+  // Gets high-level domain data for all modules in a journey
+  getJourneyModulesContext(journeyId) {
+    const character = state.get('character');
+    if (!character || !character.progress) return [];
+    
+    return this.getModulesForJourney(journeyId).map(m => {
+       const quests = this.getQuestsForModule(m.id);
+       const totalQuests = quests.length;
+       const completedQuests = quests.filter(q => this.getQuestState(q.id) === PROGRESSION_STATES.COMPLETED).length;
+       
+       let status = 'LOCKED';
+       if (totalQuests === 0) {
+          status = 'COMING_SOON';
+       } else if (character.progress.completedModules?.includes(m.id)) {
+          status = 'COMPLETED';
+       } else if (m.id === character.progress.currentModule) {
+          status = 'AVAILABLE';
+       }
+
+       return {
+          ...m,
+          stats: { completed: completedQuests, total: totalQuests },
+          status
+       };
+    });
   }
 
   // --- ACTIONS (Mutations) ---
