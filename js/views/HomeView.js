@@ -103,18 +103,27 @@ export class HomeView {
       ])
     ]);
 
-    // 3. Next Unlock Attachment
+    // 3. Next Unlock Attachment (Phase 3 Redesign)
     const nextUnlock = createElement('div', { 
-      className: 'p-4 d-flex align-center animate-slide-up delay-200', 
-      style: `${cardStyle} background: var(--theme-bg); padding: 24px; gap: 16px;` 
+      className: 'p-6 animate-slide-up delay-200', 
+      style: `${cardStyle} background: var(--color-black); color: var(--color-white); padding: 32px;` 
     }, [
-      createElement('div', { className: 'bg-white p-2 d-flex align-center justify-center', style: 'border: 2px solid var(--color-black); border-radius: 50%; min-width: 48px; min-height: 48px;' }, [
-        createElement('i', { className: 'ph-duotone ph-lock-key-open text-xl text-black', style: 'color: var(--color-black);' })
-      ]),
-      createElement('div', { className: 'd-flex align-center flex-wrap text-white', style: 'gap: 8px;' }, [
-        createElement('span', { className: 'font-black' }, 'NEXT UNLOCK:'),
-        createElement('span', { className: 'font-bold' }, `Complete this quest to unlock`),
-        createElement('span', { className: 'font-black bg-white px-2 py-1', style: 'display: inline-block; color: var(--color-black); border: 2px solid var(--color-black); border-radius: 6px; box-shadow: 2px 2px 0px var(--color-black);' }, [mockData.nextUnlock])
+      createElement('div', { className: 'd-flex justify-between align-center w-100 flex-wrap', style: 'gap: 24px;' }, [
+        createElement('div', { className: 'd-flex flex-column', style: 'flex: 1;' }, [
+          // Kicker
+          createElement('div', { className: 'd-flex align-center gap-2 mb-3' }, [
+            createElement('i', { className: 'ph-fill ph-lock-key text-gray text-lg' }),
+            createElement('span', { className: 'text-gray text-xs font-bold', style: 'letter-spacing: 2px;' }, 'NEXT UNLOCK')
+          ]),
+          // Target Module
+          createElement('h2', { className: 'm-0 text-3xl font-black text-white mb-2' }, [mockData.nextUnlock]),
+          // Condition
+          createElement('p', { className: 'm-0 font-bold text-gray text-sm', style: 'line-height: 1.5;' }, 'Complete today\'s mission to unlock this content.')
+        ]),
+        // Decorative Icon
+        createElement('div', { className: 'd-flex align-center justify-center', style: 'background: var(--color-gray-800); border-radius: 50%; width: 80px; height: 80px; border: 2px solid var(--color-gray-700);' }, [
+          createElement('i', { className: 'ph-duotone ph-lock-key text-white', style: 'font-size: 40px;' })
+        ])
       ])
     ]);
 
