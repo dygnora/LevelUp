@@ -222,12 +222,20 @@ export class QuestView {
          className: 'card p-6 mb-6 animate-slide-up delay-100', 
          style: 'border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); background: var(--color-white);' 
       }, [
-         createElement('h3', { className: 'text-xl font-black mb-3 m-0 d-flex align-center gap-2' }, [
-            createElement('i', { className: 'ph-bold ph-target text-primary' }),
-            'Mission Objective'
-         ]),
-         createElement('p', { className: 'text-lg m-0', style: 'line-height: 1.6;' }, quest.objective)
-      ]);
+          createElement('h3', { className: 'text-xl font-black mb-3 m-0 d-flex align-center gap-2' }, [
+             createElement('i', { className: 'ph-bold ph-target text-primary' }),
+             'Mission Objective'
+          ]),
+          createElement('p', { className: 'text-lg m-0 mb-4', style: 'line-height: 1.6;' }, quest.objective),
+          
+          quest.whyItMatters ? createElement('div', { 
+              className: 'p-4 bg-gray-100', 
+              style: 'border-radius: 8px; border-left: 4px solid var(--color-primary);'
+          }, [
+              createElement('strong', { className: 'd-block mb-1 text-sm text-gray text-uppercase' }, 'Why it matters'),
+              createElement('span', { style: 'line-height: 1.5;' }, quest.whyItMatters)
+          ]) : createElement('div', {}, [])
+       ]);
   }
 
   _renderResourcesCard(quest) {

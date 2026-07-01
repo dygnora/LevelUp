@@ -6,6 +6,7 @@ export const htmlQuests = [
         
         title: 'HTML Basics & Structure',
         objective: 'Create your very first web page by understanding the fundamental skeleton of HTML.',
+        whyItMatters: 'HTML is the foundational building block of the Web. Without it, browsers wouldn\'t know how to display text, images, or links. Mastering this structure is the first step to building anything on the internet.',
         learningOutcomes: [
             'Explain what HTML is and its role in web development.',
             'Understand the basic HTML document structure.',
@@ -111,13 +112,14 @@ export const htmlQuests = [
         version: 1,
         
         title: 'Semantic HTML',
-        objective: 'Structure a webpage using semantic HTML tags to improve SEO and accessibility.',
+        objective: 'Build a well-structured webpage using semantic HTML elements that are easier for both users and search engines to understand.',
+        whyItMatters: 'Using the right tags gives your content meaning. This boosts your website\'s SEO (making it easier to find on Google) and ensures screen readers can accurately interpret the page for visually impaired users.',
         learningOutcomes: [
-            'Differentiate between semantic and non-semantic tags (like div and span).',
-            'Use header, nav, main, and footer elements appropriately.',
-            'Use section and article elements to group content.',
-            'Understand how semantic HTML improves web accessibility (a11y).',
-            'Structure a basic blog post using semantic layout.'
+            'Explain what semantic HTML is and why it matters.',
+            'Choose semantic tags over generic divs.',
+            'Build a semantic page layout.',
+            'Improve document structure for accessibility.',
+            'Organize page sections correctly.'
         ],
         skills: ['Semantic HTML', 'Accessibility', 'SEO', 'Web Structure'],
         difficulty: 'BEGINNER',
@@ -143,7 +145,7 @@ export const htmlQuests = [
                 url: 'https://www.w3schools.com/html/html5_semantic_elements.asp' 
             },
             { 
-                title: 'CodePen: Semantic Layout', 
+                title: 'CodePen Challenge: Convert Div Layout to Semantic Layout', 
                 type: 'practice',
                 estimatedMinutes: 10,
                 difficulty: 'BEGINNER',
@@ -156,6 +158,7 @@ export const htmlQuests = [
             label: 'GitHub Repository URL',
             requirements: [
                 'Public repository',
+                'Use only ONE <h1> per page',
                 'index.html using <header>, <main>, and <footer>',
                 'At least one <section> or <article>',
                 'Proper commit history'
@@ -193,11 +196,114 @@ export const htmlQuests = [
                 explanation: 'The <footer> element represents a footer for its nearest sectioning content or sectioning root element, often containing copyright and authorship information.'
             },
             {
-                question: 'What is the purpose of the <main> element?',
-                options: ['To contain the dominant content of the document.', 'To declare the primary CSS file.', 'To define the most important heading.', 'To wrap the entire document including the head.'],
-                correctAnswer: 0,
+                question: 'Case Study: You are building a news website. Which semantic element is the MOST appropriate container for a standalone news story?',
+                options: ['<section>', '<div>', '<article>', '<main>'],
+                correctAnswer: 2,
                 category: 'Semantic HTML',
-                explanation: 'The <main> element specifies the main content of a document, which should be unique and directly related to the central topic.'
+                explanation: 'The <article> element specifies independent, self-contained content, making it the perfect choice for a news story or blog post.'
+            }
+        ],
+
+        rewards: {
+            xp: 30,
+            achievement: null
+        }
+    },
+    {
+        id: 'html-forms',
+        moduleId: 'html',
+        version: 1,
+        
+        title: 'Interactive HTML Forms',
+        objective: 'Build a functional user input form using various HTML form controls and validation attributes.',
+        whyItMatters: 'Forms are the primary way users interact with web applications, from logging in to submitting surveys. Knowing how to capture and validate user data natively in HTML is an essential web development skill.',
+        learningOutcomes: [
+            'Differentiate between various input types (text, email, password, radio, checkbox).',
+            'Use the <form>, <label>, and <input> tags correctly.',
+            'Implement client-side validation using attributes like required and minlength.',
+            'Organize form elements using <fieldset> and <legend>.',
+            'Structure a clean, accessible contact form.'
+        ],
+        skills: ['HTML Forms', 'Client-side Validation', 'Accessibility'],
+        difficulty: 'BEGINNER',
+        estimatedMinutes: 30,
+        
+        resourcesRequired: true,
+        submissionRequired: true,
+        quizRequired: true,
+
+        resources: [
+            { 
+                title: 'MDN: Your first form', 
+                type: 'documentation',
+                estimatedMinutes: 15,
+                difficulty: 'BEGINNER',
+                url: 'https://developer.mozilla.org/en-US/docs/Learn/Forms/Your_first_form' 
+            },
+            { 
+                title: 'W3C: Form Input Types', 
+                type: 'reference',
+                estimatedMinutes: 5,
+                difficulty: 'BEGINNER',
+                url: 'https://www.w3schools.com/html/html_form_input_types.asp' 
+            },
+            { 
+                title: 'CodePen Challenge: Build a Contact Form', 
+                type: 'practice',
+                estimatedMinutes: 10,
+                difficulty: 'BEGINNER',
+                url: 'https://codepen.io/pen/' 
+            }
+        ],
+
+        submissionRequirement: { 
+            type: 'github', 
+            label: 'GitHub Repository URL',
+            requirements: [
+                'Public repository',
+                'index.html with a <form>',
+                'At least 3 different input types',
+                'Use <label> for all inputs',
+                'Include at least one validation attribute (e.g. required)'
+            ]
+        },
+
+        passingScore: 80,
+        quiz: [
+            { 
+                question: 'Which tag is used to create a dropdown list in an HTML form?', 
+                options: ['<input type="dropdown">', '<select>', '<list>', '<dropdown>'], 
+                correctAnswer: 1,
+                category: 'HTML Forms',
+                explanation: 'The <select> element is used to create a drop-down list. It contains <option> elements that define the available options.'
+            },
+            { 
+                question: 'What is the purpose of the <label> element?', 
+                options: ['To style the text inside the form.', 'To define the title of the form.', 'To associate text with a specific form control, improving accessibility.', 'To group related form elements together.'], 
+                correctAnswer: 2,
+                category: 'HTML Forms',
+                explanation: 'The <label> element provides a usability improvement for visually impaired users and increases the hit area for checkboxes/radios.'
+            },
+            { 
+                question: 'Which attribute ensures that a user cannot submit the form without filling out a specific input field?', 
+                options: ['validate', 'important', 'mandatory', 'required'], 
+                correctAnswer: 3,
+                category: 'HTML Forms',
+                explanation: 'The "required" attribute is a boolean attribute that specifies that an input field must be filled out before submitting the form.'
+            },
+            {
+                question: 'How do you link a <label> to an <input> element?',
+                options: ['Using the "name" attribute on the input and the "id" on the label.', 'Using the "id" attribute on the input and the "for" attribute on the label.', 'Using the "class" attribute on both.', 'They are automatically linked if they are next to each other.'],
+                correctAnswer: 1,
+                category: 'HTML Forms',
+                explanation: 'The "for" attribute of the <label> tag should be equal to the "id" attribute of the <input> element to bind them together.'
+            },
+            {
+                question: 'Case Study: You are creating a registration form where users must agree to the Terms of Service. Which input type is the best choice?',
+                options: ['<input type="radio">', '<input type="button">', '<input type="checkbox">', '<input type="text">'],
+                correctAnswer: 2,
+                category: 'HTML Forms',
+                explanation: 'A checkbox (<input type="checkbox">) is the standard UI component for a binary (yes/no) choice such as agreeing to terms.'
             }
         ],
 
