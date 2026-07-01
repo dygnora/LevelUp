@@ -34,7 +34,17 @@ export class ChooseJourneyView {
         primaryJourney: pathId,
         totalSkillsCompleted: 0,
         totalQuestsCompleted: 0,
-        currentStreak: 0
+        currentStreak: 0,
+        progress: {
+          currentJourney: pathId,
+          currentModule: 'html', // Assuming pathId is frontend for MVP
+          currentQuest: 'semantic-html',
+          completedQuests: {},
+          completedModules: [],
+          xp: 0,
+          level: 1,
+          activeSubmission: null
+        }
       };
 
       await dbService.createCharacter(user.uid, characterData);
