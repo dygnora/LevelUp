@@ -3,10 +3,12 @@ import { createElement } from '../utils/dom.js';
 import { state } from '../state.js';
 import { AppLayout } from '../components/AppLayout.js';
 import { progressionEngine } from '../services/ProgressionEngine.js';
+import { themeManager } from '../managers/ThemeManager.js';
 
 export class ProfileView {
   renderContent() {
     const profile = progressionEngine.getPlayerProfile();
+    const theme = themeManager.getCurrentTheme();
     
     // Check if fully initialized
     if (!profile || !profile.identity) {
@@ -22,9 +24,9 @@ export class ProfileView {
             createElement('span', { className: 'text-4xl font-bold' }, identity.displayName.charAt(0).toUpperCase())
           ]);
 
-    const identitySection = createElement('div', { className: 'card bg-primary text-center d-flex flex-column align-center mb-6' }, [
+    const identitySection = createElement('div', { className: 'card text-center d-flex flex-column align-center mb-6', style: 'background-color: var(--theme-bg); transition: background-color var(--transition-normal);' }, [
         avatarEl,
-        createElement('h2', { className: 'text-2xl m-0' }, identity.displayName),
+        createElement('h2', { className: 'text-2xl m-0 text-black' }, identity.displayName),
         createElement('span', { className: 'badge bg-black text-white mt-2' }, identity.rank)
     ]);
 
@@ -38,7 +40,7 @@ export class ProfileView {
         missionContent = [
             createElement('p', { className: 'text-sm text-gray font-bold uppercase m-0' }, `Module: ${mission.moduleTitle}`),
             createElement('h3', { className: 'text-xl m-0 mt-2' }, mission.questTitle),
-            createElement('span', { className: 'badge bg-secondary text-black mt-3' }, mission.status)
+            createElement('span', { className: 'badge mt-3', style: 'background-color: var(--theme-accent); color: var(--theme-element-color); font-weight: bold; transition: background-color var(--transition-normal);' }, mission.status)
         ];
     } else {
         missionContent = [
@@ -58,7 +60,7 @@ export class ProfileView {
             createElement('span', { className: 'text-sm font-bold' }, `${progression.currentXp} / ${progression.nextLevelXp} XP`)
         ]),
         createElement('div', { className: 'progress-bar bg-gray-300' }, [
-            createElement('div', { className: 'progress-fill bg-success', style: `width: ${progression.percentage}%;` })
+            createElement('div', { className: 'progress-fill', style: `width: ${progression.percentage}%; background-color: var(--theme-accent); transition: background-color var(--transition-normal);` })
         ])
     ]);
 
@@ -72,7 +74,7 @@ export class ProfileView {
                 createElement('span', { className: 'text-sm' }, `${journey.completedQuests} / ${journey.totalQuests} Quests`)
             ]),
             createElement('div', { className: 'progress-bar bg-gray-300' }, [
-                createElement('div', { className: 'progress-fill bg-primary', style: `width: ${journey.percentage}%;` })
+                createElement('div', { className: 'progress-fill', style: `width: ${journey.percentage}%; background-color: var(--theme-accent); transition: background-color var(--transition-normal);` })
             ])
         ]);
     } else {
@@ -90,7 +92,7 @@ export class ProfileView {
                 className: `card d-flex align-center gap-4 ${isUnlocked ? 'card-interactive' : ''}`, 
                 style: isUnlocked ? '' : 'opacity: 0.6; filter: grayscale(1);' 
             }, [
-                createElement('div', { className: `p-3 rounded-full ${isUnlocked ? 'bg-primary' : 'bg-gray-300'}`, style: 'border-radius: var(--radius-md);' }, [
+                createElement('div', { className: 'p-3 rounded-full', style: `border-radius: var(--radius-md); background-color: ${isUnlocked ? 'var(--theme-bg)' : 'var(--color-gray-300)'}; transition: background-color var(--transition-normal);` }, [
                     createElement('i', { className: `${isUnlocked ? ach.icon : 'ph-lock'} text-2xl` })
                 ]),
                 createElement('div', {}, [
@@ -114,11 +116,11 @@ export class ProfileView {
         createElement('h2', { className: 'text-2xl mb-4' }, 'Statistics'),
         createElement('div', { className: 'grid grid-cols-2 gap-4' }, [
             createElement('div', { className: 'card text-center' }, [
-                createElement('h3', { className: 'text-4xl text-secondary m-0' }, statistics.totalXp),
+                createElement('h3', { className: 'text-4xl m-0', style: 'color: var(--theme-accent); transition: color var(--transition-normal);' }, statistics.totalXp),
                 createElement('p', { className: 'text-gray text-sm font-bold m-0 mt-2 uppercase' }, 'Total XP')
             ]),
             createElement('div', { className: 'card text-center' }, [
-                createElement('h3', { className: 'text-4xl text-success m-0' }, statistics.completedQuests),
+                createElement('h3', { className: 'text-4xl m-0', style: 'color: var(--theme-accent); transition: color var(--transition-normal);' }, statistics.completedQuests),
                 createElement('p', { className: 'text-gray text-sm font-bold m-0 mt-2 uppercase' }, 'Quests Done')
             ])
         ])
