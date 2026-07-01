@@ -25,7 +25,7 @@ export class RewardOverlay {
                 
                 createElement('div', { 
                     className: 'mb-8',
-                    style: 'display: inline-block; background-color: var(--color-black); color: var(--color-warning); padding: 12px 24px; border-radius: 30px; border: 2px solid var(--color-black);'
+                    style: 'display: inline-block; background-color: var(--color-black); color: var(--color-primary); padding: 12px 24px; border-radius: 30px; border: 2px solid var(--color-black);'
                 }, [
                     createElement('span', { className: 'text-3xl font-black' }, `+${this.quest.rewards.xp} XP`)
                 ]),
