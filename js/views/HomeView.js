@@ -137,11 +137,12 @@ export class HomeView {
          ])
       ]),
       
-      createElement('div', { className: 'mb-6', style: 'width: 100%; height: 24px; background: var(--color-gray-100); border: 3px solid var(--color-black); position: relative; box-shadow: 4px 4px 0px var(--color-black); border-radius: 24px; overflow: hidden;' }, [
+      createElement('div', { className: 'mb-6', style: 'width: 100%; height: 24px; background: var(--color-gray-200); border: 3px solid var(--color-black); position: relative; box-shadow: 4px 4px 0px var(--color-black); border-radius: 24px; overflow: hidden; display: flex; align-items: center; justify-content: center;' }, [
          createElement('div', { 
             className: ctx.stats.percentage > 0 ? 'progress-bar-striped' : '',
-            style: `height: 100%; width: 0%; border-right: ${ctx.stats.percentage > 0 ? '3px solid var(--color-black)' : 'none'}; transition: width 700ms cubic-bezier(0.4, 0, 0.2, 1); background-color: var(--color-success);` 
-         }, [])
+            style: `height: 100%; width: 0%; border-right: ${ctx.stats.percentage > 0 ? '3px solid var(--color-black)' : 'none'}; transition: width 700ms cubic-bezier(0.4, 0, 0.2, 1); background-color: var(--color-success); position: absolute; left: 0; top: 0;` 
+         }, []),
+         createElement('span', { className: 'font-bold text-xs', style: 'z-index: 2; color: var(--color-black); mix-blend-mode: difference; color: white;' }, `${Math.round(ctx.stats.percentage)}% PROGRESS`)
       ]),
 
       createElement('div', { className: 'd-flex flex-column mb-3', style: 'gap: 12px;' }, ctx.roadmap.map((item, index) => {
@@ -170,7 +171,7 @@ export class HomeView {
         ]);
       })),
 
-      createElement('div', { className: 'd-flex mt-5', style: 'justify-content: flex-end;' }, [
+      createElement('div', { className: 'd-flex', style: 'justify-content: flex-end; margin-top: 24px;' }, [
          createElement('button', { 
             className: 'font-black text-sm d-flex align-center gap-2 p-3 px-4',
             style: 'background: var(--color-white); color: var(--color-black); border: 2px solid var(--color-black); box-shadow: 3px 3px 0px var(--color-black); cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; border-radius: 24px;',
