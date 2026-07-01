@@ -149,24 +149,86 @@ export class HomeView {
       ])
     ]);
 
-    // 4. Journey Progress
+    // 4. Journey Progress (Phase 4 Redesign)
+    const mockJourneyStats = { completed: 2, total: 8, percentage: 25 };
     const journeyProgress = createElement('div', { 
-      className: 'animate-slide-up delay-300', 
-      style: `${cardStyle} padding: 24px; display: flex; flex-direction: column;` 
+      className: 'p-6 animate-slide-up delay-300', 
+      style: `${cardStyle} box-shadow: 4px 4px 0px var(--color-black); transition: all 0.2s;`,
+      onmouseenter: (e) => { 
+         e.currentTarget.style.transform = 'translateY(-2px)';
+         e.currentTarget.style.boxShadow = '6px 6px 0px var(--color-black)';
+      },
+      onmouseleave: (e) => { 
+         e.currentTarget.style.transform = 'translateY(0)';
+         e.currentTarget.style.boxShadow = '4px 4px 0px var(--color-black)';
+      }
     }, [
-      createElement('h3', { className: 'text-xl font-black mb-4' }, 'Journey Preview'),
-      createElement('div', { className: 'd-flex flex-column mb-4', style: 'gap: 12px;' }, mockData.roadmap.map(item => 
-        createElement('div', { className: 'd-flex align-center p-2', style: `gap: 12px; ${item.status === 'current' ? 'background: var(--color-gray-100); border: 1px solid var(--color-black); border-radius: 6px;' : ''}` }, [
-          item.status === 'completed' 
-            ? createElement('i', { className: 'ph-fill ph-check-circle text-success text-2xl' })
-            : item.status === 'current'
-              ? createElement('i', { className: 'ph-fill ph-play-circle text-2xl', style: 'color: var(--theme-bg)' })
-              : createElement('i', { className: 'ph-fill ph-lock-key text-gray text-2xl' }),
-          createElement('span', { className: `font-bold ${item.status === 'locked' ? 'text-gray' : 'text-black'}` }, [item.title])
-        ])
-      )),
-      createElement('button', { className: 'btn w-100 mt-auto', style: 'border: 2px solid var(--color-black); background: var(--color-white); color: var(--color-black); font-weight: bold;', onclick: () => router.navigate('/journey') }, 'Open Roadmap')
+      // 1. Journey Title
+      createElement('div', { className: 'mb-4' }, [
+         createElement('h3', { className: 'm-0 text-xl font-black' }, `${mockData.path} Journey`),
+         createElement('p', { className: 'm-0 text-sm font-bold text-gray' }, 'Building the Web')
+      ]),
+      
+      // 2. Module Progress (Game-like)
+      createElement('div', { className: 'mb-4 p-3 bg-gray-100', style: 'border: 2px solid var(--color-black); border-radius: 8px;' }, [
+         createElement('div', { className: 'd-flex justify-between align-center mb-2' }, [
+            createElement('span', { className: 'font-bold text-black text-sm' }, `${mockData.chapter} Progress`),
+            createElement('span', { className: 'font-bold text-gray text-xs' }, `${mockJourneyStats.percentage}%`)
+         ]),
+         // Progress Bar Background
+         createElement('div', { style: 'width: 100%; height: 12px; background: var(--color-gray-300); border-radius: 6px; overflow: hidden; border: 1px solid var(--color-black); position: relative;' }, [
+            // Progress Bar Fill (Animated)
+            createElement('div', { 
+               style: `width: 0%; height: 100%; background: var(--theme-accent); border-right: 1px solid var(--color-black); transition: width 700ms cubic-bezier(0.4, 0, 0.2, 1);` 
+            }, [])
+         ]),
+         createElement('div', { className: 'mt-2 text-right text-xs font-bold text-black' }, `${mockJourneyStats.completed} of ${mockJourneyStats.total} Quests Completed`)
+      ]),
+
+      // 3. Current Roadmap Preview
+      createElement('div', { className: 'd-flex flex-column mb-4' }, mockData.roadmap.slice(0, 4).map((item, index) => {
+        let iconHtml, textColor;
+        if (item.status === 'completed') {
+           iconHtml = createElement('i', { className: 'ph-bold ph-check text-success' });
+           textColor = 'text-gray';
+        } else if (item.status === 'current') {
+           iconHtml = createElement('i', { className: 'ph-fill ph-play text-black', style: 'color: var(--theme-accent);' });
+           textColor = 'text-black';
+        } else {
+           iconHtml = createElement('i', { className: 'ph-bold ph-lock-key text-gray-400' });
+           textColor = 'text-gray-400';
+        }
+
+        return createElement('div', { 
+          className: 'd-flex align-center gap-2 py-2',
+          style: index !== mockData.roadmap.slice(0, 4).length - 1 ? 'border-bottom: 1px dashed var(--color-gray-300);' : ''
+        }, [
+          createElement('div', { className: 'd-flex align-center justify-center', style: 'width: 24px;' }, [iconHtml]),
+          createElement('span', { className: `font-bold text-sm ${textColor}` }, [item.title])
+        ]);
+      })),
+
+      // 4. Open Journey (Lightweight Link)
+      createElement('div', { className: 'd-flex justify-end mt-2' }, [
+         createElement('a', { 
+            href: 'javascript:void(0)', 
+            className: 'font-bold text-black text-sm d-flex align-center gap-1',
+            style: 'text-decoration: none; border-bottom: 2px solid transparent; padding-bottom: 2px; transition: border-color 0.2s;',
+            onmouseenter: (e) => e.currentTarget.style.borderBottom = '2px solid var(--color-black)',
+            onmouseleave: (e) => e.currentTarget.style.borderBottom = '2px solid transparent',
+            onclick: () => router.navigate('/journey')
+         }, [
+            'Open Journey', 
+            createElement('i', { className: 'ph-bold ph-arrow-right' })
+         ])
+      ])
     ]);
+    
+    // Trigger progress bar animation after DOM mount
+    setTimeout(() => {
+       const pb = journeyProgress.querySelector('div[style*="transition: width 700ms"]');
+       if(pb) pb.style.width = `${mockJourneyStats.percentage}%`;
+    }, 50);
 
     // 5. Achievement (Conditional)
     let recentAchievement = createElement('div', {}, []);
