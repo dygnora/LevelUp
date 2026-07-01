@@ -57,7 +57,9 @@ class ProgressionEngine {
       activeSubmission: p.activeSubmission || null,
       isQuestStarted: !!p.isQuestStarted,
       isRewardPending: !!p.isRewardPending,
-      quizResults: p.quizResults || null
+      quizResults: p.quizResults || null,
+      achievements: p.achievements || [],
+      stats: p.stats || {}
     };
   }
 
