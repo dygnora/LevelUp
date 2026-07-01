@@ -1,5 +1,8 @@
 // js/services/ProgressionEngine.js
 import { state } from '../state.js';
+import { levelTable } from '../data/levelTable.js';
+import { rankTable } from '../data/rankTable.js';
+import { achievementDefinitions } from '../data/achievements.js';
 
 // --- FSM STATES ---
 export const PROGRESSION_STATES = {
@@ -375,6 +378,167 @@ class ProgressionEngine {
       progress.currentQuest = null; 
       progress.isQuestStarted = false;
     }
+  }
+
+  // --- MODULAR CALCULATION HELPERS ---
+  
+  calculateLevel(xp) {
+    let currentLvl = levelTable[0];
+    for (let i = 0; i < levelTable.length; i++) {
+        if (xp >= levelTable[i].minXp) {
+            currentLvl = levelTable[i];
+        } else {
+            break;
+        }
+    }
+    const nextLvl = levelTable.find(l => l.level === currentLvl.level + 1);
+    return {
+        level: currentLvl.level,
+        currentXp: xp,
+        nextLevelXp: nextLvl ? nextLvl.minXp : currentLvl.minXp
+    };
+  }
+
+  calculateRank(level) {
+    const rank = rankTable.find(r => level >= r.minLevel && level <= r.maxLevel);
+    return rank ? rank.name : 'Unknown';
+  }
+
+  calculatePercentage(current, total) {
+    if (total === 0) return 0;
+    return Math.round((current / total) * 100);
+  }
+
+  // --- PROFILE DATA FETCHERS ---
+
+  getPlayerIdentity() {
+    const character = state.get('character') || {};
+    const p = character.progress || {};
+    const lvlInfo = this.calculateLevel(p.xp || 0);
+    
+    return {
+        displayName: character.displayName || 'Unknown Hero',
+        photoURL: character.photoURL || null,
+        rank: this.calculateRank(lvlInfo.level),
+        createdAt: character.createdAt || null
+    };
+  }
+
+  getPlayerProgression() {
+    const character = state.get('character') || {};
+    const xp = (character.progress && character.progress.xp) ? character.progress.xp : 0;
+    const lvlInfo = this.calculateLevel(xp);
+    
+    return {
+        level: lvlInfo.level,
+        currentXp: lvlInfo.currentXp,
+        nextLevelXp: lvlInfo.nextLevelXp,
+        percentage: this.calculatePercentage(lvlInfo.currentXp, lvlInfo.nextLevelXp)
+    };
+  }
+
+  getJourneyProgress() {
+    const character = state.get('character') || {};
+    const p = character.progress || { currentJourney: 'frontend', completedQuests: {} };
+    const currentJourney = this.getJourney(p.currentJourney);
+    if (!currentJourney) return null;
+
+    const modulesInJourney = this.getModulesForJourney(currentJourney.id);
+    let totalQuestsInJourney = 0;
+    modulesInJourney.forEach(m => {
+       totalQuestsInJourney += this.getQuestsForModule(m.id).length;
+    });
+    
+    const completedQuestsCount = Object.keys(p.completedQuests || {}).length;
+
+    return {
+        journeyName: currentJourney.title,
+        completedQuests: completedQuestsCount,
+        totalQuests: totalQuestsInJourney,
+        percentage: this.calculatePercentage(completedQuestsCount, totalQuestsInJourney)
+    };
+  }
+
+  getCurrentMission() {
+    const character = state.get('character') || {};
+    const p = character.progress || { currentModule: 'html', currentQuest: null, isQuestStarted: false };
+    
+    let targetQuestId = p.currentQuest;
+    if (!targetQuestId) {
+       const moduleQuests = this.getQuestsForModule(p.currentModule);
+       if (moduleQuests.length > 0) targetQuestId = moduleQuests[0].id;
+    }
+    
+    const quest = targetQuestId ? this.getQuest(targetQuestId) : null;
+    const module = quest ? this.getModule(quest.moduleId) : null;
+    
+    // Check if journey is fully complete
+    const journeyProg = this.getJourneyProgress();
+    if (journeyProg && journeyProg.percentage === 100) {
+        return { isComplete: true };
+    }
+    
+    if (!quest || !module) return null;
+
+    let status = 'Ready to Start';
+    if (p.isQuestStarted) status = 'In Progress';
+    if (p.activeSubmission) status = 'Submitted';
+
+    return {
+        isComplete: false,
+        moduleTitle: module.title,
+        questTitle: quest.title,
+        status: status
+    };
+  }
+
+  getAchievements() {
+    const character = state.get('character') || {};
+    
+    return achievementDefinitions.map(ach => {
+        const isUnlocked = ach.condition(character);
+        
+        let progress = null;
+        if (ach.incremental && ach.maxProgress) {
+            let currentProg = 0;
+            if (ach.id === 'html-master') {
+                const htmlQuests = this.getQuestsForModule('html');
+                const completed = Object.keys(character.progress?.completedQuests || {}).filter(qId => htmlQuests.find(q => q.id === qId)).length;
+                currentProg = completed;
+            }
+            progress = `${Math.min(currentProg, ach.maxProgress)} / ${ach.maxProgress}`;
+        }
+
+        return {
+            ...ach,
+            isUnlocked,
+            progress
+        };
+    });
+  }
+
+  getPlayerStatistics() {
+    const character = state.get('character') || {};
+    const p = character.progress || {};
+    
+    return {
+        totalXp: p.xp || 0,
+        completedQuests: Object.keys(p.completedQuests || {}).length
+    };
+  }
+
+  getPlayerProfile() {
+    return {
+        identity: this.getPlayerIdentity(),
+        progression: this.getPlayerProgression(),
+        journey: this.getJourneyProgress(),
+        mission: this.getCurrentMission(),
+        achievements: this.getAchievements(),
+        statistics: this.getPlayerStatistics(),
+        account: {
+            email: state.get('user')?.email || 'Not available'
+        }
+    };
   }
 }
 
