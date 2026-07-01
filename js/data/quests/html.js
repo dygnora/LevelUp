@@ -739,6 +739,24 @@ export const htmlQuests = [
             ]
         },
 
+        projectRubric: [
+            { criteria: 'Semantic HTML', percentage: '20%' },
+            { criteria: 'Forms', percentage: '15%' },
+            { criteria: 'Tables', percentage: '15%' },
+            { criteria: 'Media', percentage: '15%' },
+            { criteria: 'Accessibility', percentage: '20%' },
+            { criteria: 'Project Structure', percentage: '15%' }
+        ],
+
+        beforeYouSubmit: [
+            'No HTML validation errors',
+            'Images have alt text',
+            'Heading hierarchy is correct',
+            'Labels connected to inputs',
+            'README exists',
+            'Repository is public'
+        ],
+
         passingScore: null,
         quiz: [],
 

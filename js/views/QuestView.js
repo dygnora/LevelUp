@@ -306,10 +306,30 @@ export class QuestView {
           ]),
           createElement('div', { className: 'bg-white p-4 mb-4', style: 'border: 2px solid var(--color-black); border-radius: 8px;' }, [
              
+             quest.projectRubric ? createElement('div', { className: 'mb-4' }, [
+                 createElement('div', { className: 'font-bold text-sm mb-2 text-primary text-uppercase' }, 'Project Evaluation Rubric:'),
+                 createElement('div', { className: 'p-3 bg-gray-100', style: 'border-radius: 6px; font-family: monospace;' }, 
+                     quest.projectRubric.map(item => createElement('div', { className: 'd-flex justify-between mb-1' }, [
+                         createElement('span', {}, item.criteria),
+                         createElement('span', { className: 'font-bold' }, item.percentage)
+                     ]))
+                 )
+             ]) : createElement('div', {}, []),
+
              quest.submissionRequirement.requirements ? createElement('div', { className: 'mb-4' }, [
-                 createElement('div', { className: 'font-bold text-sm mb-2 text-gray' }, 'Requirements:'),
+                 createElement('div', { className: 'font-bold text-sm mb-2 text-gray text-uppercase' }, 'Requirements:'),
                  createElement('ul', { className: 'm-0 pl-4 text-sm' }, 
                      quest.submissionRequirement.requirements.map(req => createElement('li', { className: 'mb-1 font-bold' }, req))
+                 )
+             ]) : createElement('div', {}, []),
+
+             quest.beforeYouSubmit ? createElement('div', { className: 'mb-4' }, [
+                 createElement('div', { className: 'font-bold text-sm mb-2 text-warning text-uppercase' }, 'Before You Submit:'),
+                 createElement('ul', { className: 'm-0 pl-0 text-sm', style: 'list-style: none;' }, 
+                     quest.beforeYouSubmit.map(check => createElement('li', { className: 'mb-2 d-flex align-center gap-2' }, [
+                         createElement('i', { className: 'ph-duotone ph-square' }),
+                         createElement('span', { className: 'font-bold' }, check)
+                     ]))
                  )
              ]) : createElement('div', {}, []),
 
