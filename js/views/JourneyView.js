@@ -61,51 +61,68 @@ export class JourneyView {
      });
 
      modules.forEach((mod, index) => {
-        let bgColor = 'var(--color-gray-100)';
-        let textColor = 'var(--color-black)';
-        let iconHtml = '';
-        let statusBadgeHtml = '';
-        let isClickable = false;
-        let shadowStyle = '4px 4px 0px var(--color-black)';
+        let bannerColor, bannerTextColor, iconHtml, statusText, shadowStyle, isClickable;
 
         if (mod.status === 'AVAILABLE' || mod.status === 'IN_PROGRESS') {
-           bgColor = 'var(--theme-accent)';
-           iconHtml = createElement('i', { className: 'ph-fill ph-play text-2xl' });
-           statusBadgeHtml = createElement('span', { className: 'text-xs font-bold px-3 py-1 bg-black text-white mt-1 d-inline-block text-uppercase', style: 'border-radius: 12px; letter-spacing: 1px;' }, 'CURRENT');
+           bannerColor = 'var(--theme-accent)';
+           bannerTextColor = 'var(--color-black)';
+           iconHtml = createElement('i', { className: 'ph-fill ph-play text-xl' });
+           statusText = 'CURRENT';
            isClickable = true;
            shadowStyle = '6px 6px 0px var(--color-black)';
         } else if (mod.status === 'COMPLETED') {
-           bgColor = 'var(--color-success)';
-           textColor = 'var(--color-white)';
-           iconHtml = createElement('i', { className: 'ph-bold ph-check text-2xl' });
+           bannerColor = 'var(--color-success)';
+           bannerTextColor = 'var(--color-white)';
+           iconHtml = createElement('i', { className: 'ph-bold ph-check text-xl' });
+           statusText = 'COMPLETED';
            isClickable = true;
+           shadowStyle = '4px 4px 0px var(--color-black)';
         } else if (mod.status === 'LOCKED') {
-           bgColor = 'var(--color-gray-200)';
-           textColor = 'var(--color-gray-500)';
-           iconHtml = createElement('i', { className: 'ph-bold ph-lock-key text-2xl' });
-           statusBadgeHtml = createElement('span', { className: 'text-xs font-bold px-3 py-1 bg-white text-gray mt-1 d-inline-block text-uppercase', style: 'border: 2px solid var(--color-gray-300); border-radius: 12px; letter-spacing: 1px;' }, 'LOCKED');
+           bannerColor = 'var(--color-gray-200)';
+           bannerTextColor = 'var(--color-gray-500)';
+           iconHtml = createElement('i', { className: 'ph-bold ph-lock-key text-xl' });
+           statusText = 'LOCKED';
+           isClickable = false;
+           shadowStyle = '4px 4px 0px var(--color-black)';
         } else if (mod.status === 'COMING_SOON') {
-           bgColor = 'var(--color-gray-200)';
-           textColor = 'var(--color-gray-500)';
-           iconHtml = createElement('i', { className: 'ph-duotone ph-cone text-2xl' });
-           statusBadgeHtml = createElement('span', { className: 'text-xs font-bold px-3 py-1 bg-warning text-black mt-1 d-inline-block text-uppercase', style: 'border: 2px solid var(--color-black); border-radius: 12px; letter-spacing: 1px;' }, 'COMING SOON');
-           shadowStyle = '2px 2px 0px var(--color-gray-400)';
+           bannerColor = 'var(--color-black)';
+           bannerTextColor = 'var(--color-white)';
+           iconHtml = createElement('i', { className: 'ph-duotone ph-cone text-xl' });
+           statusText = 'COMING SOON';
+           isClickable = false;
+           shadowStyle = '4px 4px 0px var(--color-gray-500)';
         }
 
+        const isComingSoon = mod.status === 'COMING_SOON';
+        const bodyBg = isComingSoon ? 'var(--color-gray-100)' : 'var(--color-white)';
+
         const nodeCard = createElement('div', {
-           className: `d-flex flex-column align-center text-center ${isClickable ? 'card-interactive cursor-pointer' : ''}`,
-           style: `width: 320px; padding: 24px 16px; border-radius: 16px; background: ${bgColor}; color: ${textColor}; border: 4px solid var(--color-black); box-shadow: ${shadowStyle}; transition: transform 0.2s, box-shadow 0.2s; position: relative; z-index: 10;`,
+           className: `d-flex flex-column text-left ${isClickable ? 'card-interactive cursor-pointer' : ''}`,
+           style: `width: 320px; border-radius: 12px; background: ${bodyBg}; border: 4px solid var(--color-black); box-shadow: ${shadowStyle}; transition: transform 0.2s, box-shadow 0.2s; position: relative; z-index: 10; overflow: hidden; ${isComingSoon ? 'opacity: 0.8;' : ''}`,
            onclick: () => { if (isClickable) this.openModule(mod.id); },
            onmouseenter: (e) => { if (isClickable) { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '8px 8px 0px var(--color-black)'; } },
            onmouseleave: (e) => { if (isClickable) { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = shadowStyle; } }
         }, [
-           createElement('div', { className: 'd-flex align-center justify-center gap-2 mb-2' }, [
-               iconHtml,
-               createElement('h3', { className: 'm-0 text-3xl font-black text-uppercase tracking-wide', style: `color: ${mod.status === 'COMING_SOON' ? 'var(--color-gray-500)' : 'var(--color-black)'}; line-height: 1;` }, mod.title),
+           // Header Banner
+           createElement('div', {
+              className: 'd-flex align-center justify-between',
+              style: `background: ${bannerColor}; color: ${bannerTextColor}; padding: 12px 16px; border-bottom: 4px solid var(--color-black);`
+           }, [
+              createElement('span', { className: 'text-xs font-black text-uppercase', style: 'letter-spacing: 1px;' }, statusText),
+              iconHtml
            ]),
-           createElement('p', { className: 'm-0 text-sm font-bold text-gray mb-3' }, mod.description),
-           mod.status !== 'COMING_SOON' ? createElement('p', { className: 'm-0 text-xs font-bold' }, `${mod.stats.total} Quests • ${mod.estimatedTime || 'TBD'}`) : '',
-           createElement('div', { className: 'mt-2' }, [statusBadgeHtml])
+           // Body
+           createElement('div', {
+              className: 'd-flex flex-column',
+              style: 'padding: 20px 16px;'
+           }, [
+              createElement('h3', { className: 'm-0 text-3xl font-black text-uppercase tracking-wide mb-1', style: `color: ${isComingSoon ? 'var(--color-gray-500)' : 'var(--color-black)'}; line-height: 1.1;` }, mod.title),
+              createElement('p', { className: 'm-0 text-sm font-bold text-gray mb-4' }, mod.description),
+              !isComingSoon ? createElement('div', { className: 'd-flex align-center gap-2 mt-auto' }, [
+                 createElement('span', { className: 'text-xs font-bold text-black bg-white', style: 'padding: 4px 8px; border: 2px solid var(--color-black); border-radius: 6px;' }, `${mod.stats.total} Quests`),
+                 createElement('span', { className: 'text-xs font-bold text-black bg-white', style: 'padding: 4px 8px; border: 2px solid var(--color-black); border-radius: 6px;' }, mod.estimatedTime || 'TBD')
+              ]) : ''
+           ])
         ]);
 
         // Connecting line to next node
@@ -161,30 +178,31 @@ export class JourneyView {
      });
 
      quests.forEach((quest, index) => {
-        let bgColor, textColor, iconHtml, shadowStyle;
+        let sideColor, sideTextColor, iconHtml, shadowStyle, isClickable;
         
         if (quest.state === 'COMPLETED') {
-           bgColor = 'var(--color-success)';
-           textColor = 'var(--color-white)';
-           iconHtml = createElement('i', { className: 'ph-bold ph-check text-xl' });
+           sideColor = 'var(--color-success)';
+           sideTextColor = 'var(--color-white)';
+           iconHtml = createElement('i', { className: 'ph-bold ph-check text-2xl' });
            shadowStyle = '3px 3px 0px var(--color-black)';
+           isClickable = true;
         } else if (quest.state === 'AVAILABLE' || quest.state === 'IN_PROGRESS' || quest.state === 'SUBMITTED') {
-           bgColor = 'var(--theme-accent)';
-           textColor = 'var(--color-black)';
-           iconHtml = createElement('i', { className: 'ph-fill ph-play text-xl' });
+           sideColor = 'var(--theme-accent)';
+           sideTextColor = 'var(--color-black)';
+           iconHtml = createElement('i', { className: 'ph-fill ph-play text-2xl' });
            shadowStyle = '5px 5px 0px var(--color-black)';
+           isClickable = true;
         } else {
-           bgColor = 'var(--color-gray-100)';
-           textColor = 'var(--color-gray-400)';
-           iconHtml = createElement('i', { className: 'ph-bold ph-lock-key text-xl' });
-           shadowStyle = '0px 0px 0px transparent'; // Flat
+           sideColor = 'var(--color-gray-200)';
+           sideTextColor = 'var(--color-gray-500)';
+           iconHtml = createElement('i', { className: 'ph-bold ph-lock-key text-2xl' });
+           shadowStyle = '3px 3px 0px var(--color-gray-400)';
+           isClickable = false;
         }
 
-        const isClickable = (quest.state === 'AVAILABLE' || quest.state === 'IN_PROGRESS' || quest.state === 'COMPLETED' || quest.state === 'SUBMITTED');
-
         const questCard = createElement('div', {
-           className: `d-flex flex-column align-center text-center ${isClickable ? 'card-interactive cursor-pointer' : ''}`,
-           style: `width: 260px; padding: 16px; border-radius: 12px; background: ${bgColor}; color: ${textColor}; border: 3px solid var(--color-black); box-shadow: ${shadowStyle}; transition: transform 0.2s, box-shadow 0.2s; position: relative; z-index: 10;`,
+           className: `d-flex text-left bg-white ${isClickable ? 'card-interactive cursor-pointer' : ''}`,
+           style: `width: 320px; border-radius: 12px; border: 3px solid var(--color-black); box-shadow: ${shadowStyle}; transition: transform 0.2s, box-shadow 0.2s; position: relative; z-index: 10; overflow: hidden;`,
            onclick: () => {
               if (isClickable) {
                  if (quest.state === 'AVAILABLE') {
@@ -193,14 +211,22 @@ export class JourneyView {
                  // router.navigate('/quest');
               }
            },
-           onmouseenter: (e) => { if (isClickable) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '7px 7px 0px var(--color-black)'; } },
+           onmouseenter: (e) => { if (isClickable) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '6px 6px 0px var(--color-black)'; } },
            onmouseleave: (e) => { if (isClickable) { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = shadowStyle; } }
         }, [
-           createElement('div', { className: 'd-flex align-center justify-center gap-2 mb-1' }, [
-               iconHtml,
-               createElement('h3', { className: 'm-0 text-xl font-bold', style: quest.state === 'COMPLETED' ? 'text-decoration: line-through; color: var(--color-gray-500);' : 'color: var(--color-black);' }, quest.title),
-           ]),
-           createElement('span', { className: 'text-xs font-bold text-gray' }, quest.difficulty || 'Beginner')
+           // Left Side Banner/Icon
+           createElement('div', {
+              className: 'd-flex align-center justify-center',
+              style: `width: 64px; background: ${sideColor}; color: ${sideTextColor}; border-right: 3px solid var(--color-black); flex-shrink: 0;`
+           }, [iconHtml]),
+           // Right Side Content
+           createElement('div', {
+              className: 'd-flex flex-column justify-center',
+              style: 'padding: 16px; flex: 1;'
+           }, [
+              createElement('h3', { className: 'm-0 text-xl font-black mb-1', style: quest.state === 'COMPLETED' ? 'text-decoration: line-through; color: var(--color-gray-500);' : 'color: var(--color-black);' }, quest.title),
+              createElement('span', { className: 'text-xs font-bold text-gray text-uppercase', style: 'letter-spacing: 0.5px;' }, quest.difficulty || 'Beginner')
+           ])
         ]);
 
         // Connecting line to next node
@@ -211,7 +237,7 @@ export class JourneyView {
 
         const questRow = createElement('div', {
            className: `d-flex justify-center w-100 animate-fade-up`,
-           style: `margin-bottom: 32px; animation-delay: ${index * 80}ms; ${!isClickable ? 'opacity: 0.7;' : ''} position: relative; z-index: 10;`
+           style: `margin-bottom: 32px; animation-delay: ${index * 80}ms; ${!isClickable ? 'opacity: 0.8;' : ''} position: relative; z-index: 10;`
         }, [
            line,
            questCard
