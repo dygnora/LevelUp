@@ -31,7 +31,7 @@ function initApp() {
   router.addRoute('/home', HomeView, true);
   router.addRoute('/journey', JourneyView, true);
   router.addRoute('/skill/:id', SkillView, true);
-  router.addRoute('/quest/:id', QuestView, true);
+  router.addRoute('/quest', QuestView, true);
   router.addRoute('/profile', ProfileView, true);
   router.addRoute('/settings', SettingsView, true);
   // We will add more routes soon...
