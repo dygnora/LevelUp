@@ -280,8 +280,9 @@ class ProgressionEngine {
         
         // Submission Validation
         if (quest.submissionRequirement.type === 'github') {
-            if (!value || !value.startsWith('https://github.com/')) {
-               return { success: false, code: 'INVALID_SUBMISSION_URL', message: 'Please enter a valid GitHub repository URL starting with https://github.com/' };
+            const githubRegex = /^https:\/\/github\.com\/[^\/]+\/[^\/]+\/?$/;
+            if (!value || !githubRegex.test(value)) {
+               return { success: false, code: 'INVALID_SUBMISSION_URL', message: 'Please enter a valid GitHub repository URL (e.g. https://github.com/username/repo)' };
             }
         } else if (quest.submissionRequirement.type === 'url') {
             if (!value || !value.startsWith('http')) {
@@ -322,7 +323,7 @@ class ProgressionEngine {
         });
         
         const score = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 100;
-        const passingScore = quest.passingScore || 100;
+        const passingScore = quest.passingScore || 80;
         
         if (score < passingScore) {
            return { success: false, code: 'QUIZ_FAILED', message: `You scored ${Math.round(score)}%. You need ${passingScore}% to pass.` };
