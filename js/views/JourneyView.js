@@ -208,9 +208,12 @@ export class JourneyView {
            style: `width: 320px; border-radius: 12px; border: 3px solid var(--color-black); box-shadow: ${shadowStyle}; transition: transform 0.2s, box-shadow 0.2s; position: relative; z-index: 10; overflow: hidden;`,
            onclick: () => {
               if (isClickable) {
-                 if (quest.state === 'AVAILABLE') {
-                    progressionEngine.dispatch('START_QUEST', { questId: quest.id });
-                 }
+                  if (quest.state === 'AVAILABLE') {
+                     const result = progressionEngine.dispatch('START_QUEST', { questId: quest.id });
+                     if (result.unlockedAchievements && result.unlockedAchievements.length > 0) {
+                        import('../components/AchievementToast.js').then(module => module.achievementToast.show(result.unlockedAchievements));
+                     }
+                  }
                  router.navigate('/quest');
               }
            },

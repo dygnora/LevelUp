@@ -1,28 +1,47 @@
 // js/data/achievements.js
 export const achievementDefinitions = [
     { 
-        id: 'first-login', 
-        name: 'The Awakening', 
-        desc: 'Log in to LevelUp for the first time.', 
-        icon: 'ph-sparkle',
-        incremental: false,
-        condition: (character) => true // Automatically unlocked upon login (usually handled in backend, but we mock true here if they exist)
-    },
-    { 
         id: 'first-quest', 
-        name: 'First Steps', 
-        desc: 'Complete your first quest.', 
+        title: 'First Steps', 
+        description: 'Complete your first quest.', 
         icon: 'ph-boot',
-        incremental: false,
+        rarity: 'Common',
+        category: 'Progression',
+        hidden: false,
+        xp: 50,
         condition: (character) => Object.keys(character.progress?.completedQuests || {}).length >= 1
     },
     {
-        id: 'html-master',
-        name: 'Structure Architect',
-        desc: 'Complete all quests in the HTML module.',
+        id: 'html-explorer',
+        title: 'HTML Explorer',
+        description: 'Complete the HTML Basics module.',
         icon: 'ph-file-html',
-        incremental: true,
-        maxProgress: 2, // Hardcoded for MVP, in real app would compute from module quests
+        rarity: 'Rare',
+        category: 'Milestone',
+        hidden: false,
+        xp: 200,
         condition: (character) => character.progress?.completedModules?.includes('html')
+    },
+    {
+        id: 'knowledge-seeker',
+        title: 'Knowledge Seeker',
+        description: 'Open 10 Required Intel resources.',
+        icon: 'ph-books',
+        rarity: 'Common',
+        category: 'Exploration',
+        hidden: false,
+        xp: 100,
+        condition: (character) => (character.progress?.stats?.resourcesOpened || 0) >= 10
+    },
+    {
+        id: 'first-level-up',
+        title: 'First Level Up',
+        description: 'Reach Level 2.',
+        icon: 'ph-arrow-fat-up',
+        rarity: 'Common',
+        category: 'Progression',
+        hidden: false,
+        xp: 100,
+        condition: (character) => (character.progress?.level || 1) >= 2
     }
 ];

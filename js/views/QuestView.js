@@ -13,7 +13,7 @@ export class QuestView {
     this.engineError = null;
   }
 
-  handleAction(actionType) {
+  handleAction(actionType, payload = null) {
     const character = state.get('character');
     const questId = character?.progress?.currentQuest;
     if (!questId) return;
@@ -23,6 +23,8 @@ export class QuestView {
 
     if (actionType === 'START_QUEST') {
        result = progressionEngine.dispatch('START_QUEST', { questId });
+    } else if (actionType === 'OPEN_RESOURCE') {
+       result = progressionEngine.dispatch('OPEN_RESOURCE', { url: payload });
     } else if (actionType === 'SUBMIT_PROJECT') {
        result = progressionEngine.dispatch('SUBMIT_PROJECT', {
          questId,
@@ -40,6 +42,10 @@ export class QuestView {
 
     if (!result.success) {
        this.engineError = result;
+    } else if (result.unlockedAchievements && result.unlockedAchievements.length > 0) {
+       import('../components/AchievementToast.js').then(module => {
+           module.achievementToast.show(result.unlockedAchievements);
+       });
     }
     
     this.reRender();
@@ -297,7 +303,8 @@ export class QuestView {
                 href: res.url, 
                 target: '_blank',
                 className: 'card-interactive p-4 d-flex align-center justify-between',
-                style: 'border: 2px solid var(--color-black); border-radius: 8px; text-decoration: none; color: var(--color-black); background: var(--color-gray-100);' 
+                style: 'border: 2px solid var(--color-black); border-radius: 8px; text-decoration: none; color: var(--color-black); background: var(--color-gray-100);',
+                onclick: () => this.handleAction('OPEN_RESOURCE', res.url)
              }, [
                 createElement('div', { className: 'd-flex align-center gap-3' }, [
                    createElement('i', { className: 'ph-duotone ph-book-bookmark text-2xl' }),

@@ -74,7 +74,10 @@ export class HomeView {
         onmouseup: (e) => { e.currentTarget.style.transform = 'scale(1.02)'; },
         onclick: () => {
            if (ctx.questState === 'AVAILABLE') {
-              progressionEngine.dispatch('START_QUEST', { questId: ctx.quest.id });
+              const result = progressionEngine.dispatch('START_QUEST', { questId: ctx.quest.id });
+              if (result.unlockedAchievements && result.unlockedAchievements.length > 0) {
+                 import('../components/AchievementToast.js').then(module => module.achievementToast.show(result.unlockedAchievements));
+              }
            }
            router.navigate('/quest');
         }
@@ -192,17 +195,18 @@ export class HomeView {
 
     // 5. Achievement (Conditional)
     let recentAchievement;
-    if (ctx.latestAchievement) {
+    if (ctx.recentAchievements && ctx.recentAchievements.length > 0) {
+      const ach = ctx.recentAchievements[0];
       recentAchievement = createElement('div', { 
         className: 'animate-fade-up delay-300', 
         style: `${cardStyle} padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;` 
       }, [
         createElement('h3', { className: 'text-xl font-black mb-4 w-100 text-left' }, 'Recent Achievement'),
         createElement('div', { className: 'mb-4' }, [
-          createElement('i', { className: 'ph-duotone ph-trophy', style: 'font-size: 80px; color: var(--theme-bg); filter: drop-shadow(4px 4px 0px var(--color-black));' })
+          createElement('i', { className: `ph-duotone ${ach.icon}`, style: 'font-size: 80px; color: var(--color-primary); filter: drop-shadow(4px 4px 0px var(--color-black));' })
         ]),
-        createElement('div', { className: 'font-black text-2xl mb-2' }, ctx.latestAchievement),
-        createElement('div', { className: 'text-sm font-bold text-white bg-black px-4 py-2', style: 'border-radius: 20px;' }, 'Unlocked')
+        createElement('div', { className: 'font-black text-2xl mb-2' }, ach.title),
+        createElement('div', { className: 'text-sm font-bold text-white bg-black px-4 py-2', style: 'border-radius: 20px;' }, ach.rarity)
       ]);
     } else {
       recentAchievement = createElement('div', { 

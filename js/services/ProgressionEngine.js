@@ -3,6 +3,7 @@ import { state } from '../state.js';
 import { levelTable } from '../data/levelTable.js';
 import { rankTable } from '../data/rankTable.js';
 import { achievementDefinitions } from '../data/achievements.js';
+import { achievementEngine } from './AchievementEngine.js';
 import { journeys, modules, quests } from '../data/index.js';
 import { dbService } from './dbService.js';
 
@@ -175,7 +176,11 @@ class ProgressionEngine {
 
     const firstName = (character.displayName || 'Hero').split(' ')[0];
     const achievements = character.progress?.achievements || [];
-    const latestAchievement = achievements.length > 0 ? achievements[0] : null;
+    const recentAchievements = achievements
+        .map(id => achievementDefinitions.find(d => d.id === id))
+        .filter(Boolean)
+        .reverse()
+        .slice(0, 3);
 
     let ctaLabel = 'Start Mission';
     if (ctx.state === 'IN_PROGRESS') ctaLabel = 'Continue Learning';
@@ -202,7 +207,7 @@ class ProgressionEngine {
        nextUnlock: ctx.nextUnlock,
        stats: ctx.stats,
        roadmap,
-       latestAchievement
+       recentAchievements
     };
   }
 
@@ -249,6 +254,9 @@ class ProgressionEngine {
     switch (actionType) {
       case 'OPEN_RESOURCE': {
         console.log('[Analytics] Resource opened:', payload.url);
+        if (!p.stats) p.stats = {};
+        p.stats.resourcesOpened = (p.stats.resourcesOpened || 0) + 1;
+        isProgressionChanged = true;
         break;
       }
       case 'START_QUEST': {
@@ -371,11 +379,23 @@ class ProgressionEngine {
         return { success: false, code: 'UNKNOWN_ACTION', message: 'Invalid action.' };
     }
 
-    if (result.success) {
+    if (result.success && isProgressionChanged) {
+        const levelInfo = this.calculateLevel(p.xp || 0);
+        p.level = levelInfo.level;
+        
         const updatedCharacter = { ...character, progress: p };
+        
+        const achievementResult = achievementEngine.evaluate(updatedCharacter);
+        
+        if (achievementResult.unlockedAchievements.length > 0) {
+            const levelInfoAfter = this.calculateLevel(updatedCharacter.progress.xp || 0);
+            updatedCharacter.progress.level = levelInfoAfter.level;
+            result.unlockedAchievements = achievementResult.unlockedAchievements;
+        }
+
         state.set('character', updatedCharacter);
         
-        if (isProgressionChanged && character.id) {
+        if (character.id) {
            dbService.updateCharacter(character.id, updatedCharacter).catch(err => {
                console.error("[Persistence Error]", err);
            });
