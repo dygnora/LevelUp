@@ -78,14 +78,14 @@ export class HomeView {
         }, [mockData.quest.objective]), // Array forces createTextNode avoiding HTML injection
         
         // Metrics Row (Pills, very light)
-        createElement('div', { className: 'd-flex align-center gap-2 mt-4 mb-2 flex-wrap' }, [
-           createElement('span', { className: 'd-inline-flex align-center text-sm font-bold px-3 py-1', style: 'background: var(--color-gray-100); border-radius: 20px; gap: 4px;' }, [
+        createElement('div', { className: 'd-flex align-center mt-4 mb-2 flex-wrap', style: 'gap: 12px;' }, [
+           createElement('span', { className: 'align-center text-sm font-bold px-3 py-1', style: 'display: inline-flex; gap: 4px; background: var(--color-gray-100); border-radius: 20px;' }, [
               createElement('span', {}, '🟢'), createElement('span', {}, mockData.quest.difficulty)
            ]),
-           createElement('span', { className: 'd-inline-flex align-center text-sm font-bold px-3 py-1', style: 'background: var(--color-gray-100); border-radius: 20px; gap: 4px;' }, [
+           createElement('span', { className: 'align-center text-sm font-bold px-3 py-1', style: 'display: inline-flex; gap: 4px; background: var(--color-gray-100); border-radius: 20px;' }, [
               createElement('span', {}, '⏱'), createElement('span', {}, mockData.quest.estimatedTime)
            ]),
-           createElement('span', { className: 'd-inline-flex align-center text-sm font-bold px-3 py-1 text-warning', style: 'background: var(--color-gray-100); border-radius: 20px; gap: 4px;' }, [
+           createElement('span', { className: 'align-center text-sm font-bold px-3 py-1 text-warning', style: 'display: inline-flex; gap: 4px; background: var(--color-gray-100); border-radius: 20px;' }, [
               createElement('span', {}, '⭐'), createElement('span', {}, mockData.quest.reward)
            ])
         ])
@@ -109,12 +109,12 @@ export class HomeView {
       style: `${cardStyle} background: var(--theme-bg); padding: 24px; gap: 16px;` 
     }, [
       createElement('div', { className: 'bg-white p-2 d-flex align-center justify-center', style: 'border: 2px solid var(--color-black); border-radius: 50%; min-width: 48px; min-height: 48px;' }, [
-        createElement('i', { className: 'ph-duotone ph-lock-key-open text-xl text-black' })
+        createElement('i', { className: 'ph-duotone ph-lock-key-open text-xl text-black', style: 'color: var(--color-black);' })
       ]),
       createElement('div', { className: 'd-flex align-center flex-wrap text-white', style: 'gap: 8px;' }, [
         createElement('span', { className: 'font-black' }, 'NEXT UNLOCK:'),
         createElement('span', { className: 'font-bold' }, `Complete this quest to unlock`),
-        createElement('span', { className: 'font-black bg-white text-black px-2 py-1 d-inline-block', style: 'border: 2px solid var(--color-black); border-radius: 6px; box-shadow: 2px 2px 0px var(--color-black);' }, [mockData.nextUnlock])
+        createElement('span', { className: 'font-black bg-white px-2 py-1', style: 'display: inline-block; color: var(--color-black); border: 2px solid var(--color-black); border-radius: 6px; box-shadow: 2px 2px 0px var(--color-black);' }, [mockData.nextUnlock])
       ])
     ]);
 
