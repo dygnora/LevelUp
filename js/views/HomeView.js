@@ -149,85 +149,79 @@ export class HomeView {
       ])
     ]);
 
-    // 4. Journey Progress (Phase 4 Redesign - Option A: Quest Log)
+    // 4. Journey Progress (Phase 4 Redesign - Neo-Brutalist Blocks)
     const mockJourneyStats = { completed: 2, total: 8, percentage: 25 };
     const journeyProgress = createElement('div', { 
       className: 'p-6 animate-slide-up delay-300', 
-      style: `${cardStyle} box-shadow: 4px 4px 0px var(--color-black); transition: transform 0.2s, box-shadow 0.2s;`,
+      style: `${cardStyle} box-shadow: 6px 6px 0px var(--color-black); transition: transform 0.2s, box-shadow 0.2s;`,
       onmouseenter: (e) => { 
          e.currentTarget.style.transform = 'translateY(-2px)';
-         e.currentTarget.style.boxShadow = '6px 6px 0px var(--color-black)';
+         e.currentTarget.style.boxShadow = '8px 8px 0px var(--color-black)';
       },
       onmouseleave: (e) => { 
          e.currentTarget.style.transform = 'translateY(0)';
-         e.currentTarget.style.boxShadow = '4px 4px 0px var(--color-black)';
+         e.currentTarget.style.boxShadow = '6px 6px 0px var(--color-black)';
       }
     }, [
       // 1. Header (Title + Badge)
       createElement('div', { className: 'd-flex justify-between align-center mb-4 flex-wrap', style: 'gap: 16px;' }, [
          createElement('div', {}, [
-           createElement('h3', { className: 'm-0 text-xl font-black mb-1' }, `${mockData.path} Journey`),
+           createElement('h3', { className: 'm-0 text-xl font-black mb-1 text-uppercase' }, `${mockData.path} Journey`),
            createElement('p', { className: 'm-0 text-sm font-bold', style: 'color: var(--color-gray-600);' }, 'Building the Web')
          ]),
          // Badge
          createElement('div', { 
-            className: 'px-3 py-1 font-bold text-xs d-flex align-center', 
-            style: 'background: var(--color-black); color: var(--color-white); border-radius: 20px; gap: 6px; white-space: nowrap;' 
+            className: 'px-3 py-2 font-bold text-xs d-flex align-center', 
+            style: 'background: var(--color-black); color: var(--color-white); border-radius: 4px; gap: 8px; white-space: nowrap; border: 2px solid var(--color-black); box-shadow: 2px 2px 0px var(--color-gray-400);' 
          }, [
-            createElement('i', { className: 'ph-fill ph-flag text-sm' }),
+            createElement('i', { className: 'ph-fill ph-flag text-base' }),
             createElement('span', {}, `${mockJourneyStats.completed}/${mockJourneyStats.total} Quests`)
          ])
       ]),
       
-      // 2. Minimalist Progress Bar
-      createElement('div', { className: 'mb-6', style: 'width: 100%; height: 8px; background: var(--color-gray-200); border-radius: 4px; overflow: hidden; position: relative;' }, [
+      // 2. Thick Segmented Progress Bar
+      createElement('div', { className: 'mb-6', style: 'width: 100%; height: 16px; background: var(--color-gray-100); border: 2px solid var(--color-black); position: relative;' }, [
          createElement('div', { 
-            style: `width: 0%; height: 100%; background: var(--theme-accent); transition: width 700ms cubic-bezier(0.4, 0, 0.2, 1);` 
+            style: `width: 0%; height: 100%; background: var(--theme-accent); border-right: 2px solid var(--color-black); transition: width 700ms cubic-bezier(0.4, 0, 0.2, 1);` 
          }, [])
       ]),
 
-      // 3. Current Roadmap Preview (Timeline Style)
-      createElement('div', { className: 'd-flex flex-column mb-3', style: 'border-left: 4px solid var(--color-black); margin-left: 14px; padding-left: 24px; padding-top: 8px; padding-bottom: 8px; gap: 24px;' }, mockData.roadmap.slice(0, 4).map((item, index) => {
-        let iconHtml, textColor, dotColor;
+      // 3. Current Roadmap Preview (Chunky Blocks)
+      createElement('div', { className: 'd-flex flex-column mb-3', style: 'gap: 12px;' }, mockData.roadmap.slice(0, 4).map((item, index) => {
+        let blockStyle, iconHtml, textStyle;
         if (item.status === 'completed') {
-           iconHtml = createElement('i', { className: 'ph-bold ph-check text-success text-sm' });
-           textColor = 'var(--color-gray-600)';
-           dotColor = 'var(--color-white)';
+           blockStyle = 'background: var(--color-gray-100); border: 2px solid var(--color-black); color: var(--color-gray-600);';
+           iconHtml = createElement('i', { className: 'ph-bold ph-check text-success text-lg' });
+           textStyle = 'text-decoration: line-through;';
         } else if (item.status === 'current') {
-           iconHtml = createElement('i', { className: 'ph-fill ph-play text-sm', style: 'color: var(--color-black);' });
-           textColor = 'var(--color-black)';
-           dotColor = 'var(--theme-accent)';
+           blockStyle = 'background: var(--theme-accent); border: 3px solid var(--color-black); box-shadow: 4px 4px 0px var(--color-black); color: var(--color-black); transform: scale(1.02); z-index: 1;';
+           iconHtml = createElement('i', { className: 'ph-fill ph-play text-xl' });
+           textStyle = '';
         } else {
-           iconHtml = createElement('i', { className: 'ph-bold ph-lock-key text-gray-400 text-sm' });
-           textColor = 'var(--color-gray-400)';
-           dotColor = 'var(--color-gray-100)';
+           blockStyle = 'background: transparent; border: 2px dashed var(--color-gray-400); color: var(--color-gray-400);';
+           iconHtml = createElement('i', { className: 'ph-bold ph-lock-key text-lg' });
+           textStyle = '';
         }
 
         return createElement('div', { 
-          className: 'd-flex align-center',
-          style: 'position: relative;'
+          className: 'd-flex align-center p-3 card-interactive',
+          style: `border-radius: 8px; gap: 12px; ${blockStyle} transition: transform 0.2s, box-shadow 0.2s;`
         }, [
-          // Timeline Node Dot
-          createElement('div', { 
-             className: 'd-flex align-center justify-center', 
-             style: `width: 28px; height: 28px; border-radius: 50%; background: ${dotColor}; border: 2px solid var(--color-black); position: absolute; left: -40px; top: 50%; transform: translateY(-50%); box-shadow: 2px 2px 0px var(--color-black);` 
-          }, [iconHtml]),
-          // Content
-          createElement('span', { className: 'font-bold text-sm', style: `color: ${textColor}; padding-left: 4px;` }, [item.title])
+          iconHtml,
+          createElement('span', { className: 'font-bold text-sm', style: textStyle }, [item.title])
         ]);
       })),
 
-      // 4. Open Journey (Lightweight Link)
-      createElement('div', { className: 'd-flex mt-4', style: 'justify-content: flex-end;' }, [
-         createElement('a', { 
-            href: 'javascript:void(0)', 
-            className: 'font-bold text-sm d-flex align-center gap-1',
-            style: 'color: var(--color-black); text-decoration: none; border-bottom: 2px solid transparent; padding-bottom: 2px; transition: border-color 0.2s;',
-            onmouseenter: (e) => e.currentTarget.style.borderBottom = '2px solid var(--color-black)',
-            onmouseleave: (e) => e.currentTarget.style.borderBottom = '2px solid transparent',
+      // 4. Open Journey (Brutalist Button)
+      createElement('div', { className: 'd-flex mt-5', style: 'justify-content: flex-end;' }, [
+         createElement('button', { 
+            className: 'font-black text-sm d-flex align-center gap-2 p-3',
+            style: 'background: var(--color-white); color: var(--color-black); border: 2px solid var(--color-black); box-shadow: 3px 3px 0px var(--color-black); cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;',
+            onmousedown: (e) => { e.currentTarget.style.transform = 'translateY(2px)'; e.currentTarget.style.boxShadow = '1px 1px 0px var(--color-black)'; },
+            onmouseup: (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '3px 3px 0px var(--color-black)'; },
             onclick: () => router.navigate('/journey')
          }, [
-            'Open Journey', 
+            'OPEN JOURNEY', 
             createElement('i', { className: 'ph-bold ph-arrow-right' })
          ])
       ])
