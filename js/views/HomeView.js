@@ -4,6 +4,7 @@ import { state } from '../state.js';
 import { AppLayout } from '../components/AppLayout.js';
 import { router } from '../router.js';
 import { themeManager } from '../managers/ThemeManager.js';
+import { progressionEngine } from '../services/ProgressionEngine.js';
 
 export class HomeView {
   renderContent() {
@@ -14,55 +15,26 @@ export class HomeView {
     }
 
     const theme = themeManager.getCurrentTheme();
+    const ctx = progressionEngine.getCurrentContext();
 
-    // Realistic Mock Data for MVP Mission Control
-    const mockData = {
-      path: "Frontend Developer",
-      chapter: "HTML",
-      module: "Semantic HTML",
-      quest: {
-        title: "Build Semantic Landing Page",
-        objective: "Create a semantic landing page using <header>, <main>, <section>, dan <footer>.",
-        difficulty: "Beginner",
-        estimatedTime: "30 min",
-        reward: "+40 XP",
-        deliverable: "GitHub Repository",
-        quizStatus: "Available after submission"
-      },
-      nextUnlock: {
-        title: "HTML Forms",
-        preview: ["Forms", "Inputs", "Buttons", "Validation"]
-      },
-      resources: [
-        { type: 'Documentation', title: 'MDN Web Docs', icon: 'ph-book-bookmark' },
-        { type: 'Video', title: 'YouTube Tutorial', icon: 'ph-video' },
-        { type: 'Practice', title: 'Frontend Mentor', icon: 'ph-flask' }
-      ],
-      roadmap: [
-        { status: 'completed', title: 'HTML Basics' },
-        { status: 'current', title: 'Semantic HTML' },
-        { status: 'locked', title: 'HTML Forms' },
-        { status: 'locked', title: 'Tables' }
-      ],
-      achievement: "HTML Explorer"
-    };
+    if (!ctx || !ctx.quest) {
+       return createElement('div', { className: 'p-6' }, 'No active journey found.');
+    }
 
-    // 1. Greeting (Dynamic from ThemeManager)
-    const firstName = (character.displayName || 'Deny').split(' ')[0];
+    // 1. Greeting
+    const firstName = (character.displayName || 'Hero').split(' ')[0];
     const headerContext = createElement('div', { className: 'mb-4 animate-fade-up delay-0', style: 'margin-bottom: 24px;' }, [
       createElement('p', { className: 'm-0 text-gray font-bold text-sm mb-1' }, `${theme.greeting}, ${firstName}.`),
       createElement('p', { className: 'm-0 text-black font-bold text-md' }, theme.subGreeting)
     ]);
 
-    // Container standard styles
     const cardStyle = 'border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); border-radius: 8px; background: var(--color-white); width: 100%; margin-bottom: 24px; overflow: hidden;';
 
-    // 2. HERO: Today's Main Quest (Redesign Phase 2 + Revisions)
-    const questState = 'AVAILABLE'; // Mock FSM state (Phase 6 will connect this to ProgressionEngine)
-    let ctaLabel = 'Start Learning';
-    if (questState === 'IN_PROGRESS') ctaLabel = 'Continue Learning';
-    else if (questState === 'SUBMITTED') ctaLabel = 'Take Quiz';
-    else if (questState === 'COMPLETED') ctaLabel = 'Continue Journey';
+    // 2. HERO: Today's Main Quest
+    let ctaLabel = 'Start Mission';
+    if (ctx.state === 'IN_PROGRESS') ctaLabel = 'Continue Learning';
+    else if (ctx.state === 'SUBMITTED') ctaLabel = 'Take Quiz';
+    else if (ctx.state === 'COMPLETED') ctaLabel = 'Continue Journey';
 
     const heroQuest = createElement('div', { 
       className: 'animate-fade-up delay-100 card-interactive', 
@@ -76,32 +48,29 @@ export class HomeView {
          e.currentTarget.style.boxShadow = '6px 6px 0px var(--color-black)';
       }
     }, [
-      // Content Box (White)
       createElement('div', { className: 'p-6' }, [
         createElement('span', { 
            className: 'font-bold text-sm text-black px-3 py-1 mb-4 d-inline-block', 
            style: 'background-color: var(--theme-accent); border-radius: 20px; white-space: nowrap;' 
         }, `${theme.icon} TODAY'S MISSION`),
-        createElement('h1', { className: 'm-0 text-3xl font-black mb-3 text-black' }, mockData.quest.title),
+        createElement('h1', { className: 'm-0 text-3xl font-black mb-3 text-black' }, ctx.quest.title),
         createElement('p', { 
            className: 'm-0 font-bold text-black text-md mb-2', 
            style: 'opacity: 0.8; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;' 
-        }, [mockData.quest.objective]), // Array forces createTextNode avoiding HTML injection
+        }, [ctx.quest.objective]),
         
-        // Metrics Row (Pills, very light)
         createElement('div', { className: 'd-flex align-center mt-4 mb-2 flex-wrap', style: 'gap: 12px;' }, [
            createElement('span', { className: 'align-center text-sm font-bold px-3 py-1', style: 'display: inline-flex; gap: 4px; background: var(--color-gray-100); border-radius: 20px;' }, [
-              createElement('span', {}, '🟢'), createElement('span', {}, mockData.quest.difficulty)
+              createElement('span', {}, '🟢'), createElement('span', {}, ctx.quest.difficulty || 'Normal')
            ]),
            createElement('span', { className: 'align-center text-sm font-bold px-3 py-1', style: 'display: inline-flex; gap: 4px; background: var(--color-gray-100); border-radius: 20px;' }, [
-              createElement('span', {}, '⏱'), createElement('span', {}, mockData.quest.estimatedTime)
+              createElement('span', {}, '⏱'), createElement('span', {}, ctx.quest.estimatedTime || 'N/A')
            ]),
            createElement('span', { className: 'align-center text-sm font-bold px-3 py-1 text-warning', style: 'display: inline-flex; gap: 4px; background: var(--color-gray-100); border-radius: 20px;' }, [
-              createElement('span', {}, '⭐'), createElement('span', {}, mockData.quest.reward)
+              createElement('span', {}, '⭐'), createElement('span', {}, `+${ctx.quest.rewardXP || 0} XP`)
            ])
         ])
       ]),
-      // CTA Button (Full Width flush to bottom)
       createElement('button', {
         className: 'btn-interactive w-100 p-4 d-flex justify-center align-center gap-2',
         style: 'background-color: var(--theme-bg); color: var(--theme-btn-text); font-size: 18px; font-weight: 900; border: none; border-top: 3px solid var(--color-black); cursor: pointer; transition: transform 120ms ease, background-color 200ms ease; transform-origin: center;',
@@ -109,58 +78,47 @@ export class HomeView {
         onmouseleave: (e) => { e.currentTarget.style.transform = 'scale(1)'; },
         onmousedown: (e) => { e.currentTarget.style.transform = 'scale(0.98)'; },
         onmouseup: (e) => { e.currentTarget.style.transform = 'scale(1.02)'; },
-        onclick: () => router.navigate('/quest')
+        onclick: () => {
+           if (ctx.state === 'AVAILABLE') {
+              progressionEngine.dispatch('START_QUEST', { questId: ctx.quest.id });
+           }
+           router.navigate('/quest');
+        }
       }, [
         ctaLabel,
         createElement('i', { className: 'ph-bold ph-arrow-right text-xl' })
       ])
     ]);
 
-    // 3. Next Unlock Attachment (Phase 3 Redesign - Teaser Card)
-    const nextUnlock = createElement('div', { 
-      className: 'p-6 animate-fade-up delay-180 card-interactive', 
-      style: `${cardStyle} box-shadow: 4px 4px 0px var(--color-black); transition: all 0.2s; cursor: default;`,
-      onmouseenter: (e) => { 
-        const icon = e.currentTarget.querySelector('.lock-icon');
-        const preview = e.currentTarget.querySelector('.teaser-preview');
-        if(icon) { icon.style.transform = 'rotate(5deg)'; }
-        if(preview) { preview.style.filter = 'blur(0px)'; preview.style.opacity = '0.9'; }
-      },
-      onmouseleave: (e) => { 
-        const icon = e.currentTarget.querySelector('.lock-icon');
-        const preview = e.currentTarget.querySelector('.teaser-preview');
-        if(icon) { icon.style.transform = 'rotate(0deg)'; }
-        if(preview) { preview.style.filter = 'blur(1px)'; preview.style.opacity = '0.5'; }
-      }
-    }, [
-      createElement('div', { className: 'd-flex flex-column gap-3' }, [
-        // Kicker & Icon
-        createElement('div', { className: 'd-flex align-center gap-2 mb-1' }, [
-          createElement('i', { className: 'ph-fill ph-lock-key text-gray text-xl lock-icon', style: 'transition: transform 0.2s;' }),
-          createElement('span', { className: 'text-gray text-xs font-bold' }, 'NEXT UNLOCK')
-        ]),
-        // Target Module
-        createElement('h3', { className: 'm-0 text-xl font-black text-black' }, mockData.nextUnlock.title),
-        // Condition text
-        createElement('p', { className: 'm-0 font-bold text-gray text-sm' }, `Complete ${mockData.module} to unlock.`),
-        
-        // Separator
-        createElement('hr', { style: 'border: none; border-top: 2px dashed var(--color-gray-300); margin: 16px 0; width: 100%;' }),
-        
-        // Teaser Preview
-        createElement('div', { className: 'd-flex flex-column gap-2 teaser-preview', style: 'opacity: 0.5; filter: blur(1px); user-select: none; transition: all 0.3s;' }, [
-          createElement('span', { className: 'text-xs font-bold text-gray mb-1' }, 'YOU WILL LEARN:'),
-          ...mockData.nextUnlock.preview.map(item => 
-            createElement('div', { className: 'd-flex align-center gap-2 text-sm font-bold text-black' }, [
-              createElement('i', { className: 'ph-bold ph-check text-gray' }), item
-            ])
-          )
-        ])
-      ])
-    ]);
+    // 3. Next Unlock
+    let nextUnlock = createElement('div', { className: 'd-none' }); // Hidden by default
+    if (ctx.nextUnlock) {
+       nextUnlock = createElement('div', { 
+         className: 'p-6 animate-fade-up delay-180 card-interactive', 
+         style: `${cardStyle} box-shadow: 4px 4px 0px var(--color-black); transition: all 0.2s; cursor: default;`,
+         onmouseenter: (e) => { 
+           const icon = e.currentTarget.querySelector('.lock-icon');
+           if(icon) { icon.style.transform = 'rotate(5deg)'; }
+         },
+         onmouseleave: (e) => { 
+           const icon = e.currentTarget.querySelector('.lock-icon');
+           if(icon) { icon.style.transform = 'rotate(0deg)'; }
+         }
+       }, [
+         createElement('div', { className: 'd-flex flex-column gap-3' }, [
+           createElement('div', { className: 'd-flex align-center gap-2 mb-1' }, [
+             createElement('i', { className: 'ph-fill ph-lock-key text-gray text-xl lock-icon', style: 'transition: transform 0.2s;' }),
+             createElement('span', { className: 'text-gray text-xs font-bold' }, 'NEXT UNLOCK')
+           ]),
+           createElement('h3', { className: 'm-0 text-xl font-black text-black' }, ctx.nextUnlock.title),
+           createElement('p', { className: 'm-0 font-bold text-gray text-sm' }, `Complete ${ctx.quest.title} to unlock this module.`),
+         ])
+       ]);
+    }
 
-    // 4. Journey Progress (Phase 4 Redesign - Neo-Brutalist Blocks)
-    const mockJourneyStats = { completed: 2, total: 8, percentage: 25 };
+    // 4. Journey Progress
+    const roadmapQuests = progressionEngine.getQuestsForModule(ctx.module.id);
+    
     const journeyProgress = createElement('div', { 
       className: 'p-6 animate-fade-up delay-260 card-interactive', 
       style: `${cardStyle} box-shadow: 6px 6px 0px var(--color-black); transition: transform 0.2s, box-shadow 0.2s;`,
@@ -173,38 +131,36 @@ export class HomeView {
          e.currentTarget.style.boxShadow = '6px 6px 0px var(--color-black)';
       }
     }, [
-      // 1. Header (Title + Badge)
       createElement('div', { className: 'd-flex justify-between align-center mb-4 flex-wrap', style: 'gap: 16px;' }, [
          createElement('div', {}, [
-           createElement('h3', { className: 'm-0 text-xl font-black mb-1 text-uppercase' }, `${mockData.path} Journey`),
-           createElement('p', { className: 'm-0 text-sm font-bold', style: 'color: var(--color-gray-600);' }, 'Building the Web')
+           createElement('h3', { className: 'm-0 text-xl font-black mb-1 text-uppercase' }, `${ctx.journey.title} Journey`),
+           createElement('p', { className: 'm-0 text-sm font-bold', style: 'color: var(--color-gray-600);' }, ctx.journey.description)
          ]),
-         // Badge
          createElement('div', { 
             className: 'px-3 py-2 font-bold text-xs d-flex align-center', 
             style: 'background: var(--color-black); color: var(--color-white); border-radius: 20px; gap: 8px; white-space: nowrap; border: 2px solid var(--color-black); box-shadow: 2px 2px 0px var(--color-gray-400);' 
          }, [
             createElement('i', { className: 'ph-fill ph-flag text-base' }),
-            createElement('span', {}, `${mockJourneyStats.completed}/${mockJourneyStats.total} Quests`)
+            createElement('span', {}, `${ctx.stats.completedQuests}/${ctx.stats.totalQuests} Quests`)
          ])
       ]),
       
-      // 2. Thick Segmented Progress Bar
       createElement('div', { className: 'mb-6', style: 'width: 100%; height: 24px; background: var(--color-gray-100); border: 3px solid var(--color-black); position: relative; box-shadow: 4px 4px 0px var(--color-black); border-radius: 24px; overflow: hidden;' }, [
          createElement('div', { 
-            className: 'progress-bar-striped',
-            style: `width: 0%; border-right: 3px solid var(--color-black);` 
+            className: ctx.stats.percentage > 0 ? 'progress-bar-striped' : '',
+            style: `height: 100%; width: 0%; border-right: ${ctx.stats.percentage > 0 ? '3px solid var(--color-black)' : 'none'}; transition: width 700ms cubic-bezier(0.4, 0, 0.2, 1); background-color: var(--color-success);` 
          }, [])
       ]),
 
-      // 3. Current Roadmap Preview (Chunky Blocks)
-      createElement('div', { className: 'd-flex flex-column mb-3', style: 'gap: 12px;' }, mockData.roadmap.slice(0, 4).map((item, index) => {
+      createElement('div', { className: 'd-flex flex-column mb-3', style: 'gap: 12px;' }, roadmapQuests.slice(0, 4).map((item, index) => {
         let blockStyle, iconHtml, textStyle;
-        if (item.status === 'completed') {
+        const state = progressionEngine.getQuestState(item.id);
+        
+        if (state === 'COMPLETED') {
            blockStyle = 'background: var(--color-gray-100); border: 2px solid var(--color-black); color: var(--color-gray-600);';
            iconHtml = createElement('i', { className: 'ph-bold ph-check text-success text-lg' });
            textStyle = 'text-decoration: line-through;';
-        } else if (item.status === 'current') {
+        } else if (state === 'IN_PROGRESS' || state === 'SUBMITTED' || state === 'AVAILABLE') {
            blockStyle = 'background: var(--theme-accent); border: 3px solid var(--color-black); box-shadow: 4px 4px 0px var(--color-black); color: var(--color-black); transform: scale(1.02); z-index: 1;';
            iconHtml = createElement('i', { className: 'ph-fill ph-play text-xl' });
            textStyle = '';
@@ -223,7 +179,6 @@ export class HomeView {
         ]);
       })),
 
-      // 4. Open Journey (Brutalist Button)
       createElement('div', { className: 'd-flex mt-5', style: 'justify-content: flex-end;' }, [
          createElement('button', { 
             className: 'font-black text-sm d-flex align-center gap-2 p-3 px-4',
@@ -238,29 +193,37 @@ export class HomeView {
       ])
     ]);
     
-    // Trigger progress bar animation after DOM mount
     setTimeout(() => {
-       const pb = journeyProgress.querySelector('.progress-bar-striped');
-       if(pb) pb.style.width = `${mockJourneyStats.percentage}%`;
+       const pb = journeyProgress.querySelector('div[style*="transition: width 700ms"]');
+       if(pb) pb.style.width = `${ctx.stats.percentage}%`;
     }, 50);
 
     // 5. Achievement (Conditional)
-    let recentAchievement = createElement('div', {}, []);
-    if (mockData.achievement) {
+    let recentAchievement;
+    const achievements = character.progress?.achievements || [];
+    if (achievements.length > 0) {
       recentAchievement = createElement('div', { 
-        className: 'animate-slide-up delay-400', 
+        className: 'animate-fade-up delay-300', 
         style: `${cardStyle} padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;` 
       }, [
         createElement('h3', { className: 'text-xl font-black mb-4 w-100 text-left' }, 'Recent Achievement'),
         createElement('div', { className: 'mb-4' }, [
           createElement('i', { className: 'ph-duotone ph-trophy', style: 'font-size: 80px; color: var(--theme-bg); filter: drop-shadow(4px 4px 0px var(--color-black));' })
         ]),
-        createElement('div', { className: 'font-black text-2xl mb-2' }, mockData.achievement),
-        createElement('div', { className: 'text-sm font-bold text-white bg-black px-4 py-2', style: 'border-radius: 20px;' }, 'Unlocked Today')
+        createElement('div', { className: 'font-black text-2xl mb-2' }, achievements[0]),
+        createElement('div', { className: 'text-sm font-bold text-white bg-black px-4 py-2', style: 'border-radius: 20px;' }, 'Unlocked')
+      ]);
+    } else {
+      recentAchievement = createElement('div', { 
+        className: 'animate-fade-up delay-300', 
+        style: `${cardStyle} padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: var(--color-gray-100); border: 2px dashed var(--color-gray-400); box-shadow: none;` 
+      }, [
+        createElement('i', { className: 'ph-duotone ph-medal text-gray mb-3', style: 'font-size: 48px; opacity: 0.5;' }),
+        createElement('p', { className: 'm-0 font-bold text-gray' }, 'No achievements yet.'),
+        createElement('p', { className: 'm-0 font-bold text-black mt-1' }, 'Your first badge is waiting.')
       ]);
     }
 
-    // Wrap elements in a single column layout container
     const layoutContainer = createElement('div', { 
       className: 'd-flex flex-column', 
       style: 'max-width: 1100px; margin: 0 auto; padding-top: 32px; padding-bottom: 48px; width: 100%;' 
@@ -272,7 +235,6 @@ export class HomeView {
       recentAchievement
     ]);
 
-    // CSS Utilities
     const style = createElement('style', {}, `
       @media(min-width: 768px) { .md-grid-cols-3 { grid-template-columns: repeat(3, 1fr); } }
       .bg-white { background-color: var(--color-white); }
