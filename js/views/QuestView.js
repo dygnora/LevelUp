@@ -245,7 +245,13 @@ export class QuestView {
                    createElement('i', { className: 'ph-duotone ph-book-bookmark text-2xl' }),
                    createElement('div', {}, [
                       createElement('div', { className: 'font-bold' }, res.title),
-                      createElement('div', { className: 'text-xs text-gray font-bold' }, res.type)
+                      createElement('div', { className: 'text-xs text-gray font-bold d-flex gap-2' }, [
+                          createElement('span', { className: 'text-uppercase' }, res.type),
+                          createElement('span', {}, '•'),
+                          createElement('span', {}, `${res.estimatedMinutes}m`),
+                          createElement('span', {}, '•'),
+                          createElement('span', {}, res.difficulty)
+                      ])
                    ])
                 ]),
                 createElement('i', { className: 'ph-bold ph-arrow-up-right text-gray' })
@@ -264,6 +270,14 @@ export class QuestView {
              'Submit Deliverable'
           ]),
           createElement('div', { className: 'bg-white p-4 mb-4', style: 'border: 2px solid var(--color-black); border-radius: 8px;' }, [
+             
+             quest.submissionRequirement.requirements ? createElement('div', { className: 'mb-4' }, [
+                 createElement('div', { className: 'font-bold text-sm mb-2 text-gray' }, 'Requirements:'),
+                 createElement('ul', { className: 'm-0 pl-4 text-sm' }, 
+                     quest.submissionRequirement.requirements.map(req => createElement('li', { className: 'mb-1 font-bold' }, req))
+                 )
+             ]) : createElement('div', {}, []),
+
              createElement('label', { className: 'd-block text-sm font-bold mb-2' }, quest.submissionRequirement.label),
              createElement('input', { 
                 type: 'url', 
