@@ -194,6 +194,42 @@ class ProgressionEngine {
     };
   }
 
+  // Pre-calculated context specifically for HomeView
+  getHomeContext() {
+    const character = state.get('character') || {};
+    const ctx = this.getCurrentContext();
+    if (!ctx || !ctx.quest) return null;
+
+    const firstName = (character.displayName || 'Hero').split(' ')[0];
+    const achievements = character.progress?.achievements || [];
+    const latestAchievement = achievements.length > 0 ? achievements[0] : null;
+
+    let ctaLabel = 'Start Mission';
+    if (ctx.state === 'IN_PROGRESS') ctaLabel = 'Continue Learning';
+    else if (ctx.state === 'SUBMITTED') ctaLabel = 'Take Quiz';
+    else if (ctx.state === 'COMPLETED') ctaLabel = 'Continue Journey';
+
+    const roadmapQuests = this.getQuestsForModule(ctx.module.id).slice(0, 4);
+    const roadmap = roadmapQuests.map(q => ({
+       id: q.id,
+       title: q.title,
+       state: this.getQuestState(q.id)
+    }));
+
+    return {
+       firstName,
+       journey: ctx.journey,
+       module: ctx.module,
+       quest: ctx.quest,
+       questState: ctx.state,
+       ctaLabel,
+       nextUnlock: ctx.nextUnlock,
+       stats: ctx.stats,
+       roadmap,
+       latestAchievement
+    };
+  }
+
   // --- ACTIONS (Mutations) ---
 
   dispatch(actionType, payload) {

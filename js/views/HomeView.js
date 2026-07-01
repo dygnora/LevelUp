@@ -15,27 +15,21 @@ export class HomeView {
     }
 
     const theme = themeManager.getCurrentTheme();
-    const ctx = progressionEngine.getCurrentContext();
+    const ctx = progressionEngine.getHomeContext();
 
-    if (!ctx || !ctx.quest) {
+    if (!ctx) {
        return createElement('div', { className: 'p-6' }, 'No active journey found.');
     }
 
     // 1. Greeting
-    const firstName = (character.displayName || 'Hero').split(' ')[0];
     const headerContext = createElement('div', { className: 'mb-4 animate-fade-up delay-0', style: 'margin-bottom: 24px;' }, [
-      createElement('p', { className: 'm-0 text-gray font-bold text-sm mb-1' }, `${theme.greeting}, ${firstName}.`),
+      createElement('p', { className: 'm-0 text-gray font-bold text-sm mb-1' }, `${theme.greeting}, ${ctx.firstName}.`),
       createElement('p', { className: 'm-0 text-black font-bold text-md' }, theme.subGreeting)
     ]);
 
     const cardStyle = 'border: 3px solid var(--color-black); box-shadow: 6px 6px 0px var(--color-black); border-radius: 8px; background: var(--color-white); width: 100%; margin-bottom: 24px; overflow: hidden;';
 
     // 2. HERO: Today's Main Quest
-    let ctaLabel = 'Start Mission';
-    if (ctx.state === 'IN_PROGRESS') ctaLabel = 'Continue Learning';
-    else if (ctx.state === 'SUBMITTED') ctaLabel = 'Take Quiz';
-    else if (ctx.state === 'COMPLETED') ctaLabel = 'Continue Journey';
-
     const heroQuest = createElement('div', { 
       className: 'animate-fade-up delay-100 card-interactive', 
       style: `${cardStyle} transition: transform 150ms ease, box-shadow 150ms ease;`,
@@ -79,19 +73,19 @@ export class HomeView {
         onmousedown: (e) => { e.currentTarget.style.transform = 'scale(0.98)'; },
         onmouseup: (e) => { e.currentTarget.style.transform = 'scale(1.02)'; },
         onclick: () => {
-           if (ctx.state === 'AVAILABLE') {
+           if (ctx.questState === 'AVAILABLE') {
               progressionEngine.dispatch('START_QUEST', { questId: ctx.quest.id });
            }
            router.navigate('/quest');
         }
       }, [
-        ctaLabel,
+        ctx.ctaLabel,
         createElement('i', { className: 'ph-bold ph-arrow-right text-xl' })
       ])
     ]);
 
     // 3. Next Unlock
-    let nextUnlock = createElement('div', { className: 'd-none' }); // Hidden by default
+    let nextUnlock = createElement('div', { className: 'd-none' }); 
     if (ctx.nextUnlock) {
        nextUnlock = createElement('div', { 
          className: 'p-6 animate-fade-up delay-180 card-interactive', 
@@ -117,8 +111,6 @@ export class HomeView {
     }
 
     // 4. Journey Progress
-    const roadmapQuests = progressionEngine.getQuestsForModule(ctx.module.id);
-    
     const journeyProgress = createElement('div', { 
       className: 'p-6 animate-fade-up delay-260 card-interactive', 
       style: `${cardStyle} box-shadow: 6px 6px 0px var(--color-black); transition: transform 0.2s, box-shadow 0.2s;`,
@@ -152,15 +144,14 @@ export class HomeView {
          }, [])
       ]),
 
-      createElement('div', { className: 'd-flex flex-column mb-3', style: 'gap: 12px;' }, roadmapQuests.slice(0, 4).map((item, index) => {
+      createElement('div', { className: 'd-flex flex-column mb-3', style: 'gap: 12px;' }, ctx.roadmap.map((item, index) => {
         let blockStyle, iconHtml, textStyle;
-        const state = progressionEngine.getQuestState(item.id);
         
-        if (state === 'COMPLETED') {
+        if (item.state === 'COMPLETED') {
            blockStyle = 'background: var(--color-gray-100); border: 2px solid var(--color-black); color: var(--color-gray-600);';
            iconHtml = createElement('i', { className: 'ph-bold ph-check text-success text-lg' });
            textStyle = 'text-decoration: line-through;';
-        } else if (state === 'IN_PROGRESS' || state === 'SUBMITTED' || state === 'AVAILABLE') {
+        } else if (item.state === 'IN_PROGRESS' || item.state === 'SUBMITTED' || item.state === 'AVAILABLE') {
            blockStyle = 'background: var(--theme-accent); border: 3px solid var(--color-black); box-shadow: 4px 4px 0px var(--color-black); color: var(--color-black); transform: scale(1.02); z-index: 1;';
            iconHtml = createElement('i', { className: 'ph-fill ph-play text-xl' });
            textStyle = '';
@@ -200,8 +191,7 @@ export class HomeView {
 
     // 5. Achievement (Conditional)
     let recentAchievement;
-    const achievements = character.progress?.achievements || [];
-    if (achievements.length > 0) {
+    if (ctx.latestAchievement) {
       recentAchievement = createElement('div', { 
         className: 'animate-fade-up delay-300', 
         style: `${cardStyle} padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;` 
@@ -210,7 +200,7 @@ export class HomeView {
         createElement('div', { className: 'mb-4' }, [
           createElement('i', { className: 'ph-duotone ph-trophy', style: 'font-size: 80px; color: var(--theme-bg); filter: drop-shadow(4px 4px 0px var(--color-black));' })
         ]),
-        createElement('div', { className: 'font-black text-2xl mb-2' }, achievements[0]),
+        createElement('div', { className: 'font-black text-2xl mb-2' }, ctx.latestAchievement),
         createElement('div', { className: 'text-sm font-bold text-white bg-black px-4 py-2', style: 'border-radius: 20px;' }, 'Unlocked')
       ]);
     } else {
