@@ -3,6 +3,7 @@ import { createElement } from '../utils/dom.js';
 import { state } from '../state.js';
 import { AppLayout } from '../components/AppLayout.js';
 import { progressionEngine } from '../services/ProgressionEngine.js';
+import { router } from '../router.js';
 
 export class JourneyView {
   constructor() {
