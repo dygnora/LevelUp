@@ -111,8 +111,8 @@ export class ChooseJourneyView {
     const container = createElement('div', { className: 'centered-layout flex-column align-center' }, [
       createElement('div', { className: 'text-center mb-8 animate-fade-in' }, [
         createElement('h1', { className: 'text-white font-bold', style: 'font-size: 3.5rem; margin-bottom: 24px; text-shadow: 4px 4px 0px var(--color-black); letter-spacing: -1px;' }, 'Select Your Class'),
-        createElement('p', { className: 'text-white text-lg font-bold', style: 'margin: 0 0 12px 0; text-shadow: 2px 2px 0px var(--color-black);' }, 'Choose your primary learning journey to begin.'),
-        createElement('p', { className: 'text-white text-sm font-bold', style: 'max-width: 650px; margin: 0 auto 48px auto; line-height: 1.5; text-shadow: 2px 2px 0px var(--color-black);' }, 'Don\'t worry, you can always learn other skills later. This just sets your starting point.')
+        createElement('p', { className: 'text-lg font-bold', style: 'color: var(--color-black); margin: 0 0 12px 0; text-shadow: 2px 2px 0px var(--color-white);' }, 'Choose your primary learning journey to begin.'),
+        createElement('p', { className: 'text-sm font-bold', style: 'color: var(--color-black); max-width: 650px; margin: 0 auto 48px auto; line-height: 1.5; text-shadow: 2px 2px 0px var(--color-white);' }, 'Don\'t worry, you can always learn other skills later. This just sets your starting point.')
       ]),
       createElement('div', { id: 'paths-container', className: 'grid grid-cols-1 md-grid-cols-3', style: 'gap: 32px;' }, [
         // Loading state
