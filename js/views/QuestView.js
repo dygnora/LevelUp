@@ -397,7 +397,7 @@ export class QuestView {
              createElement('i', { className: 'ph-bold ph-exam text-primary' }),
              'Knowledge Check'
           ]),
-          createElement('div', { className: 'd-flex flex-column gap-6 mb-6' }, quest.quiz.map((q, index) => {
+          createElement('div', { className: 'd-flex flex-column mb-6', style: 'gap: 24px;' }, quest.quiz.map((q, index) => {
              
              let explanationBox = null;
              if (hasSubmitted && this.quizAnswers[index] !== undefined) {
@@ -417,12 +417,12 @@ export class QuestView {
                  ]);
              }
 
-             return createElement('div', {}, [
-                createElement('p', { className: 'font-bold mb-3' }, [`${index + 1}. ${q.question}`]),
-                createElement('div', { className: 'd-flex flex-column gap-2' }, q.options.map((opt, optIndex) => 
+             return createElement('div', { className: 'p-4 bg-gray-100', style: 'border: 2px solid var(--color-black); border-radius: 8px;' }, [
+                createElement('p', { className: 'font-bold text-lg m-0 mb-4' }, [`${index + 1}. ${q.question}`]),
+                createElement('div', { className: 'd-flex flex-column', style: 'gap: 12px;' }, q.options.map((opt, optIndex) => 
                    createElement('label', { 
-                      className: 'd-flex align-center gap-3 p-3 card-interactive', 
-                      style: 'border: 2px solid var(--color-black); border-radius: 8px; cursor: pointer; background: var(--color-gray-100);' 
+                      className: 'd-flex align-center p-3 card-interactive bg-white', 
+                      style: 'gap: 12px; border: 2px solid var(--color-black); border-radius: 8px; cursor: pointer;' 
                    }, [
                       createElement('input', { 
                          type: 'radio', 
@@ -430,9 +430,10 @@ export class QuestView {
                          value: optIndex,
                          checked: this.quizAnswers[index] === optIndex,
                          disabled: questState === PROGRESSION_STATES.REWARD_PENDING,
+                         style: 'transform: scale(1.2); margin: 0;',
                          onchange: () => { this.quizAnswers[index] = optIndex; }
                       }),
-                      createElement('span', { className: 'font-bold' }, [opt])
+                      createElement('span', { className: 'font-bold text-sm' }, [opt])
                    ])
                 )),
                 explanationBox ? explanationBox : createElement('span', {}, [])
