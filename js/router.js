@@ -7,10 +7,10 @@ class Router {
     this.currentRoute = null;
     this.appContainer = document.getElementById('app');
     
-    // Listen for browser back/forward navigation
-    window.addEventListener('popstate', () => this.handleRoute());
+    // Listen for hash changes
+    window.addEventListener('hashchange', () => this.handleRoute());
 
-    // Intercept global link clicks to use History API instead of full reload
+    // Intercept global link clicks to support old '/' links gracefully
     document.addEventListener('click', (e) => {
       const link = e.target.closest('a');
       if (link && link.getAttribute('href') && link.getAttribute('href').startsWith('/')) {
@@ -25,10 +25,14 @@ class Router {
   }
 
   navigate(path) {
-    if (window.location.pathname !== path) {
-      window.history.pushState({}, '', path);
+    // Standardize path format
+    if (!path.startsWith('/')) path = '/' + path;
+    
+    if (window.location.hash !== `#${path}`) {
+      window.location.hash = path;
+    } else {
+      this.handleRoute(); // Manually trigger if navigating to same route programmatically
     }
-    this.handleRoute();
   }
 
   async handleRoute() {
@@ -37,7 +41,9 @@ class Router {
       return;
     }
 
-    const path = window.location.pathname || '/';
+    let path = window.location.hash.slice(1) || '/';
+    // Remove query params if any
+    if (path.includes('?')) path = path.split('?')[0];
     let matchedPath = null;
     let params = {};
     
