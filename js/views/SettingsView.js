@@ -85,27 +85,12 @@ export class SettingsView {
         ].filter(Boolean))
     ]);
 
-    // 5. Danger Zone
-    const dangerSection = createElement('div', { className: 'card border-danger' }, [
-        createElement('h2', { className: 'text-2xl text-danger mb-4' }, 'Danger Zone'),
-        createElement('div', { className: 'd-flex justify-between align-center flex-wrap gap-4' }, [
-            createElement('div', { style: 'flex: 1; min-width: 200px;' }, [
-                createElement('h3', { className: 'text-lg m-0 mb-1' }, 'Delete Account'),
-                createElement('p', { className: 'text-sm text-gray m-0' }, 'Permanently remove all progress and data.')
-            ]),
-            createElement('button', { 
-                className: 'btn bg-danger text-white',
-                onclick: () => this.showDeleteDialog()
-            }, 'Delete Account')
-        ])
-    ]);
 
     return createElement('div', { className: 'animate-fade-in pb-8', style: 'max-width: 900px; margin: 0 auto;' }, [
         createElement('h1', { className: 'text-3xl mb-6' }, 'Settings'),
         preferencesSection,
         accountSection,
-        aboutSection,
-        dangerSection
+        aboutSection
     ]);
   }
 
@@ -114,39 +99,6 @@ export class SettingsView {
           createElement('span', { className: 'font-bold text-sm' }, label),
           createElement('span', { className: 'text-sm text-gray' }, value)
       ]);
-  }
-
-  showDeleteDialog() {
-      const dialog = createElement('div', { 
-          className: 'fixed inset-0 d-flex align-center justify-center p-4',
-          style: 'background: rgba(0,0,0,0.5); z-index: 9999; animation: fadeIn 0.2s ease-out forwards;'
-      }, [
-          createElement('div', { className: 'card max-w-sm w-full animate-pop-in' }, [
-              createElement('h2', { className: 'text-2xl text-danger mb-3' }, 'Delete Account?'),
-              createElement('p', { className: 'text-sm mb-4' }, 'This will permanently remove:'),
-              createElement('ul', { className: 'text-sm text-gray mb-6', style: 'padding-left: 20px; margin-bottom: 24px;' }, [
-                  createElement('li', { className: 'mb-1' }, 'Progress'),
-                  createElement('li', { className: 'mb-1' }, 'XP'),
-                  createElement('li', { className: 'mb-1' }, 'Achievements'),
-                  createElement('li', { className: 'mb-1' }, 'Journey Progress')
-              ]),
-              createElement('p', { className: 'text-sm font-bold mb-6' }, 'This action cannot be undone.'),
-              createElement('div', { className: 'd-flex gap-3 justify-end' }, [
-                  createElement('button', { 
-                      className: 'btn bg-gray-200',
-                      onclick: () => document.body.removeChild(dialog)
-                  }, 'Cancel'),
-                  createElement('button', { 
-                      className: 'btn bg-danger text-white',
-                      onclick: () => {
-                          alert("In MVP, account deletion is not connected to Firebase yet.");
-                          document.body.removeChild(dialog);
-                      }
-                  }, 'Delete Forever')
-              ])
-          ])
-      ]);
-      document.body.appendChild(dialog);
   }
 
   render() {
