@@ -102,9 +102,9 @@ export class QuestView {
     ]);
 
     // --- COLUMNS ---
-    const mainCol = createElement('div', { className: 'd-flex flex-column', style: 'flex: 1; min-width: 300px; gap: 24px;' });
+    const mainCol = createElement('div', { className: 'd-flex flex-column main-col', style: 'flex: 1; min-width: 0; gap: 24px;' });
     const sidebarCol = createElement('div', { className: 'd-flex flex-column sidebar-col', style: 'width: 350px; flex-shrink: 0; gap: 24px;' });
-    const contentGrid = createElement('div', { className: 'd-flex max-w-1200 px-6 pb-12 w-100 flex-wrap', style: 'margin: 0 auto; gap: 32px;' }, [mainCol, sidebarCol]);
+    const contentGrid = createElement('div', { className: 'd-flex max-w-1200 px-6 pb-12 w-100 flex-wrap content-grid', style: 'margin: 0 auto; gap: 32px; box-sizing: border-box;' }, [mainCol, sidebarCol]);
 
     // MAIN CONTENT
     const errorArea = this.engineError ? this._renderError(this.engineError) : null;
@@ -136,7 +136,9 @@ export class QuestView {
       .bg-black { background-color: var(--color-black); }
       .text-white { color: var(--color-white); }
       @media (max-width: 800px) {
+         .content-grid { flex-direction: column !important; padding: 16px !important; }
          .sidebar-col { width: 100% !important; order: -1; }
+         .main-col { width: 100% !important; flex: none !important; }
       }
     `);
     document.head.appendChild(style);
