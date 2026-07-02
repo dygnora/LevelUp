@@ -269,10 +269,10 @@ export class QuestView {
 
           quest.keyConcepts && quest.keyConcepts.length > 0 ? createElement('div', { className: 'mb-4' }, [
               createElement('div', { className: 'mb-2 text-sm text-gray text-uppercase font-bold' }, 'Key Concepts Preview'),
-              createElement('div', { className: 'd-flex flex-wrap', style: 'gap: 8px;' }, quest.keyConcepts.map(concept => 
+              createElement('div', { className: 'd-flex', style: 'flex-wrap: wrap; gap: 10px;' }, quest.keyConcepts.map(concept => 
                   createElement('span', { 
-                      className: 'px-3 py-1 bg-black text-white font-bold text-xs',
-                      style: 'border-radius: 20px;'
+                      className: 'px-3 py-1 font-bold text-sm',
+                      style: 'background-color: var(--theme-bg, var(--color-primary)); color: var(--color-black); border: 2px solid var(--color-black); box-shadow: 2px 2px 0px var(--color-black); white-space: nowrap;'
                   }, concept)
               ))
           ]) : createElement('div', {}, []),
