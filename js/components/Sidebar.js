@@ -30,6 +30,10 @@ export class Sidebar {
           },
           onmouseleave: (e) => {
              if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';
+          },
+          onclick: (e) => {
+             const sidebar = e.currentTarget.closest('.app-sidebar');
+             if (sidebar) sidebar.classList.remove('show-mobile');
           }
         }, [
           createElement('i', { className: `${isActive ? 'ph-fill' : 'ph'} ${item.icon} text-lg`, style: 'transition: color 200ms ease;' }),
